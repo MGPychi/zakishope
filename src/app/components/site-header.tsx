@@ -52,12 +52,14 @@ export function SiteHeader() {
           <Button variant="ghost" size="icon" className="text-gray-600 hover:text-tahat-800">
             <Heart className="h-5 w-5" />
           </Button>
+          <Link href="/cart">
           <Button variant="ghost" size="icon" className="relative text-gray-600 hover:text-tahat-800">
             <ShoppingBag className="h-5 w-5" />
             <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-tahat-800 text-xs text-white flex items-center justify-center">
               0
             </span>
           </Button>
+          </Link>
         </div>
       </div>
     </header>
