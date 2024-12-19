@@ -1,7 +1,7 @@
 import { CategoriesSidebar } from "./components/categories-sidebar";
 import { FeaturedProducts } from "./components/feature-products";
 import { HeroCarousel } from "./components/hero-carousel";
-import { ProductCategories } from "./components/product-categories";
+// import { ProductCategories } from "./components/product-categories";
 import { SiteHeader } from "./components/site-header";
 import { SiteNav } from "./components/site-nav";
 
@@ -17,7 +17,6 @@ export default function Home() {
           </aside>
           <main>
             <HeroCarousel />
-            <ProductCategories />
             <FeaturedProducts />
           </main>
         </div>
