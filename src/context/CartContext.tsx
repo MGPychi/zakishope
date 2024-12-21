@@ -6,9 +6,10 @@ interface CartType {
   items: CartItem[];
   addItem: (item: CartItem) => void;
   removeItem: (id: string) => void;
-  updateQuantity: (id: string, qt: number) => void;
+  updateQuantity: (id: string, qt: number, override?: boolean) => void;
   clearCart: () => void;
   isInCart: (id: string) => boolean;
+  getTotal: () => number;
 }
 const initialState: CartType = {
   items: [],
@@ -17,6 +18,7 @@ const initialState: CartType = {
   updateQuantity: () => {},
   clearCart: () => {},
   isInCart: () => false,
+  getTotal: () => 0,
 };
 
 export const cartContext = createContext(initialState);
@@ -27,14 +29,32 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const addItem = (item: CartItem) => {
     setItems((prev) => [...prev, item]);
   };
+  const getTotal = () => {
+    let total = 0;
+    for (const item of items) total += item.item.price * item.qt;
+    return total;
+  };
 
   const removeItem = (id: string) => {
     setItems((prev) => prev.filter((i) => i.item.id != id));
   };
-  const updateQuantity = (id: string, qt: number) => {
+  const updateQuantity = (id: string, qt: number, override?: boolean) => {
+    if (override) {
+      if (qt <= 0) qt = 1;
+      console.log(qt);
+      setItems((prev) =>
+        prev.map((i) => {
+          if (i.item.id == id && i.qt >= 1) return { ...i, qt };
+          return { ...i };
+        })
+      );
+      return;
+    }
     setItems((prev) =>
       prev.map((i) => {
-        if (i.item.id == id && i.qt + qt >= 1) return { ...i, qt: i.qt + qt };
+        const newQt = i.qt + qt;
+        console.log(newQt);
+        if (i.item.id == id && i.qt + qt >= 1) return { ...i, qt: newQt };
         return { ...i };
       })
     );
@@ -53,7 +73,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     if (items.length != 0) {
       timeOut = setTimeout(
         () => localStorage.setItem("cart", JSON.stringify(items)),
-        300
+        100
       );
     }
     return () => clearTimeout(timeOut);
@@ -72,6 +92,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     updateQuantity,
     clearCart,
     isInCart,
+    getTotal
   };
   return <cartContext.Provider value={value}>{children}</cartContext.Provider>;
 };

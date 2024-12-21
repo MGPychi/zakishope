@@ -12,9 +12,6 @@ export function CartItems() {
   const {items,updateQuantity:updateItemQt,removeItem:removeCartItem} = useCart()
 
   const updateQuantity = (id: string, newQuantity: number) => {
-    console.log(items)
-    console.log("update",id,newQuantity)
-    console.log(items.filter(i=>i.item.id==id)[0])
     updateItemQt(id,newQuantity)
   }
 
@@ -36,14 +33,15 @@ export function CartItems() {
                   variant="outline"
                   size="icon"
                   className="h-8 w-8"
-                  onClick={() => updateQuantity(item.item.id,  - 1)}
+                  onClick={() => updateQuantity(item.item.id, - 1)}
                 >
                   <Minus className="h-4 w-4" />
                 </Button>
                 <Input
                   type="number"
                   value={item.qt}
-                  onChange={(e) => updateQuantity(item.item.id, parseInt(e.target.value))}
+                  min={1}
+                  onChange={(e) => updateItemQt(item.item.id, parseInt(e.target.value??"1"),true)}
                   className="w-16 mx-2 text-center"
                 />
                 <Button

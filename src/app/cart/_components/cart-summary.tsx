@@ -1,15 +1,26 @@
-import { Button } from "@/components/ui/button"
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
+"use client";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { useCart } from "@/hooks/useCart";
 
 export function CartSummary() {
-  const subtotal = 289.97
-  const shipping = 10.00
-  const total = subtotal + shipping
+  const { getTotal } = useCart();
+  const subtotal = getTotal();
+  const shipping = 10.0;
+  const total = subtotal + shipping;
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="font-heading text-xl">Résumé de la commande</CardTitle>
+        <CardTitle className="font-heading text-xl">
+          Résumé de la commande
+        </CardTitle>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="flex justify-between">
@@ -31,6 +42,5 @@ export function CartSummary() {
         </Button>
       </CardFooter>
     </Card>
-  )
+  );
 }
-
