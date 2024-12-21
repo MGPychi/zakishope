@@ -1,9 +1,9 @@
-import { CategoriesSidebar } from "./components/categories-sidebar";
-import { FeaturedProducts } from "./components/feature-products";
-import { HeroCarousel } from "./components/hero-carousel";
+import { CategoriesSidebar } from "./_components/categories-sidebar";
+import { FeaturedProducts } from "./_components/feature-products";
+import { HeroCarousel } from "./_components/hero-carousel";
 // import { ProductCategories } from "./components/product-categories";
-import { SiteHeader } from "./components/site-header";
-import { SiteNav } from "./components/site-nav";
+import { SiteHeader } from "../components/layout/site-header/site-header";
+import { SiteNav } from "../components/layout/site-nav";
 
 export default function Home() {
   return (

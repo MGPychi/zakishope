@@ -1,28 +1,34 @@
-"use client"
-import { ProductCard } from "./product-card"
+"use client";
+import { Product } from "@/interfaces/CartItem";
+import { ProductCard } from "../../components/cards/product-card/product-card";
 
-const products = [
+const products:Product[] = [
   {
+
+    id:"120r9fupj",
     name: "Xiaomi Mi Watch",
-    price: "129.99 €",
+    price: 129.99,
     image: "/placeholder.svg?height=300&width=300",
   },
   {
+    id:"02hifn",
     name: "Écouteurs sans fil",
-    price: "79.99 €",
+    price: 79.99,
     image: "/placeholder.svg?height=300&width=300",
   },
   {
+    id:"230rwifjs02hifn",
     name: "Caméra de sécurité",
-    price: "89.99 €",
+    price: 89.99,
     image: "/placeholder.svg?height=300&width=300",
   },
   {
+    id:"230rwifjs02hif203rwqihfn",
     name: "Tablette Android",
-    price: "199.99 €",
+    price: 199.99,
     image: "/placeholder.svg?height=300&width=300",
   },
-]
+];
 
 export function FeaturedProducts() {
   return (
@@ -33,11 +39,13 @@ export function FeaturedProducts() {
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
           {products.map((product) => (
-            <ProductCard key={product.name} {...product} />
+            <ProductCard
+              key={product.name}
+              product={product}
+            />
           ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
-

@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Search, RefreshCw, Heart, ShoppingBag } from 'lucide-react'
+import { Search, RefreshCw, Heart  } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
 import {
@@ -10,6 +10,7 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
+import SiteHeaderCart from "./site-header-cart"
 
 export function SiteHeader() {
   return (
@@ -53,12 +54,7 @@ export function SiteHeader() {
             <Heart className="h-5 w-5" />
           </Button>
           <Link href="/cart">
-          <Button variant="ghost" size="icon" className="relative text-gray-600 hover:text-tahat-800">
-            <ShoppingBag className="h-5 w-5" />
-            <span className="absolute -top-1 -right-1 h-4 w-4 rounded-full bg-tahat-800 text-xs text-white flex items-center justify-center">
-              0
-            </span>
-          </Button>
+          <SiteHeaderCart/>
           </Link>
         </div>
       </div>
