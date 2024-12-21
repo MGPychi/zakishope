@@ -10,10 +10,11 @@ import {
 import { useCart } from "@/hooks/useCart";
 
 export function CartSummary() {
-  const { getTotal } = useCart();
+  const { getTotal,isLoading } = useCart();
   const subtotal = getTotal();
   const shipping = 10.0;
   const total = subtotal + shipping;
+  if(isLoading)return <div>loading</div>
 
   return (
     <Card>

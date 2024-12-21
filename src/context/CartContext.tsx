@@ -8,11 +8,13 @@ interface CartType {
   removeItem: (id: string) => void;
   updateQuantity: (id: string, qt: number, override?: boolean) => void;
   clearCart: () => void;
+  isLoading:boolean;
   isInCart: (id: string) => boolean;
   getTotal: () => number;
 }
 const initialState: CartType = {
   items: [],
+  isLoading:true,
   addItem: () => {},
   removeItem: () => {},
   updateQuantity: () => {},
@@ -25,6 +27,7 @@ export const cartContext = createContext(initialState);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState(initialState.items);
+  const [isLoading,setIsLoading]=useState(initialState.isLoading)
 
   const addItem = (item: CartItem) => {
     setItems((prev) => [...prev, item]);
@@ -63,10 +66,12 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setItems([]);
   };
   useEffect(() => {
+
     const cart = localStorage.getItem("cart");
     if (cart) {
       setItems(JSON.parse(cart));
     }
+    setIsLoading(false)
   }, []);
   useEffect(() => {
     let timeOut: NodeJS.Timeout;
@@ -89,6 +94,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     items,
     addItem,
     removeItem,
+    isLoading,
     updateQuantity,
     clearCart,
     isInCart,

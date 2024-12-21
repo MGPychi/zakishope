@@ -9,7 +9,7 @@ import { useCart } from "@/hooks/useCart"
 
 
 export function CartItems() {
-  const {items,updateQuantity:updateItemQt,removeItem:removeCartItem} = useCart()
+  const {items,isLoading,updateQuantity:updateItemQt,removeItem:removeCartItem} = useCart()
 
   const updateQuantity = (id: string, newQuantity: number) => {
     updateItemQt(id,newQuantity)
@@ -18,6 +18,7 @@ export function CartItems() {
   const removeItem = (id: string) => {
     removeCartItem(id)
   }
+  if(isLoading)return <div>loading</div>
 
   return (
     <div className="space-y-4">
