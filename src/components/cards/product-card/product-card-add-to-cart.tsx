@@ -14,10 +14,7 @@ const ProductCardAddToCart = ({ product }: Props) => {
   const inCart = isInCart(product.id);
 
   const handleAddToCart = () => {
-    console.log("running")
-    console.log(inCart)
     if (!inCart){ 
-        console.log("adding")
         addItem({ item: product, qt: 1 });}
 
     else removeItem(product.id);

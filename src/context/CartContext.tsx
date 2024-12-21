@@ -25,7 +25,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [items, setItems] = useState(initialState.items);
 
   const addItem = (item: CartItem) => {
-    console.log(item);
     setItems((prev) => [...prev, item]);
   };
 
@@ -35,8 +34,8 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const updateQuantity = (id: string, qt: number) => {
     setItems((prev) =>
       prev.map((i) => {
-        if (i.item.id != id) return i;
-        return { ...i, quantity: i.qt + qt };
+        if (i.item.id == id && i.qt + qt >= 1) return { ...i, qt: i.qt + qt };
+        return { ...i };
       })
     );
   };
@@ -50,9 +49,14 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   }, []);
   useEffect(() => {
+    let timeOut: NodeJS.Timeout;
     if (items.length != 0) {
-      localStorage.setItem("cart", JSON.stringify(items));
+      timeOut = setTimeout(
+        () => localStorage.setItem("cart", JSON.stringify(items)),
+        300
+      );
     }
+    return () => clearTimeout(timeOut);
   }, [items]);
   const isInCart = (id: string) => {
     for (const i of items) {
