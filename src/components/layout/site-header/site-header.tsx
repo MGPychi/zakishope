@@ -14,8 +14,8 @@ import SiteHeaderCart from "./site-header-cart"
 
 export function SiteHeader() {
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="container flex h-16 items-center gap-4 px-4">
+    <header className=" sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+      <div className="container mx-auto max-w-screen-2xl flex h-16 items-center gap-4 px-4">
         <Link href="/" className="flex items-center gap-2">
           <img src="/placeholder.svg?height=40&width=40" alt="Tahat Store Logo" className="h-10" />
           <span className="text-xl font-bold font-heading text-tahat-800">Tahat Store</span>
