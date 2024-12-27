@@ -1,9 +1,12 @@
-import { CategoriesSidebar } from "./_components/categories-sidebar";
-import { FeaturedProducts } from "./_components/feature-products";
-import { HeroCarousel } from "./_components/hero-carousel";
-// import { ProductCategories } from "./components/product-categories";
-import { SiteHeader } from "../components/layout/site-header/site-header";
-import { SiteNav } from "../components/layout/site-nav";
+import { CategoriesSidebar } from "./_components/categories-sidebar"
+import { FeaturedProducts } from "./_components/feature-products"
+import { HeroCarousel } from "./_components/hero-carousel"
+import { NewArrivals } from "./_components/new-arrivals"
+import { PopularCategories } from "./_components/popular-categories"
+import { SpecialOffers } from "./_components/special-offers"
+import { Brands } from "./_components/brands"
+import { SiteHeader } from "../components/layout/site-header/site-header"
+import { SiteNav } from "../components/layout/site-nav"
 
 export default function Home() {
   return (
@@ -12,12 +15,16 @@ export default function Home() {
       <SiteNav />
       <div className="container py-4">
         <div className="grid lg:grid-cols-[280px,1fr] gap-6">
-          <aside >
+          <aside>
             <CategoriesSidebar />
           </aside>
-          <main>
+          <main className="space-y-8">
             <HeroCarousel />
             <FeaturedProducts />
+            <NewArrivals />
+            <PopularCategories />
+            <SpecialOffers />
+            <Brands />
           </main>
         </div>
       </div>
