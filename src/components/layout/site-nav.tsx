@@ -3,14 +3,25 @@ import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { Separator } from "@radix-ui/react-select";
 
 const categories = [
   { name: "Accueil", href: "/" },
   { name: "Boutique", href: "/boutique" },
+  { name: "Nouvel Arrivage", href: "/nouvel-arrivage" },
   { name: "Smart Watch", href: "/smart-watch" },
-  { name: "Mon compte", href: "/mon-compte" },
-];
+  { name: "Box TV", href: "/box-tv" },
+  { name: "Smart Home", href: "/smart-home" },
+  { name: "Caméras", href: "/cameras" },
+  { name: "Écouteurs", href: "/ecouteurs" },
+  { name: "Pour Femme", href: "/pour-femme" },
+  { name: "Bracelet & Glass", href: "/bracelet-glass" },
+  { name: "Power Bank", href: "/power-bank" },
+  { name: "Tablette", href: "/tablette" },
+  { name: "Datashow", href: "/datashow" },
+  { name: "Car Electronic & GPS", href: "/car-electronic" },
+  { name: "Jeux Vidéos", href: "/jeux-videos" },
+]
+
 
 export function SiteNav() {
   return (
@@ -27,26 +38,26 @@ export function SiteNav() {
               <span className="font-medium">Categories</span>
             </Button>
           </SheetTrigger>
-          <SheetContent side="left">
-            <div className="grid gap-4 py-4">
+          <SheetContent side="left" className="max-h-screen overflow-scroll">
+            <h2 className="text-xl font-medium">Categories</h2>
+            <div className="grid gap-2 py-4">
               {categories.map((category) => (
                 <>
                   <Link
                     key={category.name}
                     href={category.href}
-                    className="block px-2 py-1 text-lg hover:text-tahat-800 transition-colors"
+                    className="block px-2 border-b border-gray-200 last:border-b-0 py-2 hover:text-primary  text-lg hover:text-tahat-800 transition-colors"
                   >
                     {category.name}
                     
                   </Link>
-                  <Separator  />
                 </>
               ))}
             </div>
           </SheetContent>
         </Sheet>
         <div className="flex gap-6">
-          {categories.map((category) => (
+          {categories.slice(0,8).map((category) => (
             <Link
               key={category.name}
               href={category.href}

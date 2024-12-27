@@ -2,6 +2,8 @@ import { CartItems } from "./_components/cart-items";
 import { CartSummary } from "./_components/cart-summary";
 import { SiteHeader } from "../../components/layout/site-header/site-header";
 import { SiteNav } from "../../components/layout/site-nav";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 export default function CartPage() {
   return (
@@ -14,12 +16,16 @@ export default function CartPage() {
           <div className="lg:col-span-2">
             <CartItems />
           </div>
-          <div>
+          <div className="space-y-4">
             <CartSummary />
+            <Link href="/confirm-order" passHref>
+              <Button className="w-full">Passer la commande</Button>
+            </Link>
           </div>
         </div>
       </main>
     </div>
   )
 }
+
 

@@ -20,10 +20,10 @@ const categories = [
 
 export function CategoriesSidebar() {
   return (
-    <div className="w-full">
-      <div className="bg-tahat-800 text-white p-4 flex items-center gap-2">
-        <span className="text-lg font-medium">Categories</span>
-      </div>
+    <div className="w-full hidden lg:block">
+      {/* <div className="bg-tahat-800   flex items-center gap-2"> */}
+        {/* <span className="text-lg  font-medium">Categories</span> */}
+      {/* </div> */}
       <div className="border border-gray-200">
         {categories.map((category) => (
           <Link

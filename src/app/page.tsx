@@ -12,7 +12,7 @@ export default function Home() {
       <SiteNav />
       <div className="container py-4">
         <div className="grid lg:grid-cols-[280px,1fr] gap-6">
-          <aside>
+          <aside >
             <CategoriesSidebar />
           </aside>
           <main>
