@@ -2,13 +2,13 @@ import Link from "next/link"
 import { Search, RefreshCw, Heart  } from 'lucide-react'
 
 import { Button } from "@/components/ui/button"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
+// import {
+//   Select,
+//   SelectContent,
+//   SelectItem,
+//   SelectTrigger,
+//   SelectValue,
+// } from "@/components/ui/select"
 import { Input } from "@/components/ui/input"
 import SiteHeaderCart from "./site-header-cart"
 
@@ -30,7 +30,7 @@ export function SiteHeader() {
                 className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-tahat-500 focus:ring-tahat-500"
               />
             </div>
-            <Select defaultValue="all">
+            {/* <Select defaultValue="all">
               <SelectTrigger className="w-[180px] border-gray-300 focus:border-tahat-500 focus:ring-tahat-500">
                 <SelectValue placeholder="Toutes catégories" />
               </SelectTrigger>
@@ -39,8 +39,8 @@ export function SiteHeader() {
                 <SelectItem value="electronics">Electronics</SelectItem>
                 <SelectItem value="fashion">Fashion</SelectItem>
               </SelectContent>
-            </Select>
-            <Button variant="default" className="bg-tahat-800 hover:bg-tahat-900 text-white">
+            </Select> */}
+            <Button  >
               <Search className="h-4 w-4 mr-2" />
               Rechercher
             </Button>
