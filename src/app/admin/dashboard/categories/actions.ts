@@ -13,7 +13,7 @@ export async function generateUploadSignature() {
   const signature = generateCloudinarySignature(
     {
       timestamp: timestamp,
-      folder: "product_categories",
+      folder: "world_tech",
     },
     process.env.CLOUDINARY_API_SECRET!
   );
@@ -61,6 +61,7 @@ export const updateProductCategory = protectedActionClient
       revalidatePath("/admin/dashboard/categories");
       revalidatePath("/admin/dashboard/products");
       revalidateTag("featured_product_categories");
+      revalidateTag("categories");
       revalidatePath("/");
       return { success: true };
     } catch (err) {
@@ -83,6 +84,7 @@ export const deleteProductCategory = protectedActionClient
       revalidatePath("/admin/dashboard/categories");
       revalidatePath("/admin/dashboard/products");
       revalidateTag("featured_product_categories");
+      revalidateTag("categories");
       return { success: true };
     } catch (err) {
       console.error("Error deleting product category:", err);
@@ -94,7 +96,7 @@ export const deleteProductCategory = protectedActionClient
   });
 
 const createProductCategorySchema = zfd.formData({
-  description: zfd.text(),
+  // description: zfd.text(),
   name: zfd.text(),
 });
 
@@ -114,6 +116,7 @@ export const createProductCategory = actionClient
 
       revalidatePath("/admin/dashboard/product-categories");
       revalidatePath("/");
+      revalidateTag("categories");
       return { success: true };
     } catch (err) {
       console.error("Error creating product category:", err);

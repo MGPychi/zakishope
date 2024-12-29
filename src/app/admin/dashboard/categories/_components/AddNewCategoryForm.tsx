@@ -29,7 +29,7 @@ const formSchema = z.object({
   //   .min(1, "Description is required")
   //   .min(50)
   //   .max(MAX_CHARS),
-  image: z.instanceof(File).optional().nullable(),
+  // image: z.instanceof(File).optional().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -43,7 +43,7 @@ type FormValues = z.infer<typeof formSchema>;
 const initialValues: FormValues = {
   // description: "",
   name: "",
-  image: null,
+  // image: null,
 };
 
 const AddNewCategoryForm = () => {

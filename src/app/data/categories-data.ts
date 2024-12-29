@@ -51,9 +51,9 @@ export const getAllCategories = unstable_cache(
   async () => {
     return await db.query.categories.findMany({});
   },
-  ["product_categories"],
+  ["categories"],
   {
-    tags: ["product_categories"],
+    tags: ["categories"],
   }
 );
 
