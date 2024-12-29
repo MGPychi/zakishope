@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Toaster } from "@/components/ui/toaster"
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "@/components/Providers";
@@ -27,10 +28,12 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
+
         <body
           className={`${geistSans.variable} ${geistMono.variable} antialiased px-2`}
         >
           {children}
+          <Toaster />
         </body>
       </Providers>
     </html>
