@@ -56,7 +56,31 @@ export function SiteNav() {
             </div>
           </SheetContent>
         </Sheet>
-        <div className="flex gap-6">
+
+        <div className="md:hidden  flex    gap-6 ">
+          {categories.slice(0,2).map((category) => (
+            <Link
+              key={category.name}
+              href={category.href}
+              className="text-sm font-medium transition-colors hover:text-tahat-800"
+            >
+              {category.name}
+            </Link>
+          ))}
+        </div>
+
+        <div className="lg:hidden md:flex hidden gap-6  ">
+          {categories.slice(0,4).map((category) => (
+            <Link
+              key={category.name}
+              href={category.href}
+              className="text-sm font-medium transition-colors hover:text-tahat-800"
+            >
+              {category.name}
+            </Link>
+          ))}
+        </div>
+        <div className="lg:flex gap-6 hidden ">
           {categories.slice(0,8).map((category) => (
             <Link
               key={category.name}
