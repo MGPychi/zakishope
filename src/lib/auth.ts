@@ -1,28 +1,13 @@
-"use sever";
+"use server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import NextAuth, { NextAuthOptions} from "next-auth";
+import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { verifyPassword } from "./passwords";
-import { DefaultSession } from "next-auth";
-// import { verifyPassword } from "./passwords";
 
-declare module "next-auth" {
-  interface User {
-    id: string;
-    role: "admin" | "client";
-  }
 
-  interface Session {
-    user: {
-      id: string;
-      role: "admin" | "client";
-    } & DefaultSession["user"];
-  }
-}
-
-export const authConfig: NextAuthOptions = {
+export const { handlers, signIn, signOut, auth } = NextAuth({
   secret: process.env.NEXTAUTH_SECRET,
 
   session: {
@@ -46,7 +31,6 @@ export const authConfig: NextAuthOptions = {
       }
       return session;
     },
-    
   },
   providers: [
     Credentials({
@@ -69,7 +53,7 @@ export const authConfig: NextAuthOptions = {
           if (!user) return null;
 
           const isValid =
-            user.role == "admin"  &&
+            user.role == "admin" &&
             (await verifyPassword(password as string, user.password));
           if (!isValid) return null;
           return {
@@ -85,6 +69,4 @@ export const authConfig: NextAuthOptions = {
       },
     }),
   ],
-};
-
-export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
+});

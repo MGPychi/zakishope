@@ -35,7 +35,6 @@ const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
   isFeatured: z.boolean(),
-  isActive: z.boolean(),
   description: z
     .string()
     .min(1, "Description is required")
@@ -195,7 +194,6 @@ const UpdateProductForm = ({
       formData.append("id", data.id);
       formData.append("name", data.name);
       formData.append("description", data.description);
-      formData.append("isActive", String(data.isActive));
       formData.append("isFeatured", String(data.isFeatured));
       formData.append("category", data.category);
       formData.append(
@@ -298,26 +296,6 @@ const UpdateProductForm = ({
           />
 
           <div className="flex flex-col space-y-4">
-            <FormField
-              control={form.control}
-              name="isActive"
-              render={({ field }) => (
-                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <FormLabel className="text-base">Active Status</FormLabel>
-                    <FormDescription>
-                      Make this product visible to customers
-                    </FormDescription>
-                  </div>
-                  <FormControl>
-                    <Switch
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
-                  </FormControl>
-                </FormItem>
-              )}
-            />
 
             <FormField
               control={form.control}

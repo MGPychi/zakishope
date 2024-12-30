@@ -1,6 +1,17 @@
 import Link from "next/link";
 import { MapPin, Phone, Mail, Facebook } from "lucide-react";
-import { infos } from "@/constants";
+// import { infos } from "@/constants";
+const infos  = {
+  description: "ZAK ELECTRIC est une entreprise spécialisée dans l'installation et la maintenance des systèmes électriques. Nous offrons des services de qualité à des prix compétitifs.",
+  address: "Cité 200 logements, Bloc 2, N° 10, Tizi Ouzou, Algérie",
+  phone: "+213 555 555 555",
+  email: "worldtech@email.com",
+  facebook: "https://www.facebook.com",
+  facebookName: "world tech",
+  whatsapp: "+213 555 555 555",
+
+}
+
 
 const Footer = () => {
   return (

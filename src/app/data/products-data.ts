@@ -1,22 +1,21 @@
 import { PAGE_SIZE } from "@/constants";
 import { db } from "@/db";
-import { products, selectProductSchema } from "@/db/schema";
+import { products  } from "@/db/schema";
 import { and, eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import slugify from "slugify";
-import { z } from "zod";
 // import { z } from "zod";
 
-interface ProductsResponse {
-  data: Array<z.infer<typeof selectProductSchema> & {
-    images: { url: string; cloudId: string }[];
-  }>;
-  hasNext: boolean;
-  hasPrev: boolean;
-  count: number;
-  pageCount: number;
-}
+// interface ProductsResponse {
+//   data: Array<z.infer<typeof selectProductSchema> & {
+//     images: { url: string; cloudId: string }[];
+//   }>;
+//   hasNext: boolean;
+//   hasPrev: boolean;
+//   count: number;
+//   pageCount: number;
+// }
 
 interface GetProductsParams {
   page: number;
@@ -88,7 +87,7 @@ export const getProductDetailWithSlug = unstable_cache(
 
 // Get paginated products with optional search
 export const getProducts = cache(
-  async ({ page, q,  category }: GetProductsParams): Promise<ProductsResponse> => {
+  async ({ page, q,  category }: GetProductsParams)  => {
     const sluggedCategory = slugify(category ?? "");
     const foundCategory = await db.query.categories.findFirst({
       where: eq(products.slug, sluggedCategory),

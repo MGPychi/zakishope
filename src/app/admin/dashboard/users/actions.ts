@@ -33,7 +33,7 @@ export const deleteUser = protectedActionClient
       if (ctx.user.role == "admin") return { success: false };
       await ctx.db
         .delete(users)
-        .where(and(eq(users.id, parsedInput.id), ne(users.role, "superAdmin")));
+        .where(and(eq(users.id, parsedInput.id), ne(users.role, "admin")));
     } catch (err) {
       console.error(err);
       return { success: false };

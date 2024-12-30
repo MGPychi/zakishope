@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React  from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -11,35 +11,35 @@ import {
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2} from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { updateProductCategory, generateUploadSignature } from "../actions";
+import { updateProductCategory  } from "../actions";
 import { z } from "zod";
-import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent } from "@/components/ui/card";
-import { MAX_FILE_SIZE } from "@/constants";
+// import { Textarea } from "@/components/ui/textarea";
+// import { Card, CardContent } from "@/components/ui/card";
+// import { MAX_FILE_SIZE } from "@/constants";
 
-const MAX_CHARS = 2000;
+// const MAX_CHARS = 2000;
 
 const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
-  description: z
-    .string()
-    .min(1, "Description is required")
-    .min(50)
-    .max(MAX_CHARS),
-  image: z.instanceof(File).optional().nullable(),
+  // description: z
+  //   .string()
+  //   .min(1, "Description is required")
+  //   .min(50)
+  //   .max(MAX_CHARS),
+  // image: z.instanceof(File).optional().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-type ImagePreview = {
-  id: string;
-  url: string;
-  file?: File;
-  isExisting?: boolean;
-};
+// type ImagePreview = {
+//   id: string;
+//   url: string;
+//   file?: File;
+//   isExisting?: boolean;
+// };
 
 const UpdateCategoryForm = ({
   initialData,
@@ -47,114 +47,114 @@ const UpdateCategoryForm = ({
   initialData: FormValues & { imageUrl?: string };
 }) => {
   const { toast } = useToast();
-  const [imagePreview, setImagePreview] = useState<ImagePreview | null>(
-    initialData.imageUrl
-      ? {
-          id: "existing-image",
-          url: initialData.imageUrl,
-          isExisting: true,
-        }
-      : null
-  );
+  // const [imagePreview, setImagePreview] = useState<ImagePreview | null>(
+  //   initialData.imageUrl
+  //     ? {
+  //         id: "existing-image",
+  //         url: initialData.imageUrl,
+  //         isExisting: true,
+  //       }
+  //     : null
+  // );
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...initialData,
-      image: null,
+      // image: null,
     },
   });
 
-  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
+  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
 
-    if (!file) return;
+  //   if (!file) return;
 
-    // Validate file type
-    if (!file.type.startsWith("image/")) {
-      toast({
-        title: "Invalid file type",
-        description: `${file.name} is not an image file`,
-        variant: "destructive",
-      });
-      return;
-    }
+  //   // Validate file type
+  //   if (!file.type.startsWith("image/")) {
+  //     toast({
+  //       title: "Invalid file type",
+  //       description: `${file.name} is not an image file`,
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
 
-    // Validate file size
-    if (file.size > MAX_FILE_SIZE) {
-      toast({
-        title: "File too large",
-        description: `${file.name} is larger than 10MB`,
-        variant: "destructive",
-      });
-      return;
-    }
+  //   // Validate file size
+  //   if (file.size > MAX_FILE_SIZE) {
+  //     toast({
+  //       title: "File too large",
+  //       description: `${file.name} is larger than 10MB`,
+  //       variant: "destructive",
+  //     });
+  //     return;
+  //   }
 
-    // Create preview
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const preview = {
-        id: Math.random().toString(36).substring(7),
-        url: reader.result as string,
-        file: file,
-      };
-      setImagePreview(preview);
-      form.setValue("image", file);
-    };
-    reader.readAsDataURL(file);
-  };
+  //   // Create preview
+  //   const reader = new FileReader();
+  //   reader.onloadend = () => {
+  //     const preview = {
+  //       id: Math.random().toString(36).substring(7),
+  //       url: reader.result as string,
+  //       file: file,
+  //     };
+  //     setImagePreview(preview);
+  //     form.setValue("image", file);
+  //   };
+  //   reader.readAsDataURL(file);
+  // };
 
-  const removeImage = () => {
-    setImagePreview(null);
-    form.setValue("image", null);
-  };
+  // const removeImage = () => {
+  //   setImagePreview(null);
+  //   form.setValue("image", null);
+  // };
 
-  const uploadToCloudinary = async (file: File) => {
-    try {
-      const { signature, timestamp, apiKey, cloudName } =
-        await generateUploadSignature();
+  // const uploadToCloudinary = async (file: File) => {
+  //   try {
+  //     const { signature, timestamp, apiKey, cloudName } =
+  //       await generateUploadSignature();
 
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("signature", signature);
-      formData.append("timestamp", timestamp.toString());
-      formData.append("api_key", apiKey.toString());
-      formData.append("folder", "product_categories");
+  //     const formData = new FormData();
+  //     formData.append("file", file);
+  //     formData.append("signature", signature);
+  //     formData.append("timestamp", timestamp.toString());
+  //     formData.append("api_key", apiKey.toString());
+  //     formData.append("folder", "product_categories");
 
-      const uploadResponse = await fetch(
-        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+  //     const uploadResponse = await fetch(
+  //       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+  //       {
+  //         method: "POST",
+  //         body: formData,
+  //       }
+  //     );
 
-      const data = await uploadResponse.json();
-      return {
-        url: data.secure_url,
-        cloudId: data.public_id,
-      };
-    } catch (error) {
-      console.error("Upload failed:", error);
-      throw error;
-    }
-  };
+  //     const data = await uploadResponse.json();
+  //     return {
+  //       url: data.secure_url,
+  //       cloudId: data.public_id,
+  //     };
+  //   } catch (error) {
+  //     console.error("Upload failed:", error);
+  //     throw error;
+  //   }
+  // };
 
   const onSubmit = async (data: FormValues) => {
     try {
-      let imageUrl = imagePreview?.isExisting ? imagePreview.url : "";
+      // let imageUrl = imagePreview?.isExisting ? imagePreview.url : "";
 
       // Upload new image to Cloudinary if exists
-      if (imagePreview?.file) {
-        const uploadedImage = await uploadToCloudinary(imagePreview.file);
-        imageUrl = uploadedImage.url;
-      }
+      // if (imagePreview?.file) {
+      //   const uploadedImage = await uploadToCloudinary(imagePreview.file);
+      //   imageUrl = uploadedImage.url;
+      // }
 
       const formData = new FormData();
       formData.append("id", data.id);
       formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("imageUrls", JSON.stringify([imageUrl]));
+      // formData.append("description", data.description);
+      // formData.append("imageUrls", JSON.stringify([imageUrl]));
 
       const response = await updateProductCategory(formData);
 
@@ -194,7 +194,7 @@ const UpdateCategoryForm = ({
             )}
           />
 
-          <FormField
+          {/* <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
@@ -285,7 +285,7 @@ const UpdateCategoryForm = ({
                 </FormItem>
               );
             }}
-          />
+          /> */}
         </div>
 
         <div className="flex w-full justify-end">
