@@ -1,13 +1,11 @@
-"use server";
 import { db } from "@/db";
 import { users } from "@/db/schema";
 import { eq } from "drizzle-orm";
-import NextAuth from "next-auth";
 import Credentials from "next-auth/providers/credentials";
 import { verifyPassword } from "./passwords";
+import NextAuth, { NextAuthConfig } from "next-auth";
 
-
-export const { handlers, signIn, signOut, auth } = NextAuth({
+const authConfig: NextAuthConfig = {
   secret: process.env.NEXTAUTH_SECRET,
 
   session: {
@@ -69,4 +67,6 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
     }),
   ],
-});
+};
+
+export const { handlers, signIn, signOut, auth } = NextAuth(authConfig);
