@@ -210,6 +210,8 @@ const AddNewProductForm = ({
         form.reset();
         setImagePreviews([]);
       } else {
+        console.error("Failed to create product:", response?.serverError);
+        console.error("Failed to create product:", response?.validationErrors);
         throw new Error("Failed to create product");
       }
     } catch (error) {

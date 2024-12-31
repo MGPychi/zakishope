@@ -96,6 +96,7 @@ export default function AdminProductsTable({
           <TableHeader>
             <TableRow>
               <TableHead>Name</TableHead>
+              <TableHead>Price</TableHead>
               <TableHead>Category</TableHead>
               <TableHead>featured</TableHead>
               <TableHead>Created at</TableHead>
@@ -134,6 +135,10 @@ const TableItem = ({ product, categories }: TableItemProps) => {
         <TableCell className=" md:min-w-32">
           {product.name.slice(0, 20)}
           {product.name.length > 20 && "..."}
+        </TableCell>
+
+        <TableCell className=" md:min-w-32">
+          {product.price}
         </TableCell>
         <TableCell>
           {categories.find((category) => category.id === product.categoryId)?.name || "Unknown"}

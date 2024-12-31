@@ -1,6 +1,6 @@
-"use client";
 import { Product } from "@/interfaces/CartItem";
 import { ProductCard } from "../../components/cards/product-card/product-card";
+import { getAllFeaturedActiveProducts } from "../data/products-data";
 
 const products:Product[] = [
   {
@@ -30,7 +30,8 @@ const products:Product[] = [
   },
 ];
 
-export function FeaturedProducts() {
+export async function FeaturedProducts() {
+  const featuredProducts  = await getAllFeaturedActiveProducts()
   return (
     <section className="bg-gray-50 py-16">
       <div className="container mx-auto px-4">
@@ -38,7 +39,7 @@ export function FeaturedProducts() {
           Produits Vedettes
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {products.map((product) => (
+          {featuredProducts.map((product) => (
             <ProductCard
               key={product.name}
               product={product}

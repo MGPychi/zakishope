@@ -1,12 +1,16 @@
 "use client";
 import { Button } from "@/components/ui/button";
+import { selectProductSchema } from "@/db/schema";
 import { useCart } from "@/hooks/useCart";
 import { Product } from "@/interfaces/CartItem";
 import { cn } from "@/lib/utils";
 import { ShoppingBasket } from "lucide-react";
 import React from "react";
+import { z } from "zod";
 interface Props {
-  product: Product;
+  product: z.infer<typeof selectProductSchema>&{
+    images:{url:string}[]
+  };
 }
 const ProductCardAddToCart = ({ product }: Props) => {
   const { isInCart, addItem, removeItem } = useCart();

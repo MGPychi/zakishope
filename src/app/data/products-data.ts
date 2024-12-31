@@ -78,6 +78,8 @@ export const getProductDetailWithSlug = unstable_cache(
       where: eq(products.slug, decodedSlug),
       with: {
         images: true,
+        features: true,
+        category: true,
       },
     });
   },

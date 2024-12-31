@@ -30,7 +30,6 @@ const updateProductSchema = zfd.formData({
   id: zfd.text(),
   name: zfd.text(),
   description: zfd.text(),
-  isActive: zfd.text().transform((val) => val === "true"),
   isFeatured: zfd.text().transform((val) => val === "true"),
   imageUrls: zfd.text().transform((val) => JSON.parse(val)),
   cloudIds: zfd.text().transform((val) => JSON.parse(val)),
@@ -97,7 +96,6 @@ export const updateProduct = protectedActionClient
 const createProductSchema = zfd.formData({
   description: zfd.text(),
   name: zfd.text(),
-  isActive: zfd.text(),
   isFeatured: zfd.text(),
   imageUrls: zfd.text().optional(), // For storing Cloudinary URLs
   cloudIds: zfd.text().optional(), // For storing Cloudinary IDs
