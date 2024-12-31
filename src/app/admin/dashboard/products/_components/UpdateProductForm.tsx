@@ -10,9 +10,9 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2, Upload, X, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import { updateProduct, generateUploadSignature } from "../actions";
 import { z } from "zod";
@@ -35,16 +35,15 @@ const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
   isFeatured: z.boolean(),
-  description: z
-    .string()
-    .min(1, "Description is required")
-    .min(50)
-    .max(MAX_CHARS),
-  images: z
-    .array(z.any())
-    .min(1, "At least one image is required")
-    .max(MAX_FILES, `Maximum ${MAX_FILES} images allowed`),
+  description: z.string().min(50).max(MAX_CHARS),
+  images: z.array(z.any()).min(1).max(MAX_FILES),
   category: z.string().min(1, "Category is required"),
+  features: z.array(
+    z.object({
+      name: z.string().min(1, "Specification name is required"),
+      value: z.string().min(1, "Specification value is required"),
+    })
+  ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
@@ -62,6 +61,7 @@ const UpdateProductForm = ({
 }: {
   initialData: Omit<FormValues, "category"> & {
     category: { name: string; id: string };
+    features: Array<{ name: string; value: string }>;
   };
   categories: Awaited<ReturnType<typeof getAllCategories>>;
 }) => {
@@ -78,7 +78,13 @@ const UpdateProductForm = ({
     defaultValues: {
       ...initialData,
       category: initialData.category.id,
+      features: initialData.features || [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "features",
   });
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -177,35 +183,34 @@ const UpdateProductForm = ({
 
   const onSubmit = async (data: FormValues) => {
     try {
-      // Upload new images to Cloudinary
       const uploadPromises = imagePreviews
         .filter((preview) => !preview.isExisting && preview.file)
         .map((preview) => uploadToCloudinary(preview.file!));
 
       const uploadedImages = await Promise.all(uploadPromises);
 
-      // Combine existing and new images
-      const allImages = [
-        ...imagePreviews.filter((preview) => preview.isExisting),
+      const allImages: { cloudId: string; url: string }[] = [
+        ...imagePreviews
+          .filter((preview) => preview.isExisting)
+          .map((preview) => ({
+            cloudId: preview.id,
+            url: preview.url,
+          })),
         ...uploadedImages,
       ];
 
-      const formData = new FormData();
-      formData.append("id", data.id);
-      formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("isFeatured", String(data.isFeatured));
-      formData.append("category", data.category);
-      formData.append(
-        "imageUrls",
-        JSON.stringify(allImages.map((img) => img.url))
-      );
-      formData.append(
-        "cloudIds",
-        JSON.stringify(allImages.map((img) => img.url))
-      );
+      const response = await updateProduct({
+        id: initialData.id,
+        cloudIds: allImages.map((img) => img.cloudId),
+        imageUrls: allImages.map((img) => img.url),
+        description: data.description,
+        name: data.name,
+        isFeatured: data.isFeatured,
+        category: data.category,
+        features: data.features,
 
-      const response = await updateProduct(formData);
+
+      });
 
       if (response?.data?.success) {
         toast({
@@ -267,6 +272,53 @@ const UpdateProductForm = ({
             )}
           />
 
+          <div>
+            <FormLabel>features</FormLabel>
+            {fields.map((field, index) => (
+              <div key={field.id} className="flex items-center space-x-2 mt-2">
+                <FormField
+                  control={form.control}
+                  name={`features.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input placeholder="Spec name" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`features.${index}.value`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input placeholder="Spec value" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              onClick={() => append({ name: "", value: "" })}
+            >
+              <Plus className="h-4 w-4 mr-2" /> Add Specification
+            </Button>
+          </div>
+
           <FormField
             control={form.control}
             name="category"
@@ -296,7 +348,6 @@ const UpdateProductForm = ({
           />
 
           <div className="flex flex-col space-y-4">
-
             <FormField
               control={form.control}
               name="isFeatured"

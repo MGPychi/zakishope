@@ -106,6 +106,7 @@ export const getProducts = cache(
       with: {
         images: true,
         category: true,
+        features: true,
       },
     });
 

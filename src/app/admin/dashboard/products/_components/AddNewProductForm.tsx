@@ -12,9 +12,9 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Upload, X } from "lucide-react";
+import { Loader2, Upload, X, Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
 import { createProduct, generateUploadSignature } from "../actions";
 import { z } from "zod";
@@ -31,26 +31,23 @@ import {
 import { getAllCategories } from "@/app/data/categories-data";
 
 const MAX_CHARS = 2000;
+
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   price: z.number().min(1, "Price is required"),
-  description: z
-    .string()
-    .min(1, "Description is required")
-    .min(50)
-    .max(MAX_CHARS),
-  images: z
-    .array(z.any())
-    .min(1, "At least one image is required")
-    .max(MAX_FILES, `Maximum ${MAX_FILES} images allowed`)
-    .optional()
-    .nullable(),
+  description: z.string().min(50).max(MAX_CHARS),
+  images: z.array(z.any()).min(1).max(MAX_FILES).optional().nullable(),
   isFeatured: z.boolean(),
   category: z.string().min(1, "Category is required"),
+  features: z.array(
+    z.object({
+      name: z.string().min(1, "Specification name is required"),
+      value: z.string().min(1, "Specification value is required"),
+    })
+  ),
 });
 
 type FormValues = z.infer<typeof formSchema>;
-
 type ImagePreview = {
   id: string;
   url: string;
@@ -58,13 +55,15 @@ type ImagePreview = {
 };
 
 const initialValues: FormValues = {
-  description: "",
   name: "",
+  price: 1,
+  description: "",
   images: [],
   isFeatured: false,
   category: "",
-  price:1,
+  features: [],
 };
+
 
 const AddNewProductForm = ({
   categories,
@@ -77,6 +76,11 @@ const AddNewProductForm = ({
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues,
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "features",
   });
 
   const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -176,53 +180,44 @@ const AddNewProductForm = ({
       throw error;
     }
   };
-
   const onSubmit = async (data: FormValues) => {
-    try {
-      const uploadPromises = imagePreviews.map((preview) =>
-        uploadToCloudinary(preview.file)
-      );
+  try {
+    const uploadPromises = imagePreviews.map((preview) =>
+      uploadToCloudinary(preview.file)
+    );
 
-      const uploadedImages = await Promise.all(uploadPromises);
+    const uploadedImages = await Promise.all(uploadPromises);
 
-      const formData = new FormData();
-      formData.append("name", data.name);
-      formData.append("description", data.description);
-      formData.append("isFeatured", String(data.isFeatured));
-      formData.append("category", data.category);
-      formData.append("price", data.price.toString());
-      formData.append(
-        "imageUrls",
-        JSON.stringify(uploadedImages.map((img) => img.url))
-      );
-      formData.append(
-        "cloudIds",
-        JSON.stringify(uploadedImages.map((img) => img.cloudId))
-      );
+    const productData = {
+      name: data.name,
+      description: data.description,
+      isFeatured: data.isFeatured,
+      category: data.category,
+      price: data.price,
+      features: data.features || [],
+      imageUrls: JSON.stringify(uploadedImages.map((img) => img.url)),
+      cloudIds: JSON.stringify(uploadedImages.map((img) => img.cloudId)),
 
-      const response = await createProduct(formData);
+    };
 
-      if (response?.data?.success) {
-        toast({
-          title: "Success",
-          description: "Product has been created",
-        });
-        form.reset();
-        setImagePreviews([]);
-      } else {
-        console.error("Failed to create product:", response?.serverError);
-        console.error("Failed to create product:", response?.validationErrors);
-        throw new Error("Failed to create product");
-      }
-    } catch (error) {
-      console.error("Error creating product:", error);
-      toast({
-        title: "Error",
-        description: "Failed to create product",
-        variant: "destructive",
-      });
+    const response = await createProduct(productData);
+
+    if (response?.data?.success) {
+      toast({ title: "Success", description: "Product created successfully" });
+      form.reset();
+      setImagePreviews([]);
+    } else {
+      throw new Error("Failed to create product");
     }
-  };
+  } catch (error) {
+    console.error("Error creating product:", error);
+    toast({
+      title: "Error",
+      description: "Failed to create product",
+      variant: "destructive"
+    });
+  }
+};
 
   return (
     <Form {...form}>
@@ -240,29 +235,29 @@ const AddNewProductForm = ({
                 <FormMessage />
               </FormItem>
             )}
-            />
+          />
 
-            <FormField
+          <FormField
             control={form.control}
             name="price"
             render={({ field }) => (
               <FormItem>
-              <FormLabel>Price</FormLabel>
-              <FormControl>
-                <Input
-                type="number"
-                min={1}
-                placeholder="Product price"
-                {...field}
-                onChange={(e) => field.onChange(Number(e.target.value))}
-                />
-              </FormControl>
-              <FormMessage />
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={1}
+                    placeholder="Product price"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
               </FormItem>
             )}
-            />
+          />
 
-            <FormField
+          <FormField
             control={form.control}
             name="description"
             render={({ field }) => (
@@ -285,7 +280,47 @@ const AddNewProductForm = ({
               </FormItem>
             )}
           />
-
+          <div>
+            <FormLabel>features</FormLabel>
+            {fields.map((field, index) => (
+              <div key={field.id} className="flex items-center space-x-2 mt-2">
+                <FormField
+                  control={form.control}
+                  name={`features.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input placeholder="Spec name" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name={`features.${index}.value`}
+                  render={({ field }) => (
+                    <FormItem className="flex-1">
+                      <FormControl>
+                        <Input placeholder="Spec value" {...field} />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              className="mt-2"
+              onClick={() => append({ name: "", value: "" })}
+            >
+              <Plus className="h-4 w-4 mr-2" /> Add Specification
+            </Button>
+          </div>
           <FormField
             control={form.control}
             name="category"
@@ -432,3 +467,4 @@ const AddNewProductForm = ({
 };
 
 export default AddNewProductForm;
+

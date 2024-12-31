@@ -54,7 +54,7 @@ export const productFeatures = pgTable("product_features", {
   productId: uuid("product_id")
     .notNull()
     .references(() => products.id, { onDelete: "cascade" }),
-  feature: varchar("feature", { length: 255 }).notNull(),
+  name: varchar("feature", { length: 255 }).notNull(),
   value: varchar("value", { length: 255 }).notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")

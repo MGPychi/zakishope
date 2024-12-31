@@ -1,11 +1,15 @@
 "use server";
-import { categories, productImages, products } from "@/db/schema";
+import {
+  categories,
+  productFeatures,
+  productImages,
+  products,
+} from "@/db/schema";
 import { generateCloudinarySignature } from "@/lib/cloudinary";
 import { actionClient, protectedActionClient } from "@/lib/safe-actions";
 import { eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
-import { zfd } from "zod-form-data";
 import slugify from "slugify";
 
 export async function generateUploadSignature() {
@@ -26,123 +30,153 @@ export async function generateUploadSignature() {
   };
 }
 
-const updateProductSchema = zfd.formData({
-  id: zfd.text(),
-  name: zfd.text(),
-  description: zfd.text(),
-  isFeatured: zfd.text().transform((val) => val === "true"),
-  imageUrls: zfd.text().transform((val) => JSON.parse(val)),
-  cloudIds: zfd.text().transform((val) => JSON.parse(val)),
-  category: zfd.text().optional(),
+const updateProductSchema = z.object({
+  id: z.string(),
+  name: z.string().min(1, "Name is required"),
+  description: z.string().min(50).max(2000),
+  isFeatured: z.boolean(),
+  imageUrls: z.array(z.string()),
+  cloudIds: z.array(z.string()),
+  category: z.string().optional(),
+  features: z.array(z.object({
+    name: z.string().min(1),
+    value: z.string().min(1)
+  }))
 });
 
 export const updateProduct = protectedActionClient
   .schema(updateProductSchema)
   .action(async ({ ctx, parsedInput }) => {
     try {
-      // Start a transaction to ensure data consistency
       const sluggedCategory = slugify(parsedInput.category || "");
       const category = await ctx.db.query.categories.findFirst({
         where: eq(categories.slug, sluggedCategory),
       });
+
       const result = await ctx.db.transaction(async (tx) => {
-        // 1. Update product details
         await tx
           .update(products)
           .set({
             name: parsedInput.name,
             description: parsedInput.description,
             isFeatured: parsedInput.isFeatured,
-            categoryId: category ? category?.id : undefined,
+            categoryId: category?.id,
           })
           .where(eq(products.id, parsedInput.id));
 
-        // 2. Delete all existing product images from the database
         await tx
           .delete(productImages)
           .where(eq(productImages.productId, parsedInput.id));
 
-        // 3. Insert new image records
         if (parsedInput.imageUrls.length > 0) {
-          const imageRecords = parsedInput.imageUrls.map(
-            (url: string, index: number) => ({
-              productId: parsedInput.id,
-              url: url,
-              cloudId: parsedInput.cloudIds[index],
-            })
-          );
+          const imageRecords = parsedInput.imageUrls.map((url, index) => ({
+            productId: parsedInput.id,
+            url: url,
+            cloudId: parsedInput.cloudIds[index],
+          }));
 
           await tx.insert(productImages).values(imageRecords);
+        }
+
+        await tx
+          .delete(productFeatures)
+          .where(eq(productFeatures.productId, parsedInput.id));
+
+        if (parsedInput.features.length > 0) {
+          await tx.insert(productFeatures).values(
+            parsedInput.features.map(spec => ({
+              productId: parsedInput.id,
+              name: spec.name,
+              value: spec.value,
+            }))
+          );
         }
 
         return true;
       });
 
-      if (!result) {
-        throw new Error("Failed to update product");
-      }
-
-      // Revalidate the path to reflect the updated data
       revalidatePath("/admin/dashboard/products");
       revalidateTag("featured_products");
       revalidatePath("/");
-      return { success: true };
+      
+      return { success: true, data: result };
     } catch (err) {
       console.error("Error updating product:", err);
       return { success: false };
     }
   });
 
-const createProductSchema = zfd.formData({
-  description: zfd.text(),
-  name: zfd.text(),
-  isFeatured: zfd.text(),
-  imageUrls: zfd.text().optional(), // For storing Cloudinary URLs
-  cloudIds: zfd.text().optional(), // For storing Cloudinary IDs
-  category: zfd.text().optional(),
-  price: zfd.text(),
+// In your form component file:
+// In your server actions file:
+const createProductSchema = z.object({
+  name: z.string().min(2, "Name must be at least 2 characters."),
+  description: z
+    .string()
+    .min(10, "Description must be at least 10 characters."),
+  price: z.number().min(1, "Price must be at least 1."),
+  isFeatured: z.boolean().default(false),
+  category: z.string({ required_error: "Please select a category." }),
+  imageUrls: z.string().transform((val) => JSON.parse(val)),
+  cloudIds: z.string().transform((val) => JSON.parse(val)),
+  features: z.array(
+    z.object({
+      name: z.string().min(1, "Specification name is required"),
+      value: z.string().min(1, "Specification value is required"),
+    })
+  ),
 });
+
 export const createProduct = actionClient
   .schema(createProductSchema)
   .action(async ({ ctx, parsedInput }) => {
     try {
       const slug = slugify(parsedInput.name);
-      const sluggedCategory = slugify(parsedInput.category || "");
-      const foundCategory = await ctx.db.query.categories.findFirst({
+      const sluggedCategory = slugify(parsedInput.category);
 
-        where: eq(products.slug, sluggedCategory),
+      const foundCategory = await ctx.db.query.categories.findFirst({
+        where: eq(categories.slug, sluggedCategory),
       });
-      if (!foundCategory) {
-        return { success: false };
-      }
+
+      if (!foundCategory) return { success: false };
+
       const [newProduct] = await ctx.db
         .insert(products)
         .values({
           description: parsedInput.description,
           slug,
           name: parsedInput.name,
-          isFeatured: parsedInput.isFeatured === "true",
+          isFeatured: parsedInput.isFeatured,
           categoryId: foundCategory.id,
-          price: parseInt(parsedInput.price),
-
+          price: parsedInput.price,
         })
         .returning({ id: products.id });
 
-      // Now we just save the Cloudinary URLs and IDs that were uploaded client-side
-      const imageUrls = JSON.parse(parsedInput.imageUrls || "[]");
-      const cloudIds = JSON.parse(parsedInput.cloudIds || "[]");
+      // Handle image uploads
       await Promise.all(
-        imageUrls.map((url: string, index: number) =>
+        parsedInput.imageUrls.map((url: string, index: number) =>
           ctx.db.insert(productImages).values({
             productId: newProduct.id,
-            cloudId: cloudIds[index],
+            cloudId: parsedInput.cloudIds[index],
             url: url,
           })
         )
       );
+
+      // Handle features
+      await Promise.all(
+        parsedInput.features.map((spec) =>
+          ctx.db.insert(productFeatures).values({
+            productId: newProduct.id,
+            name: spec.name,
+            value: spec.value,
+          })
+        )
+      );
+
       revalidatePath("/admin/dashboard/products");
       revalidateTag("featured_products");
       revalidatePath("/");
+
       return { success: true };
     } catch (err) {
       console.error(err);
