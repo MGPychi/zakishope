@@ -143,3 +143,20 @@ export const getTotalProductsCountToday = cache(async () => {
 
   return result.length;
 });
+// Get the latest 4 products
+export const getLatestProducts = unstable_cache(
+  async () => {
+    return await db.query.products.findMany({
+      orderBy: (products,{desc})=>[desc(products.createdAt)], 
+      limit: 4, // Limit to the latest 4 products
+      with: {
+        images: true, // Include associated images
+      },
+    });
+  },
+  ["latest_products"], // Cache key
+  {
+    tags: ["latest_products"], // Cache tags
+  }
+);
+

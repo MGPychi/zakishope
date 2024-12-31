@@ -12,8 +12,8 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   return (
-    <Card className="overflow-hidden transition-all duration-300 hover:shadow-lg">
-      <CardContent className="p-0">
+    <Card className="flex flex-col overflow-hidden transition-all duration-300 hover:shadow-lg h-full">
+      <CardContent className="p-0 flex-grow">
         <div className="relative">
           <Image
             src={product?.images?.length > 0 ? product.images[0].url : ""}
@@ -33,13 +33,13 @@ export function ProductCard({ product }: ProductCardProps) {
           <p className="text-xl font-bold text-tahat-600">{product.price}</p>
         </div>
       </CardContent>
-      <CardFooter className="p-4">
+      <CardFooter className="p-4 mt-auto">
         <Button
           className={cn(
             "w-full flex items-center justify-center gap-2 transition-colors duration-300"
           )}
         >
-          Bay Now
+          Buy Now
         </Button>
       </CardFooter>
     </Card>
