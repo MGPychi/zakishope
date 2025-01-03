@@ -1,7 +1,7 @@
 import { PAGE_SIZE } from "@/constants";
 import { db } from "@/db";
-import { products  } from "@/db/schema";
-import { and, eq, sql } from "drizzle-orm";
+import { categories, products  } from "@/db/schema";
+import { eq, and, or, gte, lte, ilike, inArray ,sql} from 'drizzle-orm';
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import slugify from "slugify";
@@ -30,7 +30,7 @@ export const searchAndFilterInAllProducts = cache(
     minPrice,
     maxPrice,
     sortByPrice,
-    categories: categoryIds,
+    categories: categorySlugs,
   }: {
     q?: string;
     minPrice?: number;
@@ -38,31 +38,49 @@ export const searchAndFilterInAllProducts = cache(
     sortByPrice?: "asc" | "desc";
     categories?: string[];
   }) => {
-    const conditions = [];
+    let whereClause = undefined;
+    const filters = [];
 
+    // Search in name or description
     if (q) {
-      conditions.push(sql`${products.name} LIKE ${`%${q}%`} OR ${products.description} LIKE ${`%${q}%`}`);
+      filters.push(
+        or(
+          ilike(products.name, `%${q}%`),
+          ilike(products.description, `%${q}%`)
+        )
+      );
     }
 
+    // Price range
     if (minPrice) {
-      conditions.push(sql`${products.price} >= ${minPrice}`);
+      filters.push(gte(products.price, minPrice));
     }
-
     if (maxPrice) {
-      conditions.push(sql`${products.price} <= ${maxPrice}`);
+      filters.push(lte(products.price, maxPrice));
     }
 
-    if (categoryIds && categoryIds.length > 0) {
-      conditions.push(sql`${products.categoryId} IN (${sql.join(categoryIds)})`);
+    // Category filtering - now using the correct relationship
+    if (categorySlugs && categorySlugs.length > 0) {
+      // First get the category IDs for the given slugs
+      const matchingCategories = await db.query.categories.findMany({
+        where: inArray(categories.slug, categorySlugs)
+      });
+      
+      const categoryIds = matchingCategories.map(cat => cat.id);
+      if (categoryIds.length > 0) {
+        filters.push(inArray(products.categoryId, categoryIds));
+      }
     }
 
-    const orderBy = sortByPrice
-      ? sql`${products.price} ${sortByPrice === "asc" ? "ASC" : "DESC"}`
-      : undefined;
+    // Combine all filters with AND
+    if (filters.length > 0) {
+      whereClause = and(...filters);
+    }
 
+    // Build query
     const filteredProducts = await db.query.products.findMany({
-      where: and(...conditions),
-      orderBy,
+      where: whereClause,
+      orderBy: sortByPrice ? (fields, operators) => [operators[sortByPrice](fields.price)] : undefined,
       with: {
         images: true,
         category: true,

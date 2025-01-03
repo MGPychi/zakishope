@@ -14,7 +14,7 @@ export default async function SearchPage({
     priceMax?: string;
     orderBy?: "price" | "date";
     order?: "asc" | "desc";
-    categories: string;
+    category: string;
   };
 }) {
   const {
@@ -22,23 +22,13 @@ export default async function SearchPage({
     priceMin,
     priceMax,
     order,
-    categories: categoriesParam,
+    category: categoriesParam,
   } = searchParams;
-const selectedCategories = categoriesParam ? categoriesParam.split("__") : [];
+const selectedCategorySlugs = categoriesParam ? categoriesParam.split("_or_") : [];
 const allCategories = await getAllCategories();
+console.log("values",selectedCategorySlugs)
 
 
-console.log("selected",selectedCategories)
-// Obtain a list of selected category IDs based on the names
-const selectedCategoriesIds = selectedCategories.map((categoryName) => {
-    console.log(categoryName)
-    const category = allCategories.find((cat) => {
-        console.log("the ",cat.name,categoryName,cat.name==categoryName)
-        return cat.name === categoryName
-    });
-    console.log("found",category)
-    return category ? category.id : null;
-}).filter((id) => id !== null);
 
 // Parse and validate priceMin and priceMax
   const parsedPriceMin = priceMin ? parseFloat(priceMin) : undefined;
@@ -51,14 +41,12 @@ const selectedCategoriesIds = selectedCategories.map((categoryName) => {
   if (parsedPriceMax !== undefined && isNaN(parsedPriceMax)) {
     throw new Error("Invalid priceMax value");
   }
-  console.log(selectedCategories)
-  console.log(selectedCategoriesIds)
 
   const products = await searchAndFilterInAllProducts({
     q,
     minPrice: parsedPriceMin,
     maxPrice: parsedPriceMax,
-    categories: selectedCategoriesIds,
+    categories: selectedCategorySlugs,
     sortByPrice: order,
   });
 

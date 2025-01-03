@@ -14,29 +14,44 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { getAllCategories } from "@/app/data/categories-data";
+import { usePathname, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
+import CategoriesFilter from "./categories-filter";
 interface Props {
   categories: Awaited<ReturnType<typeof getAllCategories>>;
 }
 export function SearchFilters({ categories }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const params = new URLSearchParams(searchParams);
+  const parseValues = (key: string): string[] => {
+    const value = params.get(key);
+    if (value) {
+      return value.split("_or_");
+    }
+    return [];
+  };
+  const handleSearch = (key: string, value: string[]) => {
+    if (value && value.length) {
+      params.set(key, value.join("_or_"));
+    } else {
+      params.delete(key);
+    }
+    router.replace(`${pathname}?${params.toString()}`);
+  };
+
 
   const filterContent = (
     <div className="space-y-6">
-      <div>
-        <h3 className="font-semibold mb-4">Catégories</h3>
-        <div className="space-y-3">
-          {categories.map((category) => (
-            <div key={category.id} className="flex items-center space-x-2">
-              <Checkbox id={category.id} />
-              <Label htmlFor={category.id}>
-                {category.name}{" "}
-                <span className="text-sm">{category.products_count}</span>{" "}
-              </Label>
-            </div>
-          ))}
-        </div>
-      </div>
+      <CategoriesFilter
+        categories={categories}
+        handleSearch={handleSearch}
+        initialState={parseValues("category")}
+        queryKey="category"
+      />
 
       <div>
         <h3 className="font-semibold mb-4">Prix</h3>
