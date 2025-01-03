@@ -2,14 +2,13 @@
 import { Button } from "@/components/ui/button";
 import { selectProductSchema } from "@/db/schema";
 import { useCart } from "@/hooks/useCart";
-import { Product } from "@/interfaces/CartItem";
 import { cn } from "@/lib/utils";
 import { ShoppingBasket } from "lucide-react";
 import React from "react";
 import { z } from "zod";
 interface Props {
-  product: z.infer<typeof selectProductSchema>&{
-    images:{url:string}[]
+  product: z.infer<typeof selectProductSchema> & {
+    images: { url: string }[];
   };
 }
 const ProductCardAddToCart = ({ product }: Props) => {
@@ -18,10 +17,9 @@ const ProductCardAddToCart = ({ product }: Props) => {
   const inCart = isInCart(product.id);
 
   const handleAddToCart = () => {
-    if (!inCart){ 
-        addItem({ item: product, qt: 1 });}
-
-    else removeItem(product.id);
+    if (!inCart) {
+      addItem({ item: product, qt: 1 });
+    } else removeItem(product.id);
   };
 
   return (
@@ -34,7 +32,10 @@ const ProductCardAddToCart = ({ product }: Props) => {
           ? "bg-blue-500 text-white hover:bg-blue-600"
           : "bg-white text-gray-600 hover:bg-gray-100"
       )}
-      onClick={handleAddToCart}
+      onClick={(e) => {
+        e.stopPropagation();
+        handleAddToCart();
+      }}
     >
       <ShoppingBasket
         size={18}

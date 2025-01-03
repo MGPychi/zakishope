@@ -1,8 +1,8 @@
 "use server";
 import { PAGE_SIZE } from "@/constants";
 import { db } from "@/db";
-import { categories, selectCategorySchema  } from "@/db/schema"; // Import relevant schema
-import { and, eq, sql } from "drizzle-orm";
+import { categories, products, selectCategorySchema } from "@/db/schema"; // Import relevant schema
+import { count, and, eq, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import { z } from "zod";
@@ -37,8 +37,7 @@ export const getAllFeaturedActiveCategories = unstable_cache(
 // Get all active categories
 export const getAllActiveCategories = unstable_cache(
   async () => {
-    return await db.query.categories.findMany({
-    });
+    return await db.query.categories.findMany({});
   },
   ["active_product_categories"],
   {
@@ -49,11 +48,49 @@ export const getAllActiveCategories = unstable_cache(
 // Get all categories
 export const getAllCategories = unstable_cache(
   async () => {
-    return await db.query.categories.findMany({});
+    const all_categories = await db.query.categories.findMany({});
+    const all_categories_with_products_count = await Promise.all(
+      all_categories.map(async (c) => {
+        const productsCount = await db
+          .select({ count: count() })
+          .from(products)
+          .where(eq(products.categoryId, c.id));
+        return {
+          ...c,
+          products_count: productsCount[0].count,
+        };
+      })
+    );
+    return all_categories_with_products_count;
   },
   ["categories"],
   {
     tags: ["categories"],
+  }
+);
+
+export const getAllFeaturedCategories = unstable_cache(
+  async () => {
+    const featured_categories = await db.query.categories.findMany({
+      where: eq(categories.isFeatured, true),
+    });
+    const featured_categories_with_products_count = await Promise.all(
+      featured_categories.map(async (c) => {
+        const productsCount = await db
+          .select({ count: count() })
+          .from(products)
+          .where(eq(products.categoryId, c.id));
+        return {
+          ...c,
+          products_count: productsCount[0].count,
+        };
+      })
+    );
+    return featured_categories_with_products_count;
+  },
+  ["featured_categories"],
+  {
+    tags: ["featured_categories"],
   }
 );
 
@@ -73,11 +110,7 @@ export const getCategoryDetailWithSlug = unstable_cache(
 export const getCategories = cache(
   async ({ page, q }: GetCategoriesParams): Promise<CategoriesResponse> => {
     const categoriesQuery = db.query.categories.findMany({
-      where: and(
-        q
-          ? sql`${categories.name} LIKE ${`%${q}%`}  `
-          : undefined
-      ),
+      where: and(q ? sql`${categories.name} LIKE ${`%${q}%`}  ` : undefined),
       limit: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
     });
@@ -117,13 +150,7 @@ export const getTotalCategoriesCount = cache(
     const result = await db
       .select({ count: sql`count(*)` })
       .from(categories)
-      .where(
-        and(
-          q
-            ? sql`${categories.name} LIKE ${`%${q}%`} `
-            : undefined
-        )
-      );
+      .where(and(q ? sql`${categories.name} LIKE ${`%${q}%`} ` : undefined));
 
     return Number(result[0]?.count ?? 0);
   }
@@ -134,7 +161,9 @@ export const getTotalCategoriesCountToday = cache(async () => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
   const result = await db.query.categories.findMany({
-    where: sql`DATE(${categories.createdAt}) = ${today.toISOString().split("T")[0]}`,
+    where: sql`DATE(${categories.createdAt}) = ${
+      today.toISOString().split("T")[0]
+    }`,
     columns: {
       id: true,
     },

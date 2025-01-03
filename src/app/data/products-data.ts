@@ -23,6 +23,57 @@ interface GetProductsParams {
   category?: string;
 }
 
+
+export const searchAndFilterInAllProducts = cache(
+  async ({
+    q,
+    minPrice,
+    maxPrice,
+    sortByPrice,
+    categories: categoryIds,
+  }: {
+    q?: string;
+    minPrice?: number;
+    maxPrice?: number;
+    sortByPrice?: "asc" | "desc";
+    categories?: string[];
+  }) => {
+    const conditions = [];
+
+    if (q) {
+      conditions.push(sql`${products.name} LIKE ${`%${q}%`} OR ${products.description} LIKE ${`%${q}%`}`);
+    }
+
+    if (minPrice) {
+      conditions.push(sql`${products.price} >= ${minPrice}`);
+    }
+
+    if (maxPrice) {
+      conditions.push(sql`${products.price} <= ${maxPrice}`);
+    }
+
+    if (categoryIds && categoryIds.length > 0) {
+      conditions.push(sql`${products.categoryId} IN (${sql.join(categoryIds)})`);
+    }
+
+    const orderBy = sortByPrice
+      ? sql`${products.price} ${sortByPrice === "asc" ? "ASC" : "DESC"}`
+      : undefined;
+
+    const filteredProducts = await db.query.products.findMany({
+      where: and(...conditions),
+      orderBy,
+      with: {
+        images: true,
+        category: true,
+        features: true,
+      },
+    });
+
+    return filteredProducts;
+  }
+);
+
 // Get all featured and active products with their images
 export const getAllFeaturedActiveProducts = unstable_cache(
   async (limit?: number) => {

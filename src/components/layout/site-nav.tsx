@@ -3,27 +3,10 @@ import { Menu } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { getAllCategories } from "@/app/data/categories-data";
 
-const categories = [
-  { name: "Accueil", href: "/" },
-  { name: "Boutique", href: "/boutique" },
-  { name: "Nouvel Arrivage", href: "/nouvel-arrivage" },
-  { name: "Smart Watch", href: "/smart-watch" },
-  { name: "Box TV", href: "/box-tv" },
-  { name: "Smart Home", href: "/smart-home" },
-  { name: "Caméras", href: "/cameras" },
-  { name: "Écouteurs", href: "/ecouteurs" },
-  { name: "Pour Femme", href: "/pour-femme" },
-  { name: "Bracelet & Glass", href: "/bracelet-glass" },
-  { name: "Power Bank", href: "/power-bank" },
-  { name: "Tablette", href: "/tablette" },
-  { name: "Datashow", href: "/datashow" },
-  { name: "Car Electronic & GPS", href: "/car-electronic" },
-  { name: "Jeux Vidéos", href: "/jeux-videos" },
-]
-
-
-export function SiteNav() {
+export async function SiteNav() {
+  const categories = await getAllCategories();
   return (
     <nav className="border-b bg-white">
       <div className="container flex h-14 items-center">
@@ -45,11 +28,10 @@ export function SiteNav() {
                 <>
                   <Link
                     key={category.name}
-                    href={category.href}
+                    href={`/product/?category=${category.slug}`}
                     className="block px-2 border-b border-gray-200 last:border-b-0 py-2 hover:text-primary  text-lg hover:text-tahat-800 transition-colors"
                   >
                     {category.name}
-                    
                   </Link>
                 </>
               ))}
@@ -58,10 +40,10 @@ export function SiteNav() {
         </Sheet>
 
         <div className="md:hidden  flex    gap-6 ">
-          {categories.slice(0,2).map((category) => (
+          {categories.slice(0, 2).map((category) => (
             <Link
               key={category.name}
-              href={category.href}
+              href={`/product/?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
               {category.name}
@@ -70,10 +52,10 @@ export function SiteNav() {
         </div>
 
         <div className="lg:hidden md:flex hidden gap-6  ">
-          {categories.slice(0,4).map((category) => (
+          {categories.slice(0, 4).map((category) => (
             <Link
               key={category.name}
-              href={category.href}
+              href={`/product/?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
               {category.name}
@@ -81,10 +63,10 @@ export function SiteNav() {
           ))}
         </div>
         <div className="lg:flex gap-6 hidden ">
-          {categories.slice(0,8).map((category) => (
+          {categories.slice(0, 8).map((category) => (
             <Link
               key={category.name}
-              href={category.href}
+              href={`/product/?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
               {category.name}

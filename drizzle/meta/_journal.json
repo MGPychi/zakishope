@@ -15,6 +15,20 @@
       "when": 1735651597157,
       "tag": "0001_tranquil_skin",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1735919081426,
+      "tag": "0002_gorgeous_xavin",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1735921591843,
+      "tag": "0003_calm_black_widow",
+      "breakpoints": true
     }
   ]
 }
