@@ -1,4 +1,4 @@
-import React  from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -7,39 +7,35 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2} from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { updateProductCategory  } from "../actions";
+import { updateProductCategory, generateUploadSignature } from "../actions";
 import { z } from "zod";
-// import { Textarea } from "@/components/ui/textarea";
-// import { Card, CardContent } from "@/components/ui/card";
-// import { MAX_FILE_SIZE } from "@/constants";
+import { Card, CardContent } from "@/components/ui/card";
 
-// const MAX_CHARS = 2000;
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
-  // description: z
-  //   .string()
-  //   .min(1, "Description is required")
-  //   .min(50)
-  //   .max(MAX_CHARS),
-  // image: z.instanceof(File).optional().nullable(),
+  isFeatured: z.boolean().default(false),
+  image: z.instanceof(File).optional().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-// type ImagePreview = {
-//   id: string;
-//   url: string;
-//   file?: File;
-//   isExisting?: boolean;
-// };
+type ImagePreview = {
+  id: string;
+  url: string;
+  file?: File;
+  isExisting?: boolean;
+};
 
 const UpdateCategoryForm = ({
   initialData,
@@ -47,114 +43,114 @@ const UpdateCategoryForm = ({
   initialData: FormValues & { imageUrl?: string };
 }) => {
   const { toast } = useToast();
-  // const [imagePreview, setImagePreview] = useState<ImagePreview | null>(
-  //   initialData.imageUrl
-  //     ? {
-  //         id: "existing-image",
-  //         url: initialData.imageUrl,
-  //         isExisting: true,
-  //       }
-  //     : null
-  // );
+  const [imagePreview, setImagePreview] = useState<ImagePreview | null>(
+    initialData.imageUrl
+      ? {
+          id: "existing-image",
+          url: initialData.imageUrl,
+          isExisting: true,
+        }
+      : null
+  );
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       ...initialData,
-      // image: null,
+      image: null,
     },
   });
 
-  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-  //   if (!file) return;
+    if (!file) return;
 
-  //   // Validate file type
-  //   if (!file.type.startsWith("image/")) {
-  //     toast({
-  //       title: "Invalid file type",
-  //       description: `${file.name} is not an image file`,
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Invalid file type",
+        description: `${file.name} is not an image file`,
+        variant: "destructive",
+      });
+      return;
+    }
 
-  //   // Validate file size
-  //   if (file.size > MAX_FILE_SIZE) {
-  //     toast({
-  //       title: "File too large",
-  //       description: `${file.name} is larger than 10MB`,
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "File too large",
+        description: `${file.name} is larger than 10MB`,
+        variant: "destructive",
+      });
+      return;
+    }
 
-  //   // Create preview
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     const preview = {
-  //       id: Math.random().toString(36).substring(7),
-  //       url: reader.result as string,
-  //       file: file,
-  //     };
-  //     setImagePreview(preview);
-  //     form.setValue("image", file);
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const preview = {
+        id: Math.random().toString(36).substring(7),
+        url: reader.result as string,
+        file: file,
+      };
+      setImagePreview(preview);
+      form.setValue("image", file);
+    };
+    reader.readAsDataURL(file);
+  };
 
-  // const removeImage = () => {
-  //   setImagePreview(null);
-  //   form.setValue("image", null);
-  // };
+  const removeImage = () => {
+    setImagePreview(null);
+    form.setValue("image", null);
+  };
 
-  // const uploadToCloudinary = async (file: File) => {
-  //   try {
-  //     const { signature, timestamp, apiKey, cloudName } =
-  //       await generateUploadSignature();
+  const uploadToCloudinary = async (file: File) => {
+    try {
+      const { signature, timestamp, apiKey, cloudName } =
+        await generateUploadSignature();
 
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-  //     formData.append("signature", signature);
-  //     formData.append("timestamp", timestamp.toString());
-  //     formData.append("api_key", apiKey.toString());
-  //     formData.append("folder", "product_categories");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("signature", signature);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("api_key", apiKey.toString());
+      formData.append("folder", "product_categories");
 
-  //     const uploadResponse = await fetch(
-  //       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-  //     const data = await uploadResponse.json();
-  //     return {
-  //       url: data.secure_url,
-  //       cloudId: data.public_id,
-  //     };
-  //   } catch (error) {
-  //     console.error("Upload failed:", error);
-  //     throw error;
-  //   }
-  // };
+      const data = await uploadResponse.json();
+      return {
+        url: data.secure_url,
+        cloudId: data.public_id,
+      };
+    } catch (error) {
+      console.error("Upload failed:", error);
+      throw error;
+    }
+  };
 
   const onSubmit = async (data: FormValues) => {
     try {
-      // let imageUrl = imagePreview?.isExisting ? imagePreview.url : "";
+      let imageUrl = imagePreview?.isExisting ? imagePreview.url : "";
 
       // Upload new image to Cloudinary if exists
-      // if (imagePreview?.file) {
-      //   const uploadedImage = await uploadToCloudinary(imagePreview.file);
-      //   imageUrl = uploadedImage.url;
-      // }
+      if (imagePreview?.file) {
+        const uploadedImage = await uploadToCloudinary(imagePreview.file);
+        imageUrl = uploadedImage.url;
+      }
 
       const formData = new FormData();
       formData.append("id", data.id);
       formData.append("name", data.name);
-      // formData.append("description", data.description);
-      // formData.append("imageUrls", JSON.stringify([imageUrl]));
+      formData.append("isFeatured", data.isFeatured.toString());
+      formData.append("imageUrl", imageUrl);
 
       const response = await updateProductCategory(formData);
 
@@ -194,26 +190,23 @@ const UpdateCategoryForm = ({
             )}
           />
 
-          {/* <FormField
+          <FormField
             control={form.control}
-            name="description"
+            name="isFeatured"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Description</FormLabel>
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">Featured Category</FormLabel>
+                  <FormDescription>
+                    Display this category prominently on the website
+                  </FormDescription>
+                </div>
                 <FormControl>
-                  <Textarea
-                    rows={10}
-                    className="resize-none"
-                    placeholder="Category description"
-                    {...field}
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
                   />
                 </FormControl>
-                <div>
-                  <span className="text-gray-800 text-xs font-medium">
-                    {form.getValues("description").length}/{MAX_CHARS}
-                  </span>
-                </div>
-                <FormMessage />
               </FormItem>
             )}
           />
@@ -285,7 +278,7 @@ const UpdateCategoryForm = ({
                 </FormItem>
               );
             }}
-          /> */}
+          />
         </div>
 
         <div className="flex w-full justify-end">

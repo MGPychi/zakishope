@@ -1,6 +1,5 @@
 "use server";
 import { categories } from "@/db/schema";
-import { generateCloudinarySignature } from "@/lib/cloudinary";
 import { actionClient, protectedActionClient } from "@/lib/safe-actions";
 import { eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
@@ -8,28 +7,13 @@ import { z } from "zod";
 import { zfd } from "zod-form-data";
 import slugify from "slugify";
 
-export async function generateUploadSignature() {
-  const timestamp = Math.round(new Date().getTime() / 1000);
-  const signature = generateCloudinarySignature(
-    {
-      timestamp: timestamp,
-      folder: "world_tech",
-    },
-    process.env.CLOUDINARY_API_SECRET!
-  );
-
-  return {
-    timestamp,
-    signature,
-    apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!,
-    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
-  };
-}
 
 const updateProductCategorySchema = zfd.formData({
   id: zfd.text(),
   name: zfd.text(),
-  description: zfd.text(),
+  isFeatured: zfd.text().transform((val) => val === "true"),
+  imageUrl: zfd.text().optional(),
+  cloudId: zfd.text().optional(),
 });
 
 export const updateProductCategory = protectedActionClient
@@ -39,14 +23,16 @@ export const updateProductCategory = protectedActionClient
       // Start a transaction to ensure data consistency
       const result = await ctx.db.transaction(async (tx) => {
         // Generate new slug if name changes
-        const slug = slugify(parsedInput.name);
+        // const slug = slugify(parsedInput.name);
 
         // 1. Update product category details
         await tx
           .update(categories)
           .set({
             name: parsedInput.name,
-            slug,
+            // slug,
+            isFeatured: parsedInput.isFeatured,
+            image: parsedInput.imageUrl || "",
           })
           .where(eq(categories.id, parsedInput.id));
 
@@ -96,8 +82,10 @@ export const deleteProductCategory = protectedActionClient
   });
 
 const createProductCategorySchema = zfd.formData({
-  // description: zfd.text(),
   name: zfd.text(),
+  isFeatured: zfd.text().transform((val) => val === "true"),
+  imageUrl: zfd.text(),
+  cloudId: zfd.text().optional(),
 });
 
 export const createProductCategory = actionClient
@@ -105,19 +93,22 @@ export const createProductCategory = actionClient
   .action(async ({ ctx, parsedInput }) => {
     try {
       const slug = slugify(parsedInput.name);
+      console.log(parsedInput)
 
       await ctx.db
         .insert(categories)
         .values({
           slug,
           name: parsedInput.name,
+          isFeatured: parsedInput.isFeatured,
+          image: parsedInput.imageUrl || "",
         })
         .returning({ id: categories.id });
 
       revalidatePath("/admin/dashboard/product-categories");
       revalidatePath("/");
       revalidateTag("categories");
-      return { success: true };
+      return { success: true, data: { success: true } };
     } catch (err) {
       console.error("Error creating product category:", err);
       return {

@@ -10,6 +10,7 @@ interface Props {
 }
 
 const UpdateCategoryModal = ({ category, closeModal, open }: Props) => {
+  console.log(category)
   return (
     <>
       <Dialog open={open} onOpenChange={closeModal}>
@@ -17,7 +18,14 @@ const UpdateCategoryModal = ({ category, closeModal, open }: Props) => {
           <DialogHeader>
             <DialogTitle>Update Product</DialogTitle>
           </DialogHeader>
-          <UpdateCategoryForm initialData={category} />
+          <UpdateCategoryForm
+            initialData={{
+              ...category,
+              isFeatured: category.isFeatured ?? false,
+              imageUrl: category.image ?? "",
+              image: null,
+            }}
+          />
         </DialogContent>
       </Dialog>
     </>

@@ -5,30 +5,12 @@ import {
   productImages,
   products,
 } from "@/db/schema";
-import { generateCloudinarySignature } from "@/lib/cloudinary";
 import { actionClient, protectedActionClient } from "@/lib/safe-actions";
 import { eq } from "drizzle-orm";
 import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import slugify from "slugify";
 
-export async function generateUploadSignature() {
-  const timestamp = Math.round(new Date().getTime() / 1000);
-  const signature = generateCloudinarySignature(
-    {
-      timestamp: timestamp,
-      folder: "products", // Optional: specify upload folder
-    },
-    process.env.CLOUDINARY_API_SECRET!
-  );
-
-  return {
-    timestamp,
-    signature,
-    apiKey: process.env.NEXT_PUBLIC_CLOUDINARY_API_KEY!,
-    cloudName: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME!,
-  };
-}
 
 const updateProductSchema = z.object({
   id: z.string(),

@@ -29,8 +29,8 @@ const ProductCardAddToCart = ({ product }: Props) => {
       className={cn(
         "absolute top-2 right-2 rounded-full transition-colors duration-300",
         inCart
-          ? "bg-blue-500 text-white hover:bg-blue-600"
-          : "bg-white text-gray-600 hover:bg-gray-100"
+          ? "bg-blue-500 text-white hover:text-blue-600 hover:ring-2"
+          : "bg-white text-gray-600 hover:text-blue-600  hover:ring-2"
       )}
       onClick={(e) => {
         e.stopPropagation();

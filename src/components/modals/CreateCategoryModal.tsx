@@ -15,7 +15,7 @@ const CreateCategoryModal: React.FC = () => {
         <PlusIcon />
       </Button>
       <Dialog open={isOpen} onOpenChange={setIsOpen}>
-        <DialogContent className="max-w-2xl  h-[25vh] overflow-y-scroll     outline-none ring-none ">
+        <DialogContent className="max-w-2xl  min-h-[60vh]   overflow-y-scroll     outline-none ring-none ">
           <DialogHeader>
             <DialogTitle> Create a new category </DialogTitle>
             {/* <DialogDescription>

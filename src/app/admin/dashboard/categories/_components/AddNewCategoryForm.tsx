@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Form,
@@ -8,160 +8,153 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Switch } from "@/components/ui/switch";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2 } from "lucide-react";
+import { Loader2, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { createProductCategory  } from "../actions";
+import { createProductCategory } from "../actions";
 import { z } from "zod";
-// import { Textarea } from "@/components/ui/textarea";
-// import { Card, CardContent } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
+import { generateUploadSignature } from "@/utils/generateUploadSignature";
 
-// const MAX_CHARS = 2000;
-// const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
-  // description: z
-  //   .string()
-  //   .min(1, "Description is required")
-  //   .min(50)
-  //   .max(MAX_CHARS),
-  // image: z.instanceof(File).optional().nullable(),
+  isFeatured: z.boolean().default(false),
+  image: z.instanceof(File).optional().nullable(),
 });
 
 type FormValues = z.infer<typeof formSchema>;
 
-// type ImagePreview = {
-//   id: string;
-//   url: string;
-//   file: File;
-// };
+type ImagePreview = {
+  id: string;
+  url: string;
+  file: File;
+};
 
 const initialValues: FormValues = {
-  // description: "",
   name: "",
-  // image: null,
+  isFeatured: false,
+  image: null,
 };
 
 const AddNewCategoryForm = () => {
   const { toast } = useToast();
-  // const [imagePreview, setImagePreview] = useState<ImagePreview | null>(null);
+  const [imagePreview, setImagePreview] = useState<ImagePreview | null>(null);
 
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: initialValues,
   });
 
-  // const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = event.target.files?.[0];
+  const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
-  //   if (!file) return;
+    if (!file) return;
 
-  //   // Validate file type
-  //   if (!file.type.startsWith("image/")) {
-  //     toast({
-  //       title: "Invalid file type",
-  //       description: `${file.name} is not an image file`,
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
+    // Validate file type
+    if (!file.type.startsWith("image/")) {
+      toast({
+        title: "Invalid file type",
+        description: `${file.name} is not an image file`,
+        variant: "destructive",
+      });
+      return;
+    }
 
-  //   // Validate file size
-  //   if (file.size > MAX_FILE_SIZE) {
-  //     toast({
-  //       title: "File too large",
-  //       description: `${file.name} is larger than 10MB`,
-  //       variant: "destructive",
-  //     });
-  //     return;
-  //   }
+    // Validate file size
+    if (file.size > MAX_FILE_SIZE) {
+      toast({
+        title: "File too large",
+        description: `${file.name} is larger than 10MB`,
+        variant: "destructive",
+      });
+      return;
+    }
 
-  //   // Create preview
-  //   const reader = new FileReader();
-  //   reader.onloadend = () => {
-  //     const preview = {
-  //       id: Math.random().toString(36).substring(7),
-  //       url: reader.result as string,
-  //       file: file,
-  //     };
-  //     setImagePreview(preview);
-  //     form.setValue("image", file);
-  //   };
-  //   reader.readAsDataURL(file);
-  // };
+    // Create preview
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      const preview = {
+        id: Math.random().toString(36).substring(7),
+        url: reader.result as string,
+        file: file,
+      };
+      setImagePreview(preview);
+      form.setValue("image", file);
+    };
+    reader.readAsDataURL(file);
+  };
 
-  // const removeImage = () => {
-  //   setImagePreview(null);
-  //   form.setValue("image", null);
-  // };
+  const removeImage = () => {
+    setImagePreview(null);
+    form.setValue("image", null);
+  };
 
-  // const uploadToCloudinary = async (file: File) => {
-  //   try {
-  //     // Get upload signature from our API
-  //     const { signature, timestamp, apiKey, cloudName } =
-  //       await generateUploadSignature();
+  const uploadToCloudinary = async (file: File) => {
+    try {
+      const { signature, timestamp, apiKey, cloudName } =
+        await generateUploadSignature();
+        console.log("signature", signature) 
+        console.log("timestamp", timestamp)
+        console.log("apiKey", apiKey)
 
-  //     // Prepare form data for Cloudinary
-  //     const formData = new FormData();
-  //     formData.append("file", file);
-  //     formData.append("signature", signature);
-  //     formData.append("timestamp", timestamp.toString());
-  //     formData.append("api_key", apiKey.toString());
-  //     formData.append("folder", "product_categories");
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("signature", signature);
+      formData.append("timestamp", timestamp.toString());
+      formData.append("api_key", apiKey.toString());
+      formData.append("folder", "products");
+      console.log("form data",formData)
 
-  //     // Upload directly to Cloudinary
-  //     const uploadResponse = await fetch(
-  //       `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
-  //       {
-  //         method: "POST",
-  //         body: formData,
-  //       }
-  //     );
+      const uploadResponse = await fetch(
+        `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-  //     const data = await uploadResponse.json();
-  //     return {
-  //       url: data.secure_url,
-  //       cloudId: data.public_id,
-  //     };
-  //   } catch (error) {
-  //     console.error("Upload failed:", error);
-  //     throw error;
-  //   }
-  // };
+      const data = await uploadResponse.json();
+      console.log('response data ',data)
+      return {
+        url: data.secure_url,
+        cloudId: data.public_id,
+      };
+    } catch (error) {
+      console.error("Upload failed:", error);
+      throw error;
+    }
+  };
 
   const onSubmit = async (data: FormValues) => {
     try {
-      // Check if an image is selected
-      // if (!imagePreview) {
-      //   toast({
-      //     title: "Missing Image",
-      //     description: "Please select an image for the category",
-      //     variant: "destructive",
-      //   });
-      //   return;
-      // }
-
-      // Upload image to Cloudinary
-      // const uploadedImage = await uploadToCloudinary(imagePreview.file);
-
       const formData = new FormData();
       formData.append("name", data.name);
+      formData.append("isFeatured", data.isFeatured.toString());
 
-      // Add the Cloudinary URL to the form data
-      // formData.append("imageUrls", JSON.stringify([uploadedImage.url]));
+      // Handle image upload if present
+      if (imagePreview) {
+        const uploadedImage = await uploadToCloudinary(imagePreview.file);
+        console.log(uploadedImage)
+        formData.append("imageUrl", uploadedImage.url);
+        formData.append("cloudId", uploadedImage.cloudId);
+      }
 
       const response = await createProductCategory(formData);
 
       if (response?.data?.success) {
         toast({
           title: "Success",
+          description: "Category created successfully",
         });
         form.reset();
-        // setImagePreview(null);
+        setImagePreview(null);
       } else {
         throw new Error("Failed to create category");
       }
@@ -169,6 +162,7 @@ const AddNewCategoryForm = () => {
       console.error("Error creating category:", error);
       toast({
         title: "Error",
+        description: "Failed to create category",
         variant: "destructive",
       });
     }
@@ -176,8 +170,8 @@ const AddNewCategoryForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-        <div className="grid grid-cols-1 gap-4">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 ">
+        <div className="grid grid-cols-1 gap-4 ">
           <FormField
             control={form.control}
             name="name"
@@ -192,8 +186,30 @@ const AddNewCategoryForm = () => {
             )}
           />
 
+          <FormField
+            control={form.control}
+            name="isFeatured"
+            render={({ field }) => (
+              <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <FormLabel className="text-base">
+                    Featured Category
+                  </FormLabel>
+                  <FormDescription>
+                    Display this category prominently on the website
+                  </FormDescription>
+                </div>
+                <FormControl>
+                  <Switch
+                    checked={field.value}
+                    onCheckedChange={field.onChange}
+                  />
+                </FormControl>
+              </FormItem>
+            )}
+          />
 
-          {/* <FormField
+          <FormField
             control={form.control}
             name="image"
             render={({ field }) => {
@@ -260,7 +276,7 @@ const AddNewCategoryForm = () => {
                 </FormItem>
               );
             }}
-          /> */}
+          />
         </div>
 
         <div className="flex w-full justify-end">

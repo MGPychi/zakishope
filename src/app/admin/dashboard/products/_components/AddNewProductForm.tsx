@@ -16,7 +16,7 @@ import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Upload, X, Plus } from 'lucide-react';
 import { useToast } from "@/hooks/use-toast";
-import { createProduct, generateUploadSignature } from "../actions";
+import { createProduct  } from "../actions";
 import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
@@ -29,6 +29,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { getAllCategories } from "@/app/data/categories-data";
+import { generateUploadSignature } from "@/utils/generateUploadSignature";
 
 const MAX_CHARS = 2000;
 
