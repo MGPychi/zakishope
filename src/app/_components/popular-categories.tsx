@@ -11,7 +11,7 @@ export async function PopularCategories() {
       <h2 className="text-2xl font-bold mb-6">Catégories Populaires</h2>
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         {categories.map((category) => (
-          <Link key={category.id} href={`/product/category=${category.slug}`}>
+          <Link key={category.id} href={`/search?category=${category.slug}`}>
             <Card className="group h-full">
               <CardContent className="p-4 flex flex-col items-center text-center">
                 <div className="relative w-full aspect-square mb-3">
