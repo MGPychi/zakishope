@@ -1,4 +1,4 @@
-import { CategoriesSidebar } from "./_components/categories-sidebar"
+// import { CategoriesSidebar } from "./_components/categories-sidebar"
 import { FeaturedProducts } from "./_components/feature-products"
 import { HeroCarousel } from "./_components/hero-carousel"
 import { NewArrivals } from "./_components/new-arrivals"

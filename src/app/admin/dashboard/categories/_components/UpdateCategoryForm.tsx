@@ -15,9 +15,10 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Loader2, Upload, X } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { updateProductCategory, generateUploadSignature } from "../actions";
+import { updateProductCategory} from "../actions";
 import { z } from "zod";
 import { Card, CardContent } from "@/components/ui/card";
+import { generateUploadSignature } from "@/utils/generateUploadSignature";
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 

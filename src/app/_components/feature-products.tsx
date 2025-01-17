@@ -1,34 +1,6 @@
-import { Product } from "@/interfaces/CartItem";
 import { ProductCard } from "../../components/cards/product-card/product-card";
 import { getAllFeaturedActiveProducts } from "../data/products-data";
 
-const products:Product[] = [
-  {
-
-    id:"120r9fupj",
-    name: "Xiaomi Mi Watch",
-    price: 129.99,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id:"02hifn",
-    name: "Écouteurs sans fil",
-    price: 79.99,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id:"230rwifjs02hifn",
-    name: "Caméra de sécurité",
-    price: 89.99,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-  {
-    id:"230rwifjs02hif203rwqihfn",
-    name: "Tablette Android",
-    price: 199.99,
-    image: "/placeholder.svg?height=300&width=300",
-  },
-];
 
 export async function FeaturedProducts() {
   const featuredProducts  = await getAllFeaturedActiveProducts()

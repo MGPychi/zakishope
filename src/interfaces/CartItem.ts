@@ -1,4 +1,5 @@
 import { selectProductSchema } from "@/db/schema";
+import { z } from "zod";
 
 export default interface CartItem {
   qt: number;

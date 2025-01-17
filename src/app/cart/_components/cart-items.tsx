@@ -25,7 +25,7 @@ export function CartItems() {
       {items.map((item) => (
         <Card key={item.item.id}>
           <CardContent className="flex items-center p-4">
-            <img src={item.item.image} alt={item.item.name} className="w-24 h-24 object-cover rounded-md mr-4" />
+            <img src={item.item.images[0].url} alt={item.item.name} className="w-24 h-24 object-cover rounded-md mr-4" />
             <div className="flex-grow">
               <h3 className="font-heading text-lg font-semibold text-tahat-800">{item.item.name}</h3>
               <p className="text-tahat-600">{item.item.price.toFixed(2)} €</p>
