@@ -24,10 +24,10 @@ export default function OrderSuccessPage() {
               <div className="border-b pb-4">
                 <h2 className="font-semibold text-lg mb-2">Détails de la commande</h2>
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  <div>
+                  {/* <div>
                     <p className="text-muted-foreground">Numéro de commande</p>
                     <p className="font-medium">#ORD-2024-001</p>
-                  </div>
+                  </div> */}
                   <div>
                     <p className="text-muted-foreground">Date</p>
                     <p className="font-medium">27 Dec 2024</p>

@@ -97,11 +97,13 @@ export const users = pgTable("users", {
 // Orders Table
 export const orders = pgTable("orders", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
   totalAmount: integer("total_amount").notNull(),
   status: orderStatusEnum("status").default("pending").notNull(),
+  firstName:varchar("first_name").notNull(),
+  lastName:varchar("last_name").notNull(),
+  phone:varchar("phone").notNull(),
+  wilaya:varchar("wilaya").notNull(),
+  address:varchar("address").notNull(),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at")
     .notNull()
@@ -157,13 +159,13 @@ export const productImagesRelations = relations(productImages, ({ one }) => ({
   }),
 }));
 
-export const orderRelations = relations(orders, ({ many, one }) => ({
-  items: many(orderItems),
-  user: one(users, {
-    fields: [orders.userId],
-    references: [users.id],
-  }),
-}));
+// export const orderRelations = relations(orders, ({ many, one }) => ({
+//   items: many(orderItems),
+//   user: one(users, {
+//     fields: [orders.userId],
+//     references: [users.id],
+//   }),
+// }));
 
 export const orderItemRelations = relations(orderItems, ({ one }) => ({
   order: one(orders, {

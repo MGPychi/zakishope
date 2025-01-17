@@ -5,8 +5,8 @@ import {
   ShoppingBasket,
   ALargeSmall,
   Home,
-  Text,
   Users,
+  DollarSign,
 } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
@@ -39,10 +39,11 @@ const paths: IPath[] = [
     icon: <ShoppingBasket className="h-5 w-5" />,
     href: "/admin/dashboard/products",
   },
+
   {
-    name: "Reviews",
-    icon: <Text className="h-5 w-5" />,
-    href: "/admin/dashboard/reviews",
+    name: "Orders",
+    icon: <DollarSign className="h-5 w-5" />,
+    href: "/admin/dashboard/orders",
   },
 ];
 const checkIfAdmin = (role: string) => {
