@@ -11,7 +11,7 @@ export async function NewArrivals() {
     <section className="py-8">
       <div className="flex justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Nouveaux Arrivages</h2>
-        <Link href="/products" className="text-primary hover:underline">
+        <Link href="/search" className="text-primary hover:underline">
           Voir tout
         </Link>
       </div>
