@@ -61,13 +61,14 @@ export function ConfirmOrderForm() {
         description: "Veuillez patienter pendant que nous traitons votre commande...",
       })
     },
-    onSuccess: () => {
+    onSuccess: (d) => {
       clearCart()
       toast({
         title: "Succès",
         description: "Votre commande a été créée avec succès.",
       })
-      router.push('/order-success')
+      const orderId = d.data?.data?.orderId??""
+      router.push(`/order-success?total=${getTotal()}&&items=${items.length}&&wilaya=${form.getValues().wilaya}&&address=${form.getValues().address}&&phone=${form.getValues().phone}&&firstName=${form.getValues().firstName}&&lastName=${form.getValues().lastName}&&orderId=${orderId}`)
     },
     onError: (error) => {
       console.error(error)

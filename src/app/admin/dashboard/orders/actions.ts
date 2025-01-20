@@ -60,6 +60,13 @@ export const createOrder = actionClient
           updatedAt: new Date(),
         }))
       )
+      return {
+        success: true as const,
+        data: { 
+          orderId: order.id,
+          message: "Commande créée avec succès" 
+        }
+      }
 
       revalidatePath("/admin/dashboard/orders")
       

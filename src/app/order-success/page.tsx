@@ -1,13 +1,37 @@
-import { CheckCircle } from 'lucide-react'
+import { CheckCircle } from "lucide-react"
 import Link from "next/link"
-import { SiteHeader } from "../../components/layout/site-header/site-header"
-// import { SiteNav } from "../../components/layout/site-nav"
+import { SiteHeader } from "@/components/layout/site-header/site-header"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
+import { redirect } from "next/navigation"
 
-export default function OrderSuccessPage() {
+export default function OrderSuccessPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined }
+}) {
+  const total = searchParams.total as string
+  const itemCount = searchParams.items as string
+  const wilaya = searchParams.wilaya as string
+  const address = searchParams.address as string
+  const phone = searchParams.phone as string
+  const firstName = searchParams.firstName as string
+  const lastName = searchParams.lastName as string
+  const orderId = searchParams.orderId as string
+
+  const fullName = `${firstName} ${lastName}`.trim()
+  const date = new Date().toLocaleDateString("fr-FR", {
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  })
+    if (!total || !itemCount || !wilaya || !address || !phone || !firstName || !lastName || !orderId) {
+      redirect("/cart")
+    }
+
+
   return (
-    <div className="min-h-screen container mx-auto max-w-screen-2xl bg-background">
+    <div>
       <SiteHeader />
       <main className="container py-12">
         <div className="max-w-3xl mx-auto">
@@ -24,17 +48,23 @@ export default function OrderSuccessPage() {
               <div className="border-b pb-4">
                 <h2 className="font-semibold text-lg mb-2">Détails de la commande</h2>
                 <div className="grid grid-cols-2 gap-4 text-sm">
-                  {/* <div>
-                    <p className="text-muted-foreground">Numéro de commande</p>
-                    <p className="font-medium">#ORD-2024-001</p>
-                  </div> */}
+                  {orderId && (
+                    <div>
+                      <p className="text-muted-foreground">Numéro de commande</p>
+                      <p className="font-medium">#{orderId}</p>
+                    </div>
+                  )}
                   <div>
                     <p className="text-muted-foreground">Date</p>
-                    <p className="font-medium">27 Dec 2024</p>
+                    <p className="font-medium">{date}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Total</p>
-                    <p className="font-medium">11,900 DA</p>
+                    <p className="font-medium">{total ? `${total} DA` : "N/A"}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Nombre d articles</p>
+                    <p className="font-medium">{itemCount || "N/A"}</p>
                   </div>
                   <div>
                     <p className="text-muted-foreground">Méthode de paiement</p>
@@ -46,10 +76,10 @@ export default function OrderSuccessPage() {
               <div className="border-b pb-4">
                 <h2 className="font-semibold text-lg mb-2">Informations de livraison</h2>
                 <div className="space-y-2 text-sm">
-                  <p className="font-medium">Chihab Djeribiaa</p>
-                  <p className="text-muted-foreground">781810656</p>
-                  <p className="text-muted-foreground">Constantine</p>
-                  <p className="text-muted-foreground">Wilaya: Blida</p>
+                  <p className="font-medium">{fullName || "N/A"}</p>
+                  <p className="text-muted-foreground">{phone || "N/A"}</p>
+                  <p className="text-muted-foreground">{address || "N/A"}</p>
+                  <p className="text-muted-foreground">Wilaya: {wilaya || "N/A"}</p>
                 </div>
               </div>
 
@@ -66,14 +96,10 @@ export default function OrderSuccessPage() {
 
           <div className="flex justify-center gap-4">
             <Link href="/">
-              <Button variant="outline">
-                Continuer vos achats
-              </Button>
+              <Button variant="outline">Continuer vos achats</Button>
             </Link>
             <Link href="/account/orders">
-              <Button>
-                Voir mes commandes
-              </Button>
+              <Button>Voir mes commandes</Button>
             </Link>
           </div>
         </div>
