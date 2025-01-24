@@ -1,91 +1,96 @@
 "use client"
 
 import * as React from "react"
+import Image from "next/image"
+import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "@/components/ui/carousel"
 
 const slides = [
   {
     title: "Google TV Box:",
     subtitle: "Xiaomi Mi Box S 2nd",
     description: "4K Google TV",
-    offer: "Offre Spéciale (:",
-    image: "/placeholder.svg?height=600&width=600",
+    offer: "Offre Spéciale",
+    image: "/placeholder.svg",
+    color: "blue",
   },
-  // Add more slides as needed
+  {
+    title: "Smart Speaker:",
+    subtitle: "Amazon Echo Dot 4th Gen",
+    description: "With Alexa",
+    offer: "Nouveau Modèle",
+    image: "/placeholder.svg",
+    color: "indigo",
+  },
+  {
+    title: "Streaming Stick:",
+    subtitle: "Roku Streaming Stick 4K",
+    description: "4K/HDR/Dolby Vision",
+    offer: "Prix Réduit",
+    image: "/placeholder.svg",
+    color: "purple",
+  },
+  {
+    title: "Apple TV 4K:",
+    subtitle: "2nd Generation",
+    description: "A12 Bionic Chip",
+    offer: "Haute Performance",
+    image: "/placeholder.svg",
+    color: "gray",
+  },
+  {
+    title: "NVIDIA Shield TV Pro:",
+    subtitle: "4K HDR Streaming Media Player",
+    description: "AI-Enhanced Upscaling",
+    offer: "Pour les Gamers",
+    image: "/placeholder.svg",
+    color: "green",
+  },
 ]
 
 export function HeroCarousel() {
-  const [current, setCurrent] = React.useState(0)
-
-  React.useEffect(() => {
-    const timer = setInterval(() => {
-      setCurrent((current + 1) % slides.length)
-    }, 5000)
-    return () => clearInterval(timer)
-  }, [current])
-
   return (
-    <div className="relative overflow-hidden">
-      <div 
-        className="flex transition-transform duration-500 ease-out min-h-[400px]" 
-        style={{ 
-          transform: `translateX(-${current * 100}%)`,
-          background: `
-            linear-gradient(135deg, #ffffff 25%, transparent 25%) -50px 0,
-            linear-gradient(225deg, #ffffff 25%, transparent 25%) -50px 0,
-            linear-gradient(315deg, #ffffff 25%, transparent 25%),
-            linear-gradient(45deg, #ffffff 25%, transparent 25%)
-          `,
-          backgroundColor: '#f5f5f5',
-          backgroundSize: '100px 100px'
-        }}
-      >
+    <Carousel className="w-full max-w-5xl mx-auto" opts={{
+      align: "start",
+      loop: true,
+    }}>
+      <CarouselContent className="">
         {slides.map((slide, index) => (
-          <div key={index} className="w-full flex-none">
-            <div className="container grid lg:grid-cols-2 gap-8 py-12 items-center">
-              <div className="space-y-6">
-                <div className="space-y-2">
-                  <h2 className="text-2xl text-blue-500">{slide.title}</h2>
-                  <div className="space-y-2">
-                    <h1 className="text-4xl lg:text-5xl font-bold">
-                      <span className="text-gray-800">Xiaomi</span>{" "}
-                      <span className="text-gray-600">Mi Box S 2nd</span>
-                    </h1>
-                    <p className="text-3xl text-gray-600">4K Google TV</p>
-                    <p className="text-3xl">
-                      Offre <span className="font-bold">Spéciale</span> (:
-                    </p>
+          <CarouselItem key={index}>
+            <div className="p-1">
+              <Card>
+                <CardContent className="flex flex-col md:flex-row items-center justify-between p-6">
+                  <div className="space-y-4 text-center md:text-left mb-6 md:mb-0">
+                    <h2 className="text-2xl font-semibold text-primary">{slide.title}</h2>
+                    <h3 className="text-3xl md:text-4xl font-bold">{slide.subtitle}</h3>
+                    <p className="text-xl text-muted-foreground">{slide.description}</p>
+                    <p className="text-lg font-semibold text-primary">{slide.offer}</p>
+                    <Button size="lg" className="mt-4">Acheter Maintenant</Button>
                   </div>
-                </div>
-                <Button 
-                  className="bg-tahat-800 hover:bg-tahat-900 text-white px-8 py-6 h-auto text-lg rounded-md"
-                >
-                  Acheter Maintenant
-                </Button>
-              </div>
-              <div className="flex justify-center">
-                <img
-                  src={slide.image}
-                  alt={slide.subtitle}
-                  className="max-w-md w-full object-contain"
-                />
-              </div>
+                  <div className="w-full md:w-1/2 flex justify-center">
+                    <Image
+                      src={slide.image || "/placeholder.svg"}
+                      alt={slide.subtitle}
+                      width={300}
+                      height={300}
+                      className="rounded-lg object-contain"
+                    />
+                  </div>
+                </CardContent>
+              </Card>
             </div>
-          </div>
+          </CarouselItem>
         ))}
-      </div>
-      <div className="absolute bottom-4 left-1/2 flex -translate-x-1/2 gap-2">
-        {[0,1,2,3,4].map((index) => (
-          <button
-            key={index}
-            onClick={() => setCurrent(index)}
-            className={`w-2 h-2 rounded-full transition-colors ${
-              index === current ? "bg-tahat-800" : "bg-gray-300"
-            }`}
-          />
-        ))}
-      </div>
-    </div>
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
   )
 }
-
