@@ -28,7 +28,7 @@ export async function SiteNav() {
                 <>
                   <Link
                     key={category.name}
-                    href={`/product/?category=${category.slug}`}
+                      href={`/search?category=${category.slug}`}
                     className="block px-2 border-b border-gray-200 last:border-b-0 py-2 hover:text-primary  text-lg hover:text-tahat-800 transition-colors"
                   >
                     {category.name}
@@ -43,7 +43,7 @@ export async function SiteNav() {
           {categories.slice(0, 2).map((category) => (
             <Link
               key={category.name}
-              href={`/product/?category=${category.slug}`}
+                          href={`/search?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
               {category.name}
@@ -55,7 +55,7 @@ export async function SiteNav() {
           {categories.slice(0, 4).map((category) => (
             <Link
               key={category.name}
-              href={`/product/?category=${category.slug}`}
+                                    href={`/search?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
               {category.name}
@@ -66,7 +66,7 @@ export async function SiteNav() {
           {categories.slice(0, 8).map((category) => (
             <Link
               key={category.name}
-              href={`/product/?category=${category.slug}`}
+            href={`/search?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
               {category.name}
