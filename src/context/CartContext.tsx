@@ -81,6 +81,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
         100
       );
     }
+    if(items.length==0){
+      localStorage.removeItem("cart")
+    }
     return () => clearTimeout(timeOut);
   }, [items]);
   const isInCart = (id: string) => {
