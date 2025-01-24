@@ -2,7 +2,7 @@ import { PagePaginator } from "@/components/PagePaginator";
 import AdminUsersTable from "./_components/AdminOrdersTable";
 import { getOrders } from "@/app/data/orders-data";
 
-export default async function UserDashboard(
+export default async function OrderAdmin(
   props: {
     searchParams?: Promise<{ [key: string]: string | string[] }>;
   }

@@ -12,7 +12,7 @@ import { useCart } from "@/hooks/useCart";
 export function CartSummary() {
   const { getTotal,isLoading } = useCart();
   const subtotal = getTotal();
-  const shipping = 10.0;
+  const shipping = 0.0;
   const total = subtotal + shipping;
   if(isLoading)return <div>loading</div>
 
@@ -26,15 +26,15 @@ export function CartSummary() {
       <CardContent className="space-y-4">
         <div className="flex justify-between">
           <span>Sous-total</span>
-          <span>{subtotal.toFixed(2)} €</span>
+          <span>{subtotal.toFixed(2)} DZD</span>
         </div>
         <div className="flex justify-between">
           <span>Frais de livraison</span>
-          <span>{shipping.toFixed(2)} €</span>
+          <span>{shipping.toFixed(2)} DZD</span>
         </div>
         <div className="flex justify-between font-bold text-lg">
           <span>Total</span>
-          <span>{total.toFixed(2)} €</span>
+          <span>{total.toFixed(2)} DZD</span>
         </div>
       </CardContent>
       <CardFooter>

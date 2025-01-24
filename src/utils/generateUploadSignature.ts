@@ -7,7 +7,8 @@ export async function generateUploadSignature() {
   const signature = generateCloudinarySignature(
     {
       timestamp: timestamp,
-      folder: "world_tech", // Optional: specify upload folder
+      folder: "worldtech", // Optional: specify upload folder
+
     },
     process.env.CLOUDINARY_API_SECRET!
   );

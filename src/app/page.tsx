@@ -4,9 +4,10 @@ import { HeroCarousel } from "./_components/hero-carousel"
 import { NewArrivals } from "./_components/new-arrivals"
 import { PopularCategories } from "./_components/popular-categories"
 import { SpecialOffers } from "./_components/special-offers"
-import { Brands } from "./_components/brands"
+// import { Brands } from "./_components/brands"
 import { SiteHeader } from "../components/layout/site-header/site-header"
 import { SiteNav } from "../components/layout/site-nav"
+import { CategoriesSidebar } from "./_components/categories-sidebar"
 
 export default function Home() {
   return (
@@ -14,8 +15,11 @@ export default function Home() {
       <SiteHeader />
       <SiteNav />
       <div className="container py-4">
-        <div className="">
+        {/* <div> */}
+
+                  <div className="grid lg:grid-cols-[280px,1fr] gap-6">
           <aside>
+          <CategoriesSidebar />
           </aside>
           <main className="space-y-8 px-10">
             <HeroCarousel />
@@ -23,7 +27,7 @@ export default function Home() {
             <NewArrivals />
             <PopularCategories />
             <SpecialOffers />
-            <Brands />
+            {/* <Brands /> */}
           </main>
         </div>
       </div>

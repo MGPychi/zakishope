@@ -36,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.name}
           </h3>
           {/* </Link> */}
-          <p className="text-xl font-bold text-tahat-600">{product.price}</p>
+          <p className="text-lg font-semibold text-tahat-600">{product.price} DZD</p>
         </div>
       </CardContent>
       <CardFooter className="p-4 mt-auto">

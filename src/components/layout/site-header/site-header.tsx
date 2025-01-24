@@ -16,11 +16,11 @@ export function SiteHeader() {
           <div className="flex items-center justify-between w-full md:w-auto">
             <Link href="/" className="flex items-center gap-2">
               <Image 
-                width={140} 
-                height={70} 
+                width={250} 
+                height={200} 
                 src={LogoImage} 
                 alt="World Tech" 
-                className="h-8 w-auto md:h-10"
+                className="h-[80px] w-auto md:h-[100px]"
               />
             </Link>
             

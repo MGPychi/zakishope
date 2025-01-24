@@ -30,6 +30,7 @@ import { MoreHorizontalIcon } from "lucide-react";
 import { useState } from "react";
 import { deleteOrder } from "../actions";
 import { useRouter } from "next/navigation";
+import OrderDetailsModal from "@/components/modals/OrderDetailsModal";
 
 // import { deleteEmailAction } from "../actions";
 
@@ -46,6 +47,15 @@ export default function AdminOrdersTable({
   currentPage,
   searchTerm,
 }: Props) {
+  const [selectedOrder, setSelectedOrder] = useState<(typeof data)[0] | null>(null)
+  const openModal = (order: (typeof data)[0]) => {
+    setSelectedOrder(order)
+  }
+
+  const closeModal = () => {
+    setSelectedOrder(null)
+  }
+
   const router = useRouter();
   const [searchInput, setSearchInput] = useState(searchTerm || "");
   const [debounceTimeout, setDebounceTimeout] = useState<NodeJS.Timeout | null>(
@@ -112,8 +122,13 @@ export default function AdminOrdersTable({
                 <TableCell>
                   <OrderActionsMenu orderId={item.id} />
                 </TableCell>
+                  <TableCell>
+                <Button onClick={() => openModal(item)}>View Details</Button>
+              </TableCell>
               </TableRow>
             ))}
+              {selectedOrder && <OrderDetailsModal order={selectedOrder} open={!!selectedOrder} closeModal={closeModal} />}
+
           </TableBody>
         </Table>
       </CardContent>
