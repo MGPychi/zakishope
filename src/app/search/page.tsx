@@ -56,7 +56,7 @@ console.log("values",selectedCategorySlugs)
 
       <main>
         <div className="container mx-auto px-4 py-8">
-          <SearchHeader />
+          {/* <SearchHeader /> */}
 
           <div className="flex flex-col md:flex-row gap-6">
             <SearchFilters categories={allCategories} />

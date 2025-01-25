@@ -37,6 +37,7 @@ export const categories = pgTable("categories", {
 export const products = pgTable("products", {
   id: uuid("id").defaultRandom().primaryKey(),
   name: varchar("name", { length: 255 }).notNull(),
+  mark:varchar("mark",{length:100}).notNull().default("none"),
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   description: text("description").notNull(),
   isFeatured: boolean("is_featured").notNull().default(false),

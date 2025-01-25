@@ -1,0 +1,1 @@
+ALTER TABLE "products" ADD COLUMN "mark" varchar(100) DEFAULT 'none' NOT NULL;

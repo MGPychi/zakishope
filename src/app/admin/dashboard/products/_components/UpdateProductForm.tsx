@@ -35,6 +35,7 @@ const MAX_CHARS = 2000;
 const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
+  mark: z.string().min(1, "Mark is required"),
   isFeatured: z.boolean(),
   description: z.string().min(50).max(MAX_CHARS),
   images: z.array(z.any()).min(1).max(MAX_FILES),
@@ -208,8 +209,8 @@ const UpdateProductForm = ({
         name: data.name,
         isFeatured: data.isFeatured,
         category: data.category,
+        mark:data.mark,
         features: data.features,
-
 
       });
 
@@ -243,6 +244,20 @@ const UpdateProductForm = ({
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Product name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="mark"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Mark</FormLabel>
+                <FormControl>
+                  <Input placeholder="Product mark" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

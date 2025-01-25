@@ -35,6 +35,7 @@ const MAX_CHARS = 2000;
 
 const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
+  mark: z.string().min(1, "Name is mark"),
   price: z.number().min(1, "Price is required"),
   description: z.string().min(50).max(MAX_CHARS),
   images: z.array(z.any()).min(1).max(MAX_FILES).optional().nullable(),
@@ -57,6 +58,7 @@ type ImagePreview = {
 
 const initialValues: FormValues = {
   name: "",
+  mark:"",
   price: 1,
   description: "",
   images: [],
@@ -193,6 +195,7 @@ const AddNewProductForm = ({
       name: data.name,
       description: data.description,
       isFeatured: data.isFeatured,
+      mark:data.mark,
       category: data.category,
       price: data.price,
       features: data.features || [],
@@ -232,6 +235,20 @@ const AddNewProductForm = ({
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input placeholder="Product name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="mark"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>mark</FormLabel>
+                <FormControl>
+                  <Input placeholder="Product mark" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>

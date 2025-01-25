@@ -17,7 +17,7 @@ export function SearchHeader() {
         <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
         <Input placeholder="Rechercher des produits" className="pl-8" />
       </div>
-      <div className="flex items-center gap-4">
+      {/* <div className="flex items-center gap-4">
         <Select defaultValue="featured">
           <SelectTrigger className="w-[180px]">
             <SelectValue placeholder="Trier par" />
@@ -29,7 +29,7 @@ export function SearchHeader() {
             <SelectItem value="newest">Plus récent</SelectItem>
           </SelectContent>
         </Select>
-      </div>
+      </div> */}
     </div>
   )
 }

@@ -15,6 +15,7 @@ import slugify from "slugify";
 const updateProductSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
+  mark: z.string().min(2, "mark must be at least 2 characters."),
   description: z.string().min(50).max(2000),
   isFeatured: z.boolean(),
   imageUrls: z.array(z.string()),
@@ -41,6 +42,7 @@ export const updateProduct = protectedActionClient
           .set({
             name: parsedInput.name,
             description: parsedInput.description,
+            mark:parsedInput.mark,
             isFeatured: parsedInput.isFeatured,
             categoryId: category?.id,
           })
@@ -92,6 +94,7 @@ export const updateProduct = protectedActionClient
 // In your server actions file:
 const createProductSchema = z.object({
   name: z.string().min(2, "Name must be at least 2 characters."),
+  mark: z.string().min(2, "mark must be at least 2 characters."),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters."),
@@ -127,6 +130,7 @@ export const createProduct = actionClient
           description: parsedInput.description,
           slug,
           name: parsedInput.name,
+          mark:parsedInput.mark,
           isFeatured: parsedInput.isFeatured,
           categoryId: foundCategory.id,
           price: parsedInput.price,

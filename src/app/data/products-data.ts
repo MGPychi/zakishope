@@ -157,6 +157,7 @@ export const getProductDetailWithSlug = unstable_cache(
   { tags: ["product_details"] }
 );
 
+
 // Get paginated products with optional search
 export const getProducts = cache(
   async ({ page, q, category }: GetProductsParams) => {

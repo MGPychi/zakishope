@@ -47,13 +47,13 @@ export function ProductCard({ product }: ProductCardProps) {
           e.stopPropagation()
           router.push("/confirm-order?productId="+product.id)
         }} className="block w-full"  href={`/confirm-order?productId=${product.id}`} passHref>
-          <Button
+            <Button
             className={cn(
               "w-full flex items-center justify-center gap-2 transition-colors duration-300"
             )}
-          >
-            Buy Now
-          </Button>
+            >
+            Acheter Maintenant
+            </Button>
         </Link>
       </CardFooter>
     </Card>
