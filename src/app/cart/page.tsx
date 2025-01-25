@@ -5,6 +5,7 @@ import { SiteHeader } from "../../components/layout/site-header/site-header";
 import { SiteNav } from "../../components/layout/site-nav";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import ConfirmCommandButton from "./_components/ConfirmCommandButton";
 
 export default function CartPage() {
   return (
@@ -19,9 +20,7 @@ export default function CartPage() {
           </div>
           <div className="space-y-4">
             <CartSummary />
-            <Link href="/confirm-order" passHref>
-              <Button className="w-full">Passer la commande</Button>
-            </Link>
+            <ConfirmCommandButton/>
           </div>
         </div>
       </main>

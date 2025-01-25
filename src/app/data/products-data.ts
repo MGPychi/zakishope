@@ -61,7 +61,6 @@ export const searchAndFilterInAllProducts = cache(
       filters.push(lte(products.price, maxPrice));
     }
 
-    console.log("------",marks)
     if (marks && marks.length > 0) {
       filters.push(inArray(products.mark, marks));
     }
