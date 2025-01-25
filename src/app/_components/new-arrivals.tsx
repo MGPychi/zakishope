@@ -27,7 +27,7 @@ export async function NewArrivals() {
                 <div className="relative aspect-square mb-3">
                   <Badge className="absolute top-2 right-2 z-10">Nouveau</Badge>
                   <Image
-                    src={product.images[0].url}
+                    src={product.images[0].url??""}
                     alt={product.name}
                     fill
                     className="object-cover rounded-md group-hover:scale-105 transition-transform"

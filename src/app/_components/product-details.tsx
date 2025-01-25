@@ -21,7 +21,7 @@ export function ProductDetailsClient({ product }:Props) {
           <Image
             width={400}
             height={400}
-            src={product!.images[selectedImage].url}
+            src={product!.images[selectedImage].url??""}
             alt={product!.name}
             className="absolute inset-0 w-full h-full object-cover rounded-lg"
           />
@@ -35,7 +35,7 @@ export function ProductDetailsClient({ product }:Props) {
               }`}
               onClick={() => setSelectedImage(index)}
             >
-              <Image width={100} height={100} src={image.url} alt={`${product!.name} ${index + 1}`} className="w-full h-full object-cover" />
+              <Image width={100} height={100} src={image.url??""} alt={`${product!.name} ${index + 1}`} className="w-full h-full object-cover" />
             </button>
           ))}
         </div>

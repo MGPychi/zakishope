@@ -142,7 +142,7 @@ const AddNewCategoryForm = () => {
       if (imagePreview) {
         const uploadedImage = await uploadToCloudinary(imagePreview.file);
         console.log(uploadedImage)
-        formData.append("imageUrl", uploadedImage.url);
+        formData.append("imageUrl", uploadedImage.url??"");
         formData.append("cloudId", uploadedImage.cloudId);
       }
 
@@ -225,7 +225,7 @@ const AddNewCategoryForm = () => {
                         {imagePreview ? (
                           <div className="relative">
                             <img
-                              src={imagePreview.url}
+                              src={imagePreview.url??""}
                               alt="Preview"
                               className="w-full h-64 object-cover rounded-md"
                             />

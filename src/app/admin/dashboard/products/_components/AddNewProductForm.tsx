@@ -409,7 +409,7 @@ const AddNewProductForm = ({
                           {imagePreviews.map((preview) => (
                             <div key={preview.id} className="relative">
                               <img
-                                src={preview.url}
+                                src={preview.url??""}
                                 alt="Preview"
                                 className="w-full h-32 object-cover rounded-md"
                               />
