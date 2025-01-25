@@ -59,7 +59,7 @@ export function HeroCarousel() {
   }, [api])
 
   return (
-    <div className="w-screen lg:w-full overflow-hidden rounded-lg bg-white">
+    <div className="w-full lg:w-full overflow-hidden rounded-lg bg-white">
       <Carousel
         className="w-full"
         onMouseEnter={() => {

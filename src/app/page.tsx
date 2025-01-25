@@ -1,40 +1,42 @@
 // import { CategoriesSidebar } from "./_components/categories-sidebar"
-import { FeaturedProducts } from "./_components/feature-products"
-import { HeroCarousel } from "./_components/hero-carousel"
-import { NewArrivals } from "./_components/new-arrivals"
-import { PopularCategories } from "./_components/popular-categories"
-import { SpecialOffers } from "./_components/special-offers"
+import { FeaturedProducts } from "./_components/feature-products";
+import { HeroCarousel } from "./_components/hero-carousel";
+import { NewArrivals } from "./_components/new-arrivals";
+import { PopularCategories } from "./_components/popular-categories";
+import { SpecialOffers } from "./_components/special-offers";
 // import { Brands } from "./_components/brands"
-import { SiteHeader } from "../components/layout/site-header/site-header"
-import { SiteNav } from "../components/layout/site-nav"
-import { CategoriesSidebar } from "./_components/categories-sidebar"
-import Footer from "@/components/layout/Footer"
+import { SiteHeader } from "../components/layout/site-header/site-header";
+import { SiteNav } from "../components/layout/site-nav";
+import Footer from "@/components/layout/Footer";
+import { WhyChooseUs } from "./_components/WhyUs";
+import Container from "@/components/layout/Container";
+import { CategoryProducts } from "./_components/category-products";
+import { getAllFeaturedActiveCategories } from "./data/categories-data";
 
-export default function Home() {
+export default async function Home() {
+  const featuredCategories = await getAllFeaturedActiveCategories()
   return (
-    <div className="min-h-screen  container mx-auto overflow-x-hidden max-w-screen-2xl bg-background">
-      <SiteHeader />
-      <SiteNav />
-      <div className="container py-4">
-        {/* <div> */}
+    <>
+      {/* <div> */}
 
-                  <div className="grid lg:grid-cols-[280px,1fr] gap-6">
-          <aside>
-          <CategoriesSidebar />
-          </aside>
-          <main className="space-y-8  ">
-            <HeroCarousel />
-            <FeaturedProducts />
-            <NewArrivals />
-            <PopularCategories />
-            <SpecialOffers />
-            {/* <Brands /> */}
-          </main>
-          <Footer/>
-          
-        </div>
-      </div>
-    </div>
-  )
+      <Container>
+        <main className="space-y-8 px-4  ">
+          <SiteHeader />
+          <SiteNav />
+          <HeroCarousel />
+          <FeaturedProducts />
+          <NewArrivals />
+          <PopularCategories />
+          <SpecialOffers />
+          {featuredCategories.map((category) => (
+            <CategoryProducts key={category.id} categorySlug={category.slug} title={category.name}  />
+          ))}
+          <WhyChooseUs />
+
+          {/* <Brands /> */}
+        </main>
+      </Container>
+      <Footer />
+    </>
+  );
 }
-

@@ -264,3 +264,29 @@ export const getProductDetailWithId = async (id: string) => {
     },
   });
 };
+export const getProductsByCategory = unstable_cache( async (categorySlug: string) => {   
+  const category = await db.query.categories.findFirst({
+    where: eq(categories.slug, categorySlug),
+  });
+
+  if (!category) {
+    return [];
+  }
+
+  return await db.query.products.findMany({
+    where: eq(products.categoryId, category.id),
+    with: {
+      images: true,
+    },
+  });
+},
+  ["category_products"],
+  {
+    tags: ["category_products"],
+  }
+
+)
+
+
+
+

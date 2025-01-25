@@ -9,9 +9,9 @@ export async function NewArrivals() {
   const latestProducts = await getLatestProducts();
 
   return (
-    <section className="py-8 w-screen">
+    <section className="py-8 w-full">
       <div className="flex   justify-between items-center mb-6">
-        {/* <h2 className="text-2xl font-bold">Nouveaux Arrivages</h2> */}
+        <h2 className="text-2xl font-bold">Nouveaux Arrivages</h2>
         <Link
           href="/search"
           className="text-primary hidden sm:block hover:underline"
@@ -19,7 +19,7 @@ export async function NewArrivals() {
           Voir tout
         </Link>
       </div>
-      <div className="grid grid-cols-1 px-4 space-y-4 md:grid-cols-4 sm:gap-4">
+      <div className="grid grid-cols-1 px-4  space-y-4 md:grid-cols-4 sm:gap-4">
         {latestProducts.map((product) => (
           <Card key={product.id} className="group">
             <Link href={`/product/${product.slug}`}>

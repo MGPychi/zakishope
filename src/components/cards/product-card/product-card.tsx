@@ -4,7 +4,6 @@ import { Card, CardContent, CardFooter } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import ProductCardAddToCart from "./product-card-add-to-cart";
-// import Link from "next/link";
 import { getAllFeaturedActiveProducts } from "@/app/data/products-data";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -18,42 +17,54 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       onClick={() => router.push(`/product/${product.slug}`)}
-      className="flex cursor-pointer flex-col overflow-hidden transition-all duration-300 hover:shadow-lg h-full"
+      className="group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full"
     >
-      <CardContent className="p-0 flex-grow">
-        <div className="relative">
+      <CardContent className="p-0">
+        <div className="aspect-square relative overflow-hidden">
           <Image
-            src={product?.images?.length > 0 ? product.images[0].url : ""}
+            src={product?.images?.length > 0 ? product.images[0].url : "/placeholder.svg"}
             alt={product.name}
-            width={300}
-            height={300}
-            className="w-full h-48 object-cover"
+            fill
+            className="object-cover transition-transform group-hover:scale-105"
           />
           <ProductCardAddToCart product={product} />
         </div>
         <div className="p-4">
-          {/* <Link href={`/product/${product.slug}`}> */}
-          <h3 className="text-lg hover:text-primary font-semibold text-gray-800 line-clamp-2 mb-2">
+          <h3 className="font-medium line-clamp-2 mb-2 text-lg text-gray-800">
             {product.name}
           </h3>
-          {/* </Link> */}
-          <p className="text-lg font-semibold text-tahat-600">
-            {product.price} DZD
-          </p>
+          <div className="flex items-baseline gap-2">
+            <span className="text-2xl font-bold text-primary">
+              {product.price.toFixed(2)} DZD
+            </span>
+            {product.price && (
+              <span className="text-sm text-muted-foreground line-through">
+                {product.price.toFixed(2)} DZD
+              </span>
+            )}
+          </div>
+          {product.price && (
+            <p className="text-sm text-primary mt-1">{product.price}</p>
+          )}
         </div>
       </CardContent>
       <CardFooter className="p-4 mt-auto">
-        <Link onClick={(e)=>{
-          e.stopPropagation()
-          router.push("/confirm-order?productId="+product.id)
-        }} className="block w-full"  href={`/confirm-order?productId=${product.id}`} passHref>
-            <Button
+        <Link
+          onClick={(e) => {
+            e.stopPropagation();
+            router.push("/confirm-order?productId=" + product.id);
+          }}
+          className="block w-full"
+          href={`/confirm-order?productId=${product.id}`}
+          passHref
+        >
+          <Button
             className={cn(
               "w-full flex items-center justify-center gap-2 transition-colors duration-300"
             )}
-            >
+          >
             Acheter Maintenant
-            </Button>
+          </Button>
         </Link>
       </CardFooter>
     </Card>

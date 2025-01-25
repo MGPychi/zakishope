@@ -1,10 +1,14 @@
 import { ProductCard } from "@/components/cards/product-card/product-card";
 import { SearchFilters } from "./components/search-filters";
 // import { SearchHeader } from "./components/search-header";
-import { getProductMarks, searchAndFilterInAllProducts } from "../data/products-data";
+import {
+  getProductMarks,
+  searchAndFilterInAllProducts,
+} from "../data/products-data";
 import { getAllCategories } from "../data/categories-data";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
 import Footer from "@/components/layout/Footer";
+import Container from "@/components/layout/Container";
 
 export default async function SearchPage({
   searchParams,
@@ -16,7 +20,7 @@ export default async function SearchPage({
     orderBy?: "price" | "date";
     order?: "asc" | "desc";
     category: string;
-    mark:string;
+    mark: string;
   };
 }) {
   const {
@@ -27,14 +31,14 @@ export default async function SearchPage({
     order,
     category: categoriesParam,
   } = searchParams;
-const selectedCategorySlugs = categoriesParam ? categoriesParam.split("_or_") : [];
-const selectedMarks  = mark ? mark.split("_or_"):[]
-const allCategories = await getAllCategories();
-const marks = await getProductMarks()
+  const selectedCategorySlugs = categoriesParam
+    ? categoriesParam.split("_or_")
+    : [];
+  const selectedMarks = mark ? mark.split("_or_") : [];
+  const allCategories = await getAllCategories();
+  const marks = await getProductMarks();
 
-
-
-// Parse and validate priceMin and priceMax
+  // Parse and validate priceMin and priceMax
   const parsedPriceMin = priceMin ? parseFloat(priceMin) : undefined;
   const parsedPriceMax = priceMax ? parseFloat(priceMax) : undefined;
 
@@ -52,33 +56,34 @@ const marks = await getProductMarks()
     maxPrice: parsedPriceMax,
     categories: selectedCategorySlugs,
     sortByPrice: order,
-    marks:selectedMarks
-
+    marks: selectedMarks,
   });
 
   return (
-    <div className="container mx-auto max-w-screen-2xl ">
-      <SiteHeader />
+    <>
+      <Container>
+        <SiteHeader />
 
-      <main>
-        <div className="container mx-auto px-4 py-8">
-          {/* <SearchHeader /> */}
+        <main>
+          <div className="container mx-auto px-4 py-8">
+            {/* <SearchHeader /> */}
 
-          <div className="flex flex-col md:flex-row gap-6">
-            <SearchFilters marks={marks} categories={allCategories} />
+            <div className="flex flex-col md:flex-row gap-6">
+              <SearchFilters marks={marks} categories={allCategories} />
 
-            {/* Product Grid */}
-            <div className="flex-1">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                {products.map((product) => (
-                  <ProductCard key={product.id} product={product} />
-                ))}
+              {/* Product Grid */}
+              <div className="flex-1">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {products.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
-      </main>
-      <Footer/>
-    </div>
+        </main>
+      </Container>
+      <Footer />
+    </>
   );
 }
