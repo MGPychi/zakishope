@@ -1,8 +1,20 @@
 import { SiteHeader } from "@/components/layout/site-header/site-header"
 import { SiteNav } from "@/components/layout/site-nav"
 import { ConfirmOrderForm } from "./confirm-order-form"
+import { getProductDetailWithId } from "@/app/data/products-data"
 
-export default function ConfirmOrderPage() {
+export default async function ConfirmOrderPage({
+  searchParams,
+}: {
+  searchParams: { productId?: string }
+}) {
+  const productId = searchParams.productId
+  let product = null
+
+  if (productId) {
+    product = await getProductDetailWithId(productId)
+  }
+
   return (
     <div className="min-h-screen container mx-auto max-w-screen-2xl bg-background">
       <SiteHeader />
@@ -11,7 +23,7 @@ export default function ConfirmOrderPage() {
         <h1 className="text-3xl font-bold font-heading mb-8">
           Confirmer la commande
         </h1>
-        <ConfirmOrderForm />
+        <ConfirmOrderForm initialProduct={product} />
       </main>
     </div>
   )

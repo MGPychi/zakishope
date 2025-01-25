@@ -56,7 +56,7 @@ export function ProductImages({ images }: ImageGalleryProps) {
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
-          className={` object-contain rounded-lg transition-transform duration-300 ${isFullscreen ? 'scale-100 ' : 'object-cover '}`}
+          className={` object-contain rounded-lg transition-transform duration-300 `}
         />
         
         {/* Navigation Buttons */}

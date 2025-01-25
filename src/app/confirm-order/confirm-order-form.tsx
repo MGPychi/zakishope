@@ -12,10 +12,9 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-// import { useToast } from "@/hooks/use-toast"
 import { ALGERIAN_WILAYAS } from "@/constants"
 import { useToast } from "@/hooks/use-toast"
-import { createOrder, CreateOrderInput } from "../admin/dashboard/orders/actions"
+import { createOrder, type CreateOrderInput } from "../admin/dashboard/orders/actions"
 import { useAction } from "next-safe-action/hooks"
 
 const formSchema = z.object({
@@ -38,7 +37,15 @@ const formSchema = z.object({
 
 type FormValues = z.infer<typeof formSchema>
 
-export function ConfirmOrderForm() {
+interface ConfirmOrderFormProps {
+  initialProduct?: {
+    id: string
+    name: string
+    price: number
+  } | null
+}
+
+export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
   const router = useRouter()
   const { items, getTotal, clearCart } = useCart()
   const { toast } = useToast()
@@ -62,13 +69,17 @@ export function ConfirmOrderForm() {
       })
     },
     onSuccess: (d) => {
-      clearCart()
+      if (!initialProduct) {
+        clearCart()
+      }
       toast({
         title: "Succès",
         description: "Votre commande a été créée avec succès.",
       })
-      const orderId = d.data?.data?.orderId??""
-      router.push(`/order-success?total=${getTotal()}&&items=${items.length}&&wilaya=${form.getValues().wilaya}&&address=${form.getValues().address}&&phone=${form.getValues().phone}&&firstName=${form.getValues().firstName}&&lastName=${form.getValues().lastName}&&orderId=${orderId}`)
+      const orderId = d.data?.data?.orderId ?? ""
+      router.push(
+        `/order-success?total=${orderTotal}&&items=${orderItems.length}&&wilaya=${form.getValues().wilaya}&&address=${form.getValues().address}&&phone=${form.getValues().phone}&&firstName=${form.getValues().firstName}&&lastName=${form.getValues().lastName}&&orderId=${orderId}`,
+      )
     },
     onError: (error) => {
       console.error(error)
@@ -80,18 +91,21 @@ export function ConfirmOrderForm() {
     },
   })
 
+  const orderItems = initialProduct ? [{ item: initialProduct, qt: 1 }] : items
+
+  const orderTotal = initialProduct ? initialProduct.price : getTotal()
+
   async function onSubmit(values: FormValues) {
     const orderData: CreateOrderInput = {
       ...values,
-      totalAmount: getTotal(),
-      items: items.map(item => ({
+      totalAmount: orderTotal,
+      items: orderItems.map((item) => ({
         productId: item.item.id,
         quantity: item.qt,
-        price: item.item.price
-      }))
+        price: item.item.price,
+      })),
     }
     await execute(orderData)
-
   }
 
   return (
@@ -184,13 +198,13 @@ export function ConfirmOrderForm() {
             <CardContent className="space-y-2">
               <div className="flex justify-between">
                 <span>Total</span>
-                <span className="font-semibold">{getTotal()} DA</span>
+                <span className="font-semibold">{orderTotal} DA</span>
               </div>
               <div className="flex justify-between text-sm text-gray-600">
                 <span>Méthode de paiement</span>
                 <span>Paiement à la livraison</span>
               </div>
-              {items.map((item) => (
+              {orderItems.map((item) => (
                 <div key={item.item.id} className="flex justify-between text-sm">
                   <span>
                     {item.item.name} × {item.qt}
@@ -200,14 +214,9 @@ export function ConfirmOrderForm() {
               ))}
             </CardContent>
           </Card>
-              <Button 
-                className="w-full" 
-                size="lg" 
-                type="submit" 
-                disabled={status === "executing"}
-              >
-                {status === "executing" ? 'Traitement en cours...' : 'Confirmer la commande'}
-              </Button>
+          <Button className="w-full" size="lg" type="submit" disabled={status === "executing"}>
+            {status === "executing" ? "Traitement en cours..." : "Confirmer la commande"}
+          </Button>
           <p className="text-sm text-center text-gray-600">
             En confirmant votre commande, vous acceptez nos conditions générales de vente.
           </p>

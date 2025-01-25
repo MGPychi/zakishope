@@ -7,6 +7,7 @@ import ProductCardAddToCart from "./product-card-add-to-cart";
 // import Link from "next/link";
 import { getAllFeaturedActiveProducts } from "@/app/data/products-data";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 interface ProductCardProps {
   product: Awaited<ReturnType<typeof getAllFeaturedActiveProducts>>[0];
@@ -36,21 +37,24 @@ export function ProductCard({ product }: ProductCardProps) {
             {product.name}
           </h3>
           {/* </Link> */}
-          <p className="text-lg font-semibold text-tahat-600">{product.price} DZD</p>
+          <p className="text-lg font-semibold text-tahat-600">
+            {product.price} DZD
+          </p>
         </div>
       </CardContent>
       <CardFooter className="p-4 mt-auto">
-        <Button
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push("/cart");
-          }}
-          className={cn(
-            "w-full flex items-center justify-center gap-2 transition-colors duration-300"
-          )}
-        >
-          Buy Now
-        </Button>
+        <Link onClick={(e)=>{
+          e.stopPropagation()
+          router.push("/confirm-order?productId="+product.id)
+        }} className="block w-full"  href={`/confirm-order?productId=${product.id}`} passHref>
+          <Button
+            className={cn(
+              "w-full flex items-center justify-center gap-2 transition-colors duration-300"
+            )}
+          >
+            Buy Now
+          </Button>
+        </Link>
       </CardFooter>
     </Card>
   );

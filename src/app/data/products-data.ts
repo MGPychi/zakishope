@@ -1,7 +1,7 @@
 import { PAGE_SIZE } from "@/constants";
 import { db } from "@/db";
-import { categories, products  } from "@/db/schema";
-import { eq, and, or, gte, lte, ilike, inArray ,sql} from 'drizzle-orm';
+import { categories, products } from "@/db/schema";
+import { eq, and, or, gte, lte, ilike, inArray, sql } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import slugify from "slugify";
@@ -22,7 +22,6 @@ interface GetProductsParams {
   q?: string;
   category?: string;
 }
-
 
 export const searchAndFilterInAllProducts = cache(
   async ({
@@ -63,10 +62,10 @@ export const searchAndFilterInAllProducts = cache(
     if (categorySlugs && categorySlugs.length > 0) {
       // First get the category IDs for the given slugs
       const matchingCategories = await db.query.categories.findMany({
-        where: inArray(categories.slug, categorySlugs)
+        where: inArray(categories.slug, categorySlugs),
       });
-      
-      const categoryIds = matchingCategories.map(cat => cat.id);
+
+      const categoryIds = matchingCategories.map((cat) => cat.id);
       if (categoryIds.length > 0) {
         filters.push(inArray(products.categoryId, categoryIds));
       }
@@ -80,7 +79,9 @@ export const searchAndFilterInAllProducts = cache(
     // Build query
     const filteredProducts = await db.query.products.findMany({
       where: whereClause,
-      orderBy: sortByPrice ? (fields, operators) => [operators[sortByPrice](fields.price)] : undefined,
+      orderBy: sortByPrice
+        ? (fields, operators) => [operators[sortByPrice](fields.price)]
+        : undefined,
       with: {
         images: true,
         category: true,
@@ -96,7 +97,7 @@ export const searchAndFilterInAllProducts = cache(
 export const getAllFeaturedActiveProducts = unstable_cache(
   async (limit?: number) => {
     return await db.query.products.findMany({
-      where: eq(products.isFeatured,true ),
+      where: eq(products.isFeatured, true),
       with: {
         images: true,
       },
@@ -158,7 +159,7 @@ export const getProductDetailWithSlug = unstable_cache(
 
 // Get paginated products with optional search
 export const getProducts = cache(
-  async ({ page, q,  category }: GetProductsParams)  => {
+  async ({ page, q, category }: GetProductsParams) => {
     const sluggedCategory = slugify(category ?? "");
     const foundCategory = await db.query.categories.findFirst({
       where: eq(products.slug, sluggedCategory),
@@ -167,8 +168,10 @@ export const getProducts = cache(
       where: and(
         foundCategory ? eq(products.categoryId, foundCategory.id) : undefined,
         q
-          ? sql`${products.name} LIKE ${`%${q}%`} OR ${products.description} LIKE ${`%${q}%`}`
-          : undefined,
+          ? sql`${products.name} LIKE ${`%${q}%`} OR ${
+              products.description
+            } LIKE ${`%${q}%`}`
+          : undefined
       ),
       limit: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
@@ -204,7 +207,9 @@ export const getTotalProductsCountToday = cache(async () => {
   today.setHours(0, 0, 0, 0);
 
   const result = await db.query.products.findMany({
-    where: sql`DATE(${products.createdAt}) = ${today.toISOString().split("T")[0]}`,
+    where: sql`DATE(${products.createdAt}) = ${
+      today.toISOString().split("T")[0]
+    }`,
     columns: {
       id: true,
     },
@@ -216,7 +221,7 @@ export const getTotalProductsCountToday = cache(async () => {
 export const getLatestProducts = unstable_cache(
   async () => {
     return await db.query.products.findMany({
-      orderBy: (products,{desc})=>[desc(products.createdAt)], 
+      orderBy: (products, { desc }) => [desc(products.createdAt)],
       limit: 4, // Limit to the latest 4 products
       with: {
         images: true, // Include associated images
@@ -229,3 +234,13 @@ export const getLatestProducts = unstable_cache(
   }
 );
 
+export const getProductDetailWithId = async (id: string) => {
+  return  db.query.products.findFirst({
+    where: eq(products.id, id),
+    with: {
+      images: true,
+      features: true,
+      category: true,
+    },
+  });
+};
