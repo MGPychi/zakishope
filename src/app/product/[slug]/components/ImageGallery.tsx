@@ -1,15 +1,31 @@
 'use client';
-
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
 
 interface ImageGalleryProps {
   images: string[];
 }
 
-export function ImageGallery({ images }: ImageGalleryProps) {
+export function ProductImages({ images }: ImageGalleryProps) {
   const [currentImage, setCurrentImage] = useState(0);
+  const [isFullscreen, setIsFullscreen] = useState(false);
+  const mainImageRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+      if (mainImageRef.current) {
+        mainImageRef.current.style.height = isFullscreen ? '100vh' : 'auto';
+      }
+    };
+
+    document.addEventListener('fullscreenchange', handleFullscreenChange);
+
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+    };
+  }, [isFullscreen]);
 
   const goToPreviousImage = () => {
     setCurrentImage((i) => (i > 0 ? i - 1 : images.length - 1));
@@ -19,44 +35,79 @@ export function ImageGallery({ images }: ImageGalleryProps) {
     setCurrentImage((i) => (i < images.length - 1 ? i + 1 : 0));
   };
 
+  const toggleFullscreen = () => {
+    if (isFullscreen) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  };
+
   return (
-    <div className="space-y-4">
+    <div className={`space-y-4 transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 bg-black/90 flex flex-col justify-center p-4' : ''}`}>
       {/* Main Image Display */}
-      <div className="relative w-full aspect-[4/3]">
+      <div
+        ref={mainImageRef}
+        className={` w-full ${isFullscreen ? 'aspect-auto max-w-4xl mx-auto' : 'aspect-square relative'}`}
+      >
         <Image
           src={images[currentImage] || '/placeholder.svg'}
-          alt={`Image ${currentImage + 1}`}
+          alt={`Product Image ${currentImage + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
-          className="object-cover rounded-lg"
+          className={` object-contain rounded-lg transition-transform duration-300 ${isFullscreen ? 'scale-100 ' : 'object-cover '}`}
         />
+        
         {/* Navigation Buttons */}
         <button
           onClick={goToPreviousImage}
-          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md"
+          className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group"
           aria-label="Previous image"
         >
-          <ChevronLeft className="h-6 w-6" />
+          <ChevronLeft className="h-6 w-6 group-hover:scale-110 transition-transform" />
         </button>
+        
         <button
           onClick={goToNextImage}
-          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 p-2 rounded-full shadow-md"
+          className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group"
           aria-label="Next image"
         >
-          <ChevronRight className="h-6 w-6" />
+          <ChevronRight className="h-6 w-6 group-hover:scale-110 transition-transform" />
+        </button>
+
+        {/* Fullscreen Toggle */}
+        <button
+          onClick={toggleFullscreen}
+          className={ `${isFullscreen ?"fixed top-14 right-4":"absolute top-2 right-2"}    bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group` }
+          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+        >
+          {isFullscreen ? (
+            <Minimize2 className="h-6 w-6 group-hover:scale-110   right-1 transition-transform" />
+          ) : (
+            <Maximize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
+          )}
         </button>
       </div>
 
+      {/* Image Count */}
+      <div className="text-center text-sm text-gray-500">
+        {currentImage + 1} / {images.length}
+      </div>
+
       {/* Thumbnail Carousel */}
-      <div className="flex gap-4 overflow-x-auto pb-2">
+      <div 
+        className={`flex gap-2 overflow-x-auto pb-2 transition-all 
+        ${isFullscreen ? 'hidden' : ''}`}
+      >
         {images.map((src, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentImage(idx)}
-            className={`relative w-24 aspect-square flex-shrink-0 ${
-              currentImage === idx ? 'ring-2 ring-primary' : ''
-            }`}
+            className={`relative w-20 aspect-square flex-shrink-0 
+              ${currentImage === idx ? 'ring-2 ring-primary' : 'opacity-60 hover:opacity-100'}
+              transition-all duration-300 ease-in-out
+            `}
             aria-label={`Select image ${idx + 1}`}
           >
             <Image

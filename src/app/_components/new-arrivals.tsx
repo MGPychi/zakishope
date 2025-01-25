@@ -18,7 +18,8 @@ export async function NewArrivals() {
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {latestProducts.map((product) => (
           <Card key={product.id} className="group">
-            <CardContent className="p-4">
+            <Link href={`/product/${product.slug}`}>
+            <CardContent  className="p-4">
               <div className="relative aspect-square mb-3">
                 <Badge className="absolute top-2 right-2 z-10">Nouveau</Badge>
                 <Image
@@ -36,6 +37,8 @@ export async function NewArrivals() {
               </div>
               <p className="text-primary">{product.price}DA</p>
             </CardContent>
+
+            </Link>
           </Card>
         ))}
       </div>

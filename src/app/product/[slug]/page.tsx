@@ -2,7 +2,7 @@ import { notFound } from "next/navigation";
 import { ShoppingCart, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
-import { ImageGallery } from "./components/ImageGallery";
+import {ProductImages  } from "./components/ImageGallery";
 import { getProductDetailWithSlug } from "@/app/data/products-data";
 
 export default async function ProductDetail({
@@ -19,13 +19,13 @@ export default async function ProductDetail({
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen container mx-auto max-w-screen-2xl bg-background px-4 py-8">
-        <div className="grid lg:grid-cols-2 gap-10">
+      <main className="min-h-screen  container mx-auto  max-w-screen-2xl bg-background px-2 py-8">
+        <div className="space-y-4 md:grid md:grid-cols-2 md:gap-8">
           {/* Image Gallery */}
-          <ImageGallery images={product.images.map((img) => img.url)} />
+          <ProductImages images={product.images.map((img) => img.url)} />
 
           {/* Product Info */}
-          <div className="space-y-6">
+          <div className="space-y-6 ">
             <div>
               <h1 className="text-3xl font-bold">{product.name}</h1>
               <p className="text-sm text-muted-foreground">
@@ -38,7 +38,7 @@ export default async function ProductDetail({
               </div>
             </div>
 
-            <div className="flex gap-4">
+            <div className="flex gap-4 px-4" >
               <Button size="lg" variant="outline" className="flex-1">
                 <ShoppingCart className="mr-2 h-5 w-5" />
                 Add to Cart
@@ -46,14 +46,11 @@ export default async function ProductDetail({
               <Button size="lg" className="flex-1 bg-primary">
                 Pay Now
               </Button>
-              <Button size="lg" variant="outline">
-                <Heart className="h-5 w-5" />
-              </Button>
             </div>
 
             <div className="space-y-4">
               <h2 className="text-xl font-semibold">Description</h2>
-              <p>{product.description}</p>
+              <p className="px-2">{product.description}</p>
             </div>
           </div>
         </div>

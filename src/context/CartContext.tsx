@@ -69,7 +69,7 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 
     const cart = localStorage.getItem("cart");
     if (cart) {
-      setItems(JSON.parse(cart));
+      setItems(JSON.parse(cart??"[]"));
     }
     setIsLoading(false)
   }, []);
