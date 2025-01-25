@@ -28,13 +28,13 @@ export default async function Home() {
           <NewArrivals />
           <PopularCategories />
           {/* <SpecialOffers /> */}
-          {featuredCategories.map((category) => (
+          {/* {featuredCategories.map((category) => (
             <CategoryProducts
               key={category.id}
               categorySlug={category.slug}
               title={category.name}
             />
-          ))}
+          ))} */}
           <WhyChooseUs />
 
           {/* <Brands /> */}
