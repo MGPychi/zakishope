@@ -1,5 +1,5 @@
 import { notFound } from "next/navigation";
-import { ShoppingCart, Heart } from "lucide-react";
+import { ShoppingCart} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
 import {ProductImages  } from "./components/ImageGallery";
