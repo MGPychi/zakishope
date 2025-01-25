@@ -14,22 +14,26 @@ import { CategoryProducts } from "./_components/category-products";
 import { getAllFeaturedActiveCategories } from "./data/categories-data";
 
 export default async function Home() {
-  const featuredCategories = await getAllFeaturedActiveCategories()
+  const featuredCategories = await getAllFeaturedActiveCategories();
   return (
     <>
       {/* <div> */}
 
+      <SiteHeader />
       <Container>
+        <SiteNav />
         <main className="space-y-8 px-4  ">
-          <SiteHeader />
-          <SiteNav />
           <HeroCarousel />
           <FeaturedProducts />
           <NewArrivals />
           <PopularCategories />
           {/* <SpecialOffers /> */}
           {featuredCategories.map((category) => (
-            <CategoryProducts key={category.id} categorySlug={category.slug} title={category.name}  />
+            <CategoryProducts
+              key={category.id}
+              categorySlug={category.slug}
+              title={category.name}
+            />
           ))}
           <WhyChooseUs />
 

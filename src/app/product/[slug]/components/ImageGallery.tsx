@@ -10,9 +10,14 @@ interface ImageGalleryProps {
 export function ProductImages({ images }: ImageGalleryProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
+  const [isIOS, setIsIOS] = useState(false);
   const mainImageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // Detect iOS devices
+    const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+    setIsIOS(iOS);
+
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
       if (mainImageRef.current) {
@@ -36,6 +41,9 @@ export function ProductImages({ images }: ImageGalleryProps) {
   };
 
   const toggleFullscreen = () => {
+    // Disable fullscreen for iOS
+    if (isIOS) return;
+
     if (isFullscreen) {
       document.exitFullscreen();
     } else {
@@ -49,7 +57,7 @@ export function ProductImages({ images }: ImageGalleryProps) {
       {/* Main Image Display */}
       <div
         ref={mainImageRef}
-        className={` w-full ${isFullscreen ? 'aspect-auto   max-w-4xl mx-auto' : 'aspect-square relative'}`}
+        className={`w-full ${isFullscreen ? 'aspect-auto max-w-4xl mx-auto' : 'aspect-square relative'}`}
       >
         <Image
           src={images[currentImage] || ''}
@@ -57,7 +65,7 @@ export function ProductImages({ images }: ImageGalleryProps) {
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
-          className={ ` ${isFullscreen?"object-contain":"object-contain"} rounded-lg transition-transform duration-300 w-full max-w-full` }
+          className={`${isFullscreen ? "object-contain" : "object-contain"} rounded-lg transition-transform duration-300 w-full max-w-full`}
         />
         
         {/* Navigation Buttons */}
@@ -77,18 +85,20 @@ export function ProductImages({ images }: ImageGalleryProps) {
           <ChevronRight className="h-6 w-6 group-hover:scale-110 transition-transform" />
         </button>
 
-        {/* Fullscreen Toggle */}
-        <button
-          onClick={toggleFullscreen}
-          className={`${isFullscreen ? "fixed top-14 right-4" : "absolute top-2 right-2"} bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group`}
-          aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
-        >
-          {isFullscreen ? (
-            <Minimize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
-          ) : (
-            <Maximize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
-          )}
-        </button>
+        {/* Fullscreen Toggle - Hidden on iOS */}
+        {!isIOS && (
+          <button
+            onClick={toggleFullscreen}
+            className={`${isFullscreen ? "fixed top-14 right-4" : "absolute top-2 right-2"} bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group`}
+            aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
+          >
+            {isFullscreen ? (
+              <Minimize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
+            ) : (
+              <Maximize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
+            )}
+          </button>
+        )}
       </div>
 
       {/* Image Count */}

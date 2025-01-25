@@ -10,7 +10,7 @@ import SearchBar from "./search-bar"
 export function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
-      <div className="container py-4 lg:py-2 mx-auto max-w-screen-2xl px-4">
+      <div className="container  py-4 lg:py-2 mx-auto max-w-screen-2xl px-4">
         <div className="flex h-16 flex-col items-center justify-between gap-2 md:h-16 md:flex-row">
           {/* Logo and Brand */}
           <div className="flex items-center justify-between w-full md:w-auto">

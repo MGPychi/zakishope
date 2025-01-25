@@ -9,7 +9,7 @@ export async function SiteNav() {
   const categories = await getAllCategories();
   return (
     <nav className="border-b bg-white">
-      <div className="container flex h-14 items-center">
+      <div className="container max-w-screen-2xl flex h-14 items-center">
         <Sheet>
           <SheetTrigger asChild>
             <Button

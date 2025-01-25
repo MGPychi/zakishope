@@ -14,12 +14,13 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
+  const originalPrice  = product.price*1.2
   return (
     <Card
       onClick={() => router.push(`/product/${product.slug}`)}
-      className="group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full"
+      className="group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
     >
-      <CardContent className="p-0">
+      <CardContent className="p-0 flex-grow flex flex-col">
         <div className="aspect-square relative overflow-hidden">
           <Image
             src={product?.images?.length > 0 ? product.images[0].url : ""}
@@ -29,26 +30,28 @@ export function ProductCard({ product }: ProductCardProps) {
           />
           <ProductCardAddToCart product={product} />
         </div>
-        <div className="p-4">
-          <h3 className="font-medium line-clamp-2 mb-2 text-lg text-gray-800">
+        <div className="p-4 flex-grow flex flex-col">
+          <h3 className="font-medium line-clamp-2 mb-2 text-lg text-gray-800 min-h-[3rem]">
             {product.name}
           </h3>
-          <div className="flex items-baseline gap-2">
+          <div className="flex items-baseline gap-2 mt-auto">
             <span className="text-2xl font-bold text-primary">
               {product.price.toFixed(2)} DZD
             </span>
             {product.price && (
               <span className="text-sm text-muted-foreground line-through">
-                {product.price.toFixed(2)} DZD
+                {originalPrice.toFixed(2)} DZD
               </span>
             )}
           </div>
-          {product.price && (
-            <p className="text-sm text-primary mt-1">{product.price}</p>
+          {originalPrice && (
+            <p className="text-sm text-primary mt-1">
+              {((originalPrice - product.price) / originalPrice * 100).toFixed(0)}% Off
+            </p>
           )}
         </div>
       </CardContent>
-      <CardFooter className="p-4 mt-auto">
+      <CardFooter className="p-4">
         <Link
           onClick={(e) => {
             e.stopPropagation();
