@@ -4,6 +4,7 @@ import { SearchFilters } from "./components/search-filters";
 import { getProductMarks, searchAndFilterInAllProducts } from "../data/products-data";
 import { getAllCategories } from "../data/categories-data";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
+import Footer from "@/components/layout/Footer";
 
 export default async function SearchPage({
   searchParams,
@@ -77,6 +78,7 @@ const marks = await getProductMarks()
           </div>
         </div>
       </main>
+      <Footer/>
     </div>
   );
 }

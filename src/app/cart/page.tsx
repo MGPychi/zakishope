@@ -6,6 +6,7 @@ import { SiteNav } from "../../components/layout/site-nav";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import ConfirmCommandButton from "./_components/ConfirmCommandButton";
+import Footer from "@/components/layout/Footer";
 
 export default function CartPage() {
   return (
@@ -24,6 +25,7 @@ export default function CartPage() {
           </div>
         </div>
       </main>
+      <Footer/>
     </div>
   )
 }

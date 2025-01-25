@@ -5,6 +5,7 @@ import { SiteHeader } from "@/components/layout/site-header/site-header"
 import { ProductImages } from "./components/ImageGallery"
 import { getProductDetailWithSlug } from "@/app/data/products-data"
 import AddProductToCart from "./components/AddProductToCart"
+import Footer from "@/components/layout/Footer"
 
 export default async function ProductDetail({
   params,
@@ -62,6 +63,7 @@ export default async function ProductDetail({
           </div>
         </div>
       </main>
+      <Footer/>
     </>
   )
 }

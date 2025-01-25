@@ -1,117 +1,132 @@
-import Link from "next/link";
-import { MapPin, Phone, Mail, Facebook } from "lucide-react";
-// import { infos } from "@/constants";
-const infos  = {
-  description: "ZAK ELECTRIC est une entreprise spécialisée dans l'installation et la maintenance des systèmes électriques. Nous offrons des services de qualité à des prix compétitifs.",
-  address: "Cité 200 logements, Bloc 2, N° 10, Tizi Ouzou, Algérie",
-  phone: "+213 555 555 555",
-  email: "worldtech@email.com",
-  facebook: "https://www.facebook.com",
-  facebookName: "world tech",
-  whatsapp: "+213 555 555 555",
+import Link from "next/link"
+import { Facebook, Instagram, Youtube, MessageCircle } from "lucide-react"
 
-}
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
 
-
-const Footer = () => {
+export default function Footer() {
   return (
-    <footer className="bg-primary py-20 text-white">
-      <div className="container mx-auto px-4 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {/* Informations sur l'entreprise */}
+    <footer className="w-full bg-background">
+      <div className="container px-4 py-8 md:py-12">
+        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-4 lg:grid-cols-5">
+          {/* Company Info */}
           <div className="space-y-4">
-            {/* <Image src="/placeholder.svg?height=50&width=100" alt="Logo Zak Electric" className="h-12" /> */}
-            <p className="text-sm">{infos.description}</p>
+            <h2 className="text-2xl font-bold">WorldTech</h2>
+            <p className="text-sm text-muted-foreground">Your one-stop shop for home electronics</p>
+            <div className="space-y-2">
+              <p className="text-sm">+1 (555) 123-4567</p>
+              <Link href="mailto:info@worldtech.com" className="text-sm hover:underline">
+                info@worldtech.com
+              </Link>
+            </div>
           </div>
 
-          {/* Accès rapide */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Accès rapide</h3>
-            <ul className="space-y-4">
-              <li>
-                <Link href="/" className=" transition-colors">
-                  Accueil
-                </Link>
-              </li>
-              <li>
-                <Link href="/#about" className=" transition-colors">
-                  À propos
-                </Link>
-              </li>
-              <li>
-                <Link href="/#services" className=" transition-colors">
-                  Services
-                </Link>
-              </li>
-              <li>
-                <Link href="/#contact" className=" transition-colors">
-                  Contactez-nous
-                </Link>
-              </li>
-            </ul>
+          {/* Quick Links */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Quick Links</h3>
+            <nav className="flex flex-col space-y-2">
+              <Link href="/products" className="text-sm text-muted-foreground hover:text-foreground">
+                Featured Products
+              </Link>
+              <Link href="/brands" className="text-sm text-muted-foreground hover:text-foreground">
+                Top Brands
+              </Link>
+              <Link href="/trending" className="text-sm text-muted-foreground hover:text-foreground">
+                Trending Products
+              </Link>
+              <Link href="/sitemap" className="text-sm text-muted-foreground hover:text-foreground">
+                Sitemap
+              </Link>
+            </nav>
           </div>
 
-          {/* Contactez-nous */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Contactez-nous</h3>
-            <ul className="space-y-4">
-              <li className="flex items-center">
-                <MapPin className="w-5 h-5 mr-2" />
-                <span>{infos.address}</span>
-              </li>
-              <li className="flex items-center">
-                <Phone className="w-5 h-5 mr-2" />
-                <span>{infos.phone}</span>
-              </li>
-              <li className="flex items-center">
-                <Mail className="w-5 h-5 mr-2" />
-                <span>{infos.email}</span>
-              </li>
-            </ul>
+          {/* Customer Service */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Customer Service</h3>
+            <nav className="flex flex-col space-y-2">
+              <Link href="/about" className="text-sm text-muted-foreground hover:text-foreground">
+                About Us
+              </Link>
+              <Link href="/faq" className="text-sm text-muted-foreground hover:text-foreground">
+                FAQs
+              </Link>
+              <Link href="/privacy" className="text-sm text-muted-foreground hover:text-foreground">
+                Privacy Policy
+              </Link>
+              <Link href="/terms" className="text-sm text-muted-foreground hover:text-foreground">
+                Terms & Conditions
+              </Link>
+              <Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground">
+                Contact Us
+              </Link>
+            </nav>
           </div>
 
-          {/* Réseaux sociaux */}
-          <div>
-            <h3 className="text-lg font-semibold mb-4">Réseaux sociaux</h3>
-            <ul className="space-y-4">
-              <li className="">
-                <Link href={infos.facebook} className="hover:underline">
-                  <div className="flex gap-2 items-center">
-                    <Facebook className="w-5 h-5" />
-                    <span>{infos.facebookName}</span>
-                  </div>
+          {/* Categories */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Categories</h3>
+            <nav className="flex flex-col space-y-2">
+              <Link href="/tvs" className="text-sm text-muted-foreground hover:text-foreground">
+                TVs & Entertainment
+              </Link>
+              <Link href="/appliances" className="text-sm text-muted-foreground hover:text-foreground">
+                Home Appliances
+              </Link>
+              <Link href="/kitchen" className="text-sm text-muted-foreground hover:text-foreground">
+                Kitchen Electronics
+              </Link>
+              <Link href="/smart-home" className="text-sm text-muted-foreground hover:text-foreground">
+                Smart Home
+              </Link>
+            </nav>
+          </div>
+
+          {/* Social & Apps */}
+          <div className="space-y-4">
+            <h3 className="font-semibold">Connect With Us</h3>
+            <div className="flex space-x-2">
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="https://facebook.com">
+                  <Facebook className="h-5 w-5" />
+                  <span className="sr-only">Facebook</span>
                 </Link>
-              </li>
-              <li className="flex items-center">
-                <Phone className="w-5 h-5 mr-2" />
-                <span>WhatsApp: {infos.whatsapp}</span>
-              </li>
-            </ul>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="https://instagram.com">
+                  <Instagram className="h-5 w-5" />
+                  <span className="sr-only">Instagram</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="https://youtube.com">
+                  <Youtube className="h-5 w-5" />
+                  <span className="sr-only">YouTube</span>
+                </Link>
+              </Button>
+              <Button variant="ghost" size="icon" asChild>
+                <Link href="https://wa.me/1234567890">
+                  <MessageCircle className="h-5 w-5" />
+                  <span className="sr-only">WhatsApp</span>
+                </Link>
+              </Button>
+            </div>
           </div>
         </div>
 
-        {/* Barre inférieure */}
-        <div className="mt-12 pt-4 border-t border-gray-700 flex flex-wrap justify-between items-center text-sm">
-          <p>
-            &copy; {new Date().getFullYear()} ZAK ELECTRIC. Tous droits
-            réservés.
-          </p>
-          <p>Conçu & Développé par Webelocity</p>
-          <div className="flex gap-4 mt-4 lg:mt-0">
-            <Link href="/legal" className=" transition-colors">
-              Avertissement légal
-            </Link>
-            <Link href="/terms" className=" transition-colors">
-              Termes & Conditions
-            </Link>
-            <Link href="/privacy" className=" transition-colors">
-              Politique de confidentialité
-            </Link>
+        <Separator className="my-8" />
+
+        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
+          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} WorldTech. All rights reserved.</p>
+          <div className="flex items-center space-x-4">
+            <img
+              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ArcoLinux_2025-01-25_16-25-19-bUnihvRQEmlYt7zTImndzTSQC8nrt9.png"
+              alt="Payment Methods"
+              className="h-8"
+            />
           </div>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}
 
-export default Footer;

@@ -8,9 +8,17 @@ import React, { useRef } from "react";
 const SearchBar = () => {
   const ref = useRef<HTMLInputElement>(null);
   const router = useRouter();
+
   const handleSearchRouting = () => {
     router.push(`/search?q=${ref.current?.value}`);
   };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearchRouting();
+    }
+  };
+
   return (
     <div className="hidden w-full md:flex md:flex-1 md:items-center md:gap-2">
       <div className="flex-1 flex items-center gap-2 max-w-2xl">
@@ -21,6 +29,7 @@ const SearchBar = () => {
             type="search"
             placeholder="Rechercher des produits"
             className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-tahat-500 focus:ring-tahat-500"
+            onKeyDown={handleKeyDown}
           />
         </div>
         <Button onClick={handleSearchRouting} className="hidden sm:flex">

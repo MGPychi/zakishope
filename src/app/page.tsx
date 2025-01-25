@@ -8,6 +8,7 @@ import { SpecialOffers } from "./_components/special-offers"
 import { SiteHeader } from "../components/layout/site-header/site-header"
 import { SiteNav } from "../components/layout/site-nav"
 import { CategoriesSidebar } from "./_components/categories-sidebar"
+import Footer from "@/components/layout/Footer"
 
 export default function Home() {
   return (
@@ -29,6 +30,8 @@ export default function Home() {
             <SpecialOffers />
             {/* <Brands /> */}
           </main>
+          <Footer/>
+          
         </div>
       </div>
     </div>
