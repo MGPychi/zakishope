@@ -18,7 +18,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       onClick={() => router.push(`/product/${product.slug}`)}
-      className="group overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
+      className="group active:ring-2 active:ring-primary overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
     >
       <CardContent className="p-0 flex-grow flex flex-col">
         <div className="aspect-square relative overflow-hidden">

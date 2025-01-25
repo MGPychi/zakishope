@@ -102,7 +102,7 @@ export function HeroCarousel() {
                       alt={slide.subtitle}
                       fill
                       priority={index === 0}
-                      className="object-contain md:object-cover"
+                      className="object-cover md:object-cover"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
