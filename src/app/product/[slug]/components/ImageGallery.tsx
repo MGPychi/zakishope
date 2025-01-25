@@ -44,11 +44,12 @@ export function ProductImages({ images }: ImageGalleryProps) {
   };
 
   return (
-    <div className={`space-y-4 transition-all duration-300 ${isFullscreen ? 'fixed inset-0 z-50 bg-black/90 flex flex-col justify-center p-4' : ''}`}>
+    <div className={`w-full max-w-full overflow-hidden px-4 space-y-4 transition-all duration-300 
+      ${isFullscreen ? 'fixed inset-0 z-50 bg-black/90 flex flex-col justify-center p-4' : ''}`}>
       {/* Main Image Display */}
       <div
         ref={mainImageRef}
-        className={` w-full ${isFullscreen ? 'aspect-auto max-w-4xl mx-auto' : 'aspect-square relative'}`}
+        className={` w-full ${isFullscreen ? 'aspect-auto   max-w-4xl mx-auto' : 'aspect-square relative'}`}
       >
         <Image
           src={images[currentImage] || '/placeholder.svg'}
@@ -56,7 +57,7 @@ export function ProductImages({ images }: ImageGalleryProps) {
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
-          className={` object-contain rounded-lg transition-transform duration-300 `}
+          className={ ` ${isFullscreen?"object-contain":"object-contain"} rounded-lg transition-transform duration-300 w-full max-w-full` }
         />
         
         {/* Navigation Buttons */}
@@ -79,11 +80,11 @@ export function ProductImages({ images }: ImageGalleryProps) {
         {/* Fullscreen Toggle */}
         <button
           onClick={toggleFullscreen}
-          className={ `${isFullscreen ?"fixed top-14 right-4":"absolute top-2 right-2"}    bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group` }
+          className={`${isFullscreen ? "fixed top-14 right-4" : "absolute top-2 right-2"} bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group`}
           aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
         >
           {isFullscreen ? (
-            <Minimize2 className="h-6 w-6 group-hover:scale-110   right-1 transition-transform" />
+            <Minimize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
           ) : (
             <Maximize2 className="h-6 w-6 group-hover:scale-110 transition-transform" />
           )}
@@ -97,14 +98,14 @@ export function ProductImages({ images }: ImageGalleryProps) {
 
       {/* Thumbnail Carousel */}
       <div 
-        className={`flex gap-2 overflow-x-auto pb-2 transition-all 
+        className={`flex gap-2 overflow-x-auto pb-2 w-full max-w-full transition-all 
         ${isFullscreen ? 'hidden' : ''}`}
       >
         {images.map((src, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentImage(idx)}
-            className={`relative w-20 aspect-square flex-shrink-0 
+            className={`relative w-20 h-20 flex-shrink-0 
               ${currentImage === idx ? 'ring-2 ring-primary' : 'opacity-60 hover:opacity-100'}
               transition-all duration-300 ease-in-out
             `}
