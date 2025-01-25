@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 
 export function SpecialOffers() {
   return (
-    <section className="py-8">
+    <section className="py-8 px-4">
       <div className="grid md:grid-cols-2 gap-6">
         <div className="relative rounded-lg overflow-hidden">
           <Image

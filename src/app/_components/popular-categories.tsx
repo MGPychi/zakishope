@@ -7,9 +7,9 @@ export async function PopularCategories() {
   const categories = await getAllFeaturedCategories();
 
   return (
-    <section className="py-8">
-      <h2 className="text-2xl font-bold mb-6">Catégories Populaires</h2>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+    <section className="py-8 px-4">
+      <h2 className="text-2xl font-bold ">Catégories Populaires</h2>
+      <div className="grid grid-cols-2  pt-8  md:grid-cols-3 lg:grid-cols-6 gap-4">
         {categories.map((category) => (
           <Link key={category.id} href={`/search?category=${category.slug}`}>
             <Card className="group h-full">

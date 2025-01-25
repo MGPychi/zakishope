@@ -11,7 +11,7 @@ import { CategoriesSidebar } from "./_components/categories-sidebar"
 
 export default function Home() {
   return (
-    <div className="min-h-screen container mx-auto max-w-screen-2xl bg-background">
+    <div className="min-h-screen  container mx-auto overflow-x-hidden max-w-screen-2xl bg-background">
       <SiteHeader />
       <SiteNav />
       <div className="container py-4">
