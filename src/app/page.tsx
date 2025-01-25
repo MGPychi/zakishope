@@ -10,11 +10,11 @@ import { SiteNav } from "../components/layout/site-nav";
 import Footer from "@/components/layout/Footer";
 import { WhyChooseUs } from "./_components/WhyUs";
 import Container from "@/components/layout/Container";
-import { CategoryProducts } from "./_components/category-products";
-import { getAllFeaturedActiveCategories } from "./data/categories-data";
+// import { CategoryProducts } from "./_components/category-products";
+// import { getAllFeaturedActiveCategories } from "./data/categories-data";
 
 export default async function Home() {
-  const featuredCategories = await getAllFeaturedActiveCategories();
+  // const featuredCategories = await getAllFeaturedActiveCategories();
   return (
     <>
       {/* <div> */}
