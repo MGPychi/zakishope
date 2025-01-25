@@ -1,12 +1,12 @@
 "use client";
 import { CartProvider } from "@/context/CartContext";
-// import { AppProgressBar } from "next-nprogress-bar";
+import { AppProgressBar } from "next-nprogress-bar";
 import React, { ReactNode } from "react";
 
 const Providers = ({ children }: { children: ReactNode }) => {
   return (
     <>
-      {/* <AppProgressBar options={{ showSpinner: false }} /> */}
+      <AppProgressBar options={{ showSpinner: true }} />
       <CartProvider>{children}</CartProvider>
     </>
   );
