@@ -5,22 +5,22 @@ const relatedProducts = [
   {
     name: "Écouteurs sans fil",
     price: 79.99,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
   },
   {
     name: "Bracelet connecté",
     price: 49.99,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
   },
   {
     name: "Montre GPS",
     price: 149.99,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
   },
   {
     name: "Casque audio",
     price: 99.99,
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
   },
 ]
 

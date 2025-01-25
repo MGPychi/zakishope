@@ -6,6 +6,10 @@ import { Button } from "@/components/ui/button"
 import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
 import { useEffect, useRef } from "react"
 import type { CarouselApi } from "@/components/ui/carousel"
+import Image1 from "../../../public/getImage.png"
+import Image2 from "../../../public/2.png"
+import Image3 from "../../../public/3.png"
+import Image4 from "../../../public/4.png"
 
 const slides = [
   {
@@ -13,28 +17,28 @@ const slides = [
     subtitle: "4K HDR Streaming Media Player",
     description: "AI-Enhanced Upscaling",
     offer: "Pour les Gamers",
-    image: "/placeholder.svg",
+    image: Image1,
   },
   {
     title: "Google TV Box:",
     subtitle: "Xiaomi Mi Box S 2nd",
     description: "4K Google TV",
     offer: "Offre Spéciale",
-    image: "/placeholder.svg",
+    image: Image2,
   },
   {
     title: "Smart Speaker:",
     subtitle: "Amazon Echo Dot 4th Gen",
     description: "With Alexa",
     offer: "Nouveau Modèle",
-    image: "/placeholder.svg",
+    image: Image3,
   },
   {
     title: "Streaming Stick:",
     subtitle: "Roku Streaming Stick 4K",
     description: "4K/HDR/Dolby Vision",
     offer: "Prix Réduit",
-    image: "/placeholder.svg",
+    image: Image4,
   },
 ]
 
@@ -79,20 +83,21 @@ export function HeroCarousel() {
             <CarouselItem key={index}>
               <div className="p-2 sm:p-4">
                 <div className="flex flex-col items-center sm:items-start gap-4 p-4 sm:p-6 bg-white rounded-lg">
-                  <div className="w-full space-y-2 text-center sm:text-left">
+
+                    <Image
+                      src={slide.image || ""}
+                      alt={slide.subtitle}
+                      fill
+                      className="top-0 left-0 object-cover  rounded-lg  "
+                      priority={index === 0}
+                    />
+                  <div className="w-full  space-y-2 text-center sm:text-left">
                     <h2 className="text-base sm:text-xl font-semibold text-primary line-clamp-1">{slide.title}</h2>
                     <h3 className="text-lg sm:text-2xl font-bold text-gray-900 line-clamp-2">{slide.subtitle}</h3>
                     <p className="text-sm sm:text-base text-muted-foreground line-clamp-1">{slide.description}</p>
                     <p className="text-sm sm:text-lg font-semibold text-primary">{slide.offer}</p>
                   </div>
                   <div className="w-full aspect-[4/3] relative max-w-[200px] mx-auto">
-                    <Image
-                      src={slide.image || "/placeholder.svg"}
-                      alt={slide.subtitle}
-                      fill
-                      className="object-contain"
-                      priority={index === 0}
-                    />
                   </div>
                   <Button size="sm" className="w-full sm:w-auto">
                     Acheter Maintenant

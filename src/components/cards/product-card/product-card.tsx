@@ -22,7 +22,7 @@ export function ProductCard({ product }: ProductCardProps) {
       <CardContent className="p-0">
         <div className="aspect-square relative overflow-hidden">
           <Image
-            src={product?.images?.length > 0 ? product.images[0].url : "/placeholder.svg"}
+            src={product?.images?.length > 0 ? product.images[0].url : ""}
             alt={product.name}
             fill
             className="object-cover transition-transform group-hover:scale-105"

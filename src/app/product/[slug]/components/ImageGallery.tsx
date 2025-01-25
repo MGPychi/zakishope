@@ -52,7 +52,7 @@ export function ProductImages({ images }: ImageGalleryProps) {
         className={` w-full ${isFullscreen ? 'aspect-auto   max-w-4xl mx-auto' : 'aspect-square relative'}`}
       >
         <Image
-          src={images[currentImage] || '/placeholder.svg'}
+          src={images[currentImage] || ''}
           alt={`Product Image ${currentImage + 1}`}
           fill
           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"

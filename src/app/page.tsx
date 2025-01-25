@@ -3,7 +3,7 @@ import { FeaturedProducts } from "./_components/feature-products";
 import { HeroCarousel } from "./_components/hero-carousel";
 import { NewArrivals } from "./_components/new-arrivals";
 import { PopularCategories } from "./_components/popular-categories";
-import { SpecialOffers } from "./_components/special-offers";
+// import { SpecialOffers } from "./_components/special-offers";
 // import { Brands } from "./_components/brands"
 import { SiteHeader } from "../components/layout/site-header/site-header";
 import { SiteNav } from "../components/layout/site-nav";
@@ -27,7 +27,7 @@ export default async function Home() {
           <FeaturedProducts />
           <NewArrivals />
           <PopularCategories />
-          <SpecialOffers />
+          {/* <SpecialOffers /> */}
           {featuredCategories.map((category) => (
             <CategoryProducts key={category.id} categorySlug={category.slug} title={category.name}  />
           ))}

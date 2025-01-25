@@ -12,7 +12,7 @@ export function HeroSection() {
       subtitle: "Xiaomi Mi Box S 2nd",
       description: "4K Google TV",
       offer: "Offre Spéciale (:",
-      image: "/placeholder.svg?height=400&width=400",
+      image: "",
     },
     // Add more slides as needed
   ]

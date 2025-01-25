@@ -2,12 +2,12 @@ import Image from 'next/image'
 
 export function Brands() {
   const brands = [
-    "/placeholder.svg?height=60&width=120",
-    "/placeholder.svg?height=60&width=120",
-    "/placeholder.svg?height=60&width=120",
-    "/placeholder.svg?height=60&width=120",
-    "/placeholder.svg?height=60&width=120",
-    "/placeholder.svg?height=60&width=120",
+    "",
+    "",
+    "",
+    "",
+    "",
+    "",
   ]
 
   return (

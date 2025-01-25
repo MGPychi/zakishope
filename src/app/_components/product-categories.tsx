@@ -10,22 +10,22 @@ import {
 const categories = [
   {
     title: "SMART WATCH",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
     category: "CATEGORIE",
   },
   {
     title: "SMARTHOME",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
     category: "CATEGORIE",
   },
   {
     title: "ECOUTEURS",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
     category: "CATEGORIE",
   },
   {
     title: "INFORMATIQUE",
-    image: "/placeholder.svg?height=200&width=200",
+    image: "",
     category: "CATEGORIE",
   },
 ]

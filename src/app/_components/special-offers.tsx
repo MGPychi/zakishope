@@ -7,7 +7,7 @@ export function SpecialOffers() {
       <div className="grid md:grid-cols-2 gap-6">
         <div className="relative rounded-lg overflow-hidden">
           <Image
-            src="/placeholder.svg?height=300&width=600"
+            src=""
             alt="Special offer 1"
             width={600}
             height={300}
@@ -21,7 +21,7 @@ export function SpecialOffers() {
         </div>
         <div className="relative rounded-lg overflow-hidden">
           <Image
-            src="/placeholder.svg?height=300&width=600"
+            src=""
             alt="Special offer 2"
             width={600}
             height={300}

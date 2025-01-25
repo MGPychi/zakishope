@@ -1,5 +1,6 @@
 import SideBar from "@/components/SideBar";
 import Header from "@/components/layout/AdminHeader/AdminHeader";
+import { SessionProvider } from "next-auth/react";
 import { auth } from "@/lib/auth";
 import {
   ShoppingBasket,
@@ -55,6 +56,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
   if (!session || !session.user || !checkIfAdmin(session.user.role))
     redirect("/admin/auth/signin");
   return (
+    <SessionProvider>
       <div className="flex">
         <SideBar paths={paths} />
         <div className="container mx-auto">
@@ -62,6 +64,7 @@ const Layout = async ({ children }: { children: React.ReactNode }) => {
           {children}
         </div>
       </div>
+    </SessionProvider>
   );
 };
 
