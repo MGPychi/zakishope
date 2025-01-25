@@ -50,10 +50,6 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
   const { items, getTotal, clearCart } = useCart()
   const { toast } = useToast()
 
-  if(!initialProduct&&items.length==0){
-    router.replace("/cart")
-    return <></>
-  }
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -111,6 +107,10 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
       })),
     }
     await execute(orderData)
+  }
+  if(!initialProduct&&items.length==0){
+    router.replace("/cart")
+    return <></>
   }
 
   return (
