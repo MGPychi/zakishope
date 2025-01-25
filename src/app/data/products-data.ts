@@ -1,7 +1,7 @@
 import { PAGE_SIZE } from "@/constants";
 import { db } from "@/db";
 import { categories, products } from "@/db/schema";
-import { eq, and, or, gte, lte, ilike, inArray, sql } from "drizzle-orm";
+import { eq, and, or, gte, lte, ilike, inArray, sql, count } from "drizzle-orm";
 import { unstable_cache } from "next/cache";
 import { cache } from "react";
 import slugify from "slugify";
@@ -21,6 +21,7 @@ interface GetProductsParams {
   page: number;
   q?: string;
   category?: string;
+  mark?: string;
 }
 
 export const searchAndFilterInAllProducts = cache(
@@ -30,12 +31,14 @@ export const searchAndFilterInAllProducts = cache(
     maxPrice,
     sortByPrice,
     categories: categorySlugs,
+    marks,
   }: {
     q?: string;
     minPrice?: number;
     maxPrice?: number;
     sortByPrice?: "asc" | "desc";
     categories?: string[];
+    marks?: string[];
   }) => {
     let whereClause = undefined;
     const filters = [];
@@ -56,6 +59,11 @@ export const searchAndFilterInAllProducts = cache(
     }
     if (maxPrice) {
       filters.push(lte(products.price, maxPrice));
+    }
+
+    console.log("------",marks)
+    if (marks && marks.length > 0) {
+      filters.push(inArray(products.mark, marks));
     }
 
     // Category filtering - now using the correct relationship
@@ -109,6 +117,18 @@ export const getAllFeaturedActiveProducts = unstable_cache(
     tags: ["featured_products"],
   }
 );
+export const getProductMarks = unstable_cache(
+  async () => {
+    return await db
+      .select({ mark: products.mark, count: count() })
+      .from(products)
+      .groupBy(products.mark);
+  },
+  ["products"],
+  {
+    tags: ["products"],
+  }
+);
 
 // Get all active products
 export const getAllActiveProducts = unstable_cache(
@@ -157,10 +177,9 @@ export const getProductDetailWithSlug = unstable_cache(
   { tags: ["product_details"] }
 );
 
-
 // Get paginated products with optional search
 export const getProducts = cache(
-  async ({ page, q, category }: GetProductsParams) => {
+  async ({ page, q, category, mark }: GetProductsParams) => {
     const sluggedCategory = slugify(category ?? "");
     const foundCategory = await db.query.categories.findFirst({
       where: eq(products.slug, sluggedCategory),
@@ -172,7 +191,8 @@ export const getProducts = cache(
           ? sql`${products.name} LIKE ${`%${q}%`} OR ${
               products.description
             } LIKE ${`%${q}%`}`
-          : undefined
+          : undefined,
+        mark ? sql`${products.mark} = ${mark}` : undefined
       ),
       limit: PAGE_SIZE,
       offset: (page - 1) * PAGE_SIZE,
@@ -236,7 +256,7 @@ export const getLatestProducts = unstable_cache(
 );
 
 export const getProductDetailWithId = async (id: string) => {
-  return  db.query.products.findFirst({
+  return db.query.products.findFirst({
     where: eq(products.id, id),
     with: {
       images: true,

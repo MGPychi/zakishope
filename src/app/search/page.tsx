@@ -1,7 +1,7 @@
 import { ProductCard } from "@/components/cards/product-card/product-card";
 import { SearchFilters } from "./components/search-filters";
-import { SearchHeader } from "./components/search-header";
-import { searchAndFilterInAllProducts } from "../data/products-data";
+// import { SearchHeader } from "./components/search-header";
+import { getProductMarks, searchAndFilterInAllProducts } from "../data/products-data";
 import { getAllCategories } from "../data/categories-data";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
 
@@ -15,18 +15,21 @@ export default async function SearchPage({
     orderBy?: "price" | "date";
     order?: "asc" | "desc";
     category: string;
+    mark:string;
   };
 }) {
   const {
     q,
     priceMin,
     priceMax,
+    mark,
     order,
     category: categoriesParam,
   } = searchParams;
 const selectedCategorySlugs = categoriesParam ? categoriesParam.split("_or_") : [];
+const selectedMarks  = mark ? mark.split("_or_"):[]
 const allCategories = await getAllCategories();
-console.log("values",selectedCategorySlugs)
+const marks = await getProductMarks()
 
 
 
@@ -48,6 +51,8 @@ console.log("values",selectedCategorySlugs)
     maxPrice: parsedPriceMax,
     categories: selectedCategorySlugs,
     sortByPrice: order,
+    marks:selectedMarks
+
   });
 
   return (
@@ -59,7 +64,7 @@ console.log("values",selectedCategorySlugs)
           {/* <SearchHeader /> */}
 
           <div className="flex flex-col md:flex-row gap-6">
-            <SearchFilters categories={allCategories} />
+            <SearchFilters marks={marks} categories={allCategories} />
 
             {/* Product Grid */}
             <div className="flex-1">

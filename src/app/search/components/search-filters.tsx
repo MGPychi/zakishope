@@ -17,10 +17,14 @@ import { getAllCategories } from "@/app/data/categories-data";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
 import CategoriesFilter from "./categories-filter";
+import { getProductMarks } from "@/app/data/products-data";
+import MarksFilter from "./marks-filter";
 interface Props {
   categories: Awaited<ReturnType<typeof getAllCategories>>;
+  marks: Awaited<ReturnType<typeof getProductMarks>>;
+
 }
-export function SearchFilters({ categories }: Props) {
+export function SearchFilters({ categories,marks }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [priceRange, setPriceRange] = useState([0, 1000]);
   const router = useRouter();
@@ -52,6 +56,7 @@ export function SearchFilters({ categories }: Props) {
         initialState={parseValues("category")}
         queryKey="category"
       />
+      <MarksFilter marks={marks} handleSearch={handleSearch} initialState={parseValues("mark")} queryKey="mark" />
 
       <div>
         <h3 className="font-semibold mb-4">Prix</h3>
@@ -72,10 +77,10 @@ export function SearchFilters({ categories }: Props) {
       <div>
         <h3 className="font-semibold mb-4">Marques</h3>
         <div className="space-y-3">
-          {["Xiaomi", "Samsung", "Apple", "Sony", "LG"].map((brand) => (
-            <div key={brand} className="flex items-center space-x-2">
-              <Checkbox id={brand} />
-              <Label htmlFor={brand}>{brand}</Label>
+          {marks.map((brand) => (
+            <div key={brand.mark} className="flex items-center space-x-2">
+              <Checkbox id={brand.mark} />
+              <Label htmlFor={brand.mark}>{brand.mark} {brand.count}</Label>
             </div>
           ))}
         </div>
