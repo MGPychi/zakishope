@@ -162,7 +162,7 @@ const UpdateProductForm = ({
       formData.append("signature", signature);
       formData.append("timestamp", timestamp.toString());
       formData.append("api_key", apiKey.toString());
-      formData.append("folder", "products");
+      formData.append("folder", "worldtech");
 
       const uploadResponse = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,

@@ -109,7 +109,7 @@ const AddNewCategoryForm = () => {
       formData.append("signature", signature);
       formData.append("timestamp", timestamp.toString());
       formData.append("api_key", apiKey.toString());
-      formData.append("folder", "products");
+      formData.append("folder", "worldtech");
       console.log("form data",formData)
 
       const uploadResponse = await fetch(
