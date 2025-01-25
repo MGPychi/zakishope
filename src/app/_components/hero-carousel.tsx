@@ -2,24 +2,25 @@
 
 import * as React from "react"
 import Image from "next/image"
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import {
-  Carousel,
-  CarouselContent,
-  CarouselItem,
-  CarouselNext,
-  CarouselPrevious,
-} from "@/components/ui/carousel"
+import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious } from "@/components/ui/carousel"
+import { useEffect, useRef } from "react"
+import type { CarouselApi } from "@/components/ui/carousel"
 
 const slides = [
+  {
+    title: "NVIDIA Shield TV Pro:",
+    subtitle: "4K HDR Streaming Media Player",
+    description: "AI-Enhanced Upscaling",
+    offer: "Pour les Gamers",
+    image: "/placeholder.svg",
+  },
   {
     title: "Google TV Box:",
     subtitle: "Xiaomi Mi Box S 2nd",
     description: "4K Google TV",
     offer: "Offre Spéciale",
     image: "/placeholder.svg",
-    color: "blue",
   },
   {
     title: "Smart Speaker:",
@@ -27,7 +28,6 @@ const slides = [
     description: "With Alexa",
     offer: "Nouveau Modèle",
     image: "/placeholder.svg",
-    color: "indigo",
   },
   {
     title: "Streaming Stick:",
@@ -35,62 +35,79 @@ const slides = [
     description: "4K/HDR/Dolby Vision",
     offer: "Prix Réduit",
     image: "/placeholder.svg",
-    color: "purple",
-  },
-  {
-    title: "Apple TV 4K:",
-    subtitle: "2nd Generation",
-    description: "A12 Bionic Chip",
-    offer: "Haute Performance",
-    image: "/placeholder.svg",
-    color: "gray",
-  },
-  {
-    title: "NVIDIA Shield TV Pro:",
-    subtitle: "4K HDR Streaming Media Player",
-    description: "AI-Enhanced Upscaling",
-    offer: "Pour les Gamers",
-    image: "/placeholder.svg",
-    color: "green",
   },
 ]
 
 export function HeroCarousel() {
+  const [api, setApi] = React.useState<CarouselApi>()
+  const intervalRef = useRef<NodeJS.Timeout | null>(null)
+
+  useEffect(() => {
+    if (!api) {
+      return
+    }
+
+    intervalRef.current = setInterval(() => {
+      api.scrollNext()
+    }, 4000)
+
+    return () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [api])
+
   return (
-    <Carousel className="w-full max-w-5xl mx-auto" opts={{
-      align: "start",
-      loop: true,
-    }}>
-      <CarouselContent className="">
-        {slides.map((slide, index) => (
-          <CarouselItem key={index}>
-            <div className="p-1">
-              <Card>
-                <CardContent className="flex flex-col md:flex-row items-center justify-between p-6">
-                  <div className="space-y-4 text-center md:text-left mb-6 md:mb-0">
-                    <h2 className="text-2xl font-semibold text-primary">{slide.title}</h2>
-                    <h3 className="text-3xl md:text-4xl font-bold">{slide.subtitle}</h3>
-                    <p className="text-xl text-muted-foreground">{slide.description}</p>
-                    <p className="text-lg font-semibold text-primary">{slide.offer}</p>
-                    <Button size="lg" className="mt-4">Acheter Maintenant</Button>
+    <div className="w-screen lg:w-full overflow-hidden rounded-lg bg-white">
+      <Carousel
+        className="w-full"
+        onMouseEnter={() => {
+          if (intervalRef.current) {
+            clearInterval(intervalRef.current)
+          }
+        }}
+        onMouseLeave={() => {
+          intervalRef.current = setInterval(() => {
+            api?.scrollNext()
+          }, 4000)
+        }}
+        setApi={setApi}
+      >
+        <CarouselContent>
+          {slides.map((slide, index) => (
+            <CarouselItem key={index}>
+              <div className="p-2 sm:p-4">
+                <div className="flex flex-col items-center sm:items-start gap-4 p-4 sm:p-6 bg-white rounded-lg">
+                  <div className="w-full space-y-2 text-center sm:text-left">
+                    <h2 className="text-base sm:text-xl font-semibold text-primary line-clamp-1">{slide.title}</h2>
+                    <h3 className="text-lg sm:text-2xl font-bold text-gray-900 line-clamp-2">{slide.subtitle}</h3>
+                    <p className="text-sm sm:text-base text-muted-foreground line-clamp-1">{slide.description}</p>
+                    <p className="text-sm sm:text-lg font-semibold text-primary">{slide.offer}</p>
                   </div>
-                  <div className="w-full md:w-1/2 flex justify-center">
+                  <div className="w-full aspect-[4/3] relative max-w-[200px] mx-auto">
                     <Image
                       src={slide.image || "/placeholder.svg"}
                       alt={slide.subtitle}
-                      width={300}
-                      height={300}
-                      className="rounded-lg object-contain"
+                      fill
+                      className="object-contain"
+                      priority={index === 0}
                     />
                   </div>
-                </CardContent>
-              </Card>
-            </div>
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+                  <Button size="sm" className="w-full sm:w-auto">
+                    Acheter Maintenant
+                  </Button>
+                </div>
+              </div>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <div className="hidden sm:block">
+          <CarouselPrevious className="-left-3 sm:left-2 h-8 w-8 sm:h-10 sm:w-10" />
+          <CarouselNext className="-right-3 sm:right-2 h-8 w-8 sm:h-10 sm:w-10" />
+        </div>
+      </Carousel>
+    </div>
   )
 }
+

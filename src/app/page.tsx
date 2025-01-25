@@ -21,7 +21,7 @@ export default function Home() {
           <aside>
           <CategoriesSidebar />
           </aside>
-          <main className="space-y-8 px-10">
+          <main className="space-y-8  ">
             <HeroCarousel />
             <FeaturedProducts />
             <NewArrivals />
