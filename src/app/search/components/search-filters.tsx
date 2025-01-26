@@ -108,7 +108,7 @@ export function SearchFilters({ categories,marks }: Props) {
       {/* Mobile Filters */}
       <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
         <SheetTrigger asChild>
-          <Button variant="outline" className="md:hidden">
+          <Button variant="outline" className="md:hidden w-full">
             <SlidersHorizontal className="h-4 w-4 mr-2" />
             Filtres
           </Button>

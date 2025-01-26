@@ -1,6 +1,5 @@
 import { ProductCard } from "@/components/cards/product-card/product-card";
 import { SearchFilters } from "./components/search-filters";
-// import { SearchHeader } from "./components/search-header";
 import {
   getProductMarks,
   searchAndFilterInAllProducts,
@@ -9,19 +8,21 @@ import { getAllCategories } from "../data/categories-data";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
+import { Search} from "lucide-react";
+
+interface SearchParams {
+  q?: string;
+  priceMin?: string;
+  priceMax?: string;
+  mark?: string;
+  order?: string;
+  category?: string;
+}
 
 export default async function SearchPage({
   searchParams,
 }: {
-  searchParams: {
-    q?: string;
-    priceMin?: string;
-    priceMax?: string;
-    orderBy?: "price" | "date";
-    order?: "asc" | "desc";
-    category: string;
-    mark: string;
-  };
+  searchParams: SearchParams;
 }) {
   const {
     q,
@@ -37,53 +38,62 @@ export default async function SearchPage({
   const selectedMarks = mark ? mark.split("_or_") : [];
   const allCategories = await getAllCategories();
   const marks = await getProductMarks();
-
-  // Parse and validate priceMin and priceMax
   const parsedPriceMin = priceMin ? parseFloat(priceMin) : undefined;
   const parsedPriceMax = priceMax ? parseFloat(priceMax) : undefined;
-
-  if (parsedPriceMin !== undefined && isNaN(parsedPriceMin)) {
-    throw new Error("Invalid priceMin value");
-  }
-
-  if (parsedPriceMax !== undefined && isNaN(parsedPriceMax)) {
-    throw new Error("Invalid priceMax value");
-  }
-
   const products = await searchAndFilterInAllProducts({
     q,
     minPrice: parsedPriceMin,
     maxPrice: parsedPriceMax,
     categories: selectedCategorySlugs,
-    sortByPrice: order,
+    sortByPrice: order === "desc" || order === "asc" ? order : undefined,
     marks: selectedMarks,
   });
 
   return (
-    <>
-      <Container>
-        <SiteHeader />
+    <div className="min-h-screen flex flex-col">
+      <SiteHeader />
+      <main className="w-full pt-10 px-2 sm:px-0">
+        <Container>
+          <div className="md:hidden flex  w-full mb-4">
+            <SearchFilters  marks={marks} categories={allCategories} />
+          </div>
 
-        <main>
-          <div className="container mx-auto px-4 py-8">
-            {/* <SearchHeader /> */}
-
-            <div className="flex flex-col md:flex-row gap-6">
+          <div className="flex flex-col md:flex-row gap-6">
+            <div className="hidden md:block w-64 shrink-0">
               <SearchFilters marks={marks} categories={allCategories} />
+            </div>
 
-              {/* Product Grid */}
-              <div className="flex-1">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-                  {products.map((product) => (
-                    <ProductCard key={product.id} product={product} />
-                  ))}
+            <div className="flex-1">
+              <div className="mb-6 flex items-center justify-between">
+                <h1 className="text-2xl font-bold">
+                  {products.length} Produit{products.length !== 1 ? "s" : ""}{" "}
+                  trouvé{products.length !== 1 ? "s" : ""}
+                  {q && ` pour "${q}"`}
+                </h1>
+              </div>
+
+              {products.length === 0 && (
+                <div className="flex h-1/2 flex-col items-center justify-center py-16  rounded-lg">
+                  <Search className="h-16 w-16 text-gray-400 mb-6" />
+                  <p className="text-xl font-semibold text-gray-700 mb-2">
+                    Aucun produit trouvé
+                  </p>
+                  <p className="text-lg text-gray-500">
+                    Essayez différents filtres de recherche.
+                  </p>
                 </div>
+              )}
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 min-h-[200px]">
+                {products.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
               </div>
             </div>
           </div>
-        </main>
-      </Container>
+        </Container>
+      </main>
       <Footer />
-    </>
+    </div>
   );
 }
