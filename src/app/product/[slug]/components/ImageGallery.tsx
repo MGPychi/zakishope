@@ -1,13 +1,13 @@
-'use client';
-import { useState, useEffect, useRef } from 'react';
-import Image from 'next/image';
-import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from 'lucide-react';
+"use client";
+import { useState, useEffect, useRef } from "react";
+import Image from "next/image";
+import { ChevronLeft, ChevronRight, Maximize2, Minimize2 } from "lucide-react";
 
 interface ImageGalleryProps {
   images: string[];
 }
 
-export function ProductImages({ images }: ImageGalleryProps) {
+export function ImageGallery({ images }: ImageGalleryProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
@@ -21,14 +21,18 @@ export function ProductImages({ images }: ImageGalleryProps) {
     const handleFullscreenChange = () => {
       setIsFullscreen(!!document.fullscreenElement);
       if (mainImageRef.current) {
-        mainImageRef.current.style.height = isFullscreen ? '100vh' : 'auto';
+        mainImageRef.current.style.height = isFullscreen ? "100vh" : "auto";
       }
     };
 
-    document.addEventListener('fullscreenchange', handleFullscreenChange);
+    document.addEventListener("fullscreenchange", handleFullscreenChange);
+
+    if (!isFullscreen && mainImageRef.current) {
+      mainImageRef.current.style.height = "auto";
+    }
 
     return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange);
+      document.removeEventListener("fullscreenchange", handleFullscreenChange);
     };
   }, [isFullscreen]);
 
@@ -52,23 +56,28 @@ export function ProductImages({ images }: ImageGalleryProps) {
   };
 
   return (
-    <div className={`w-full max-w-full overflow-hidden px-4 space-y-4 transition-all duration-300 
-      ${isFullscreen ? 'fixed inset-0 z-50 bg-black/90 flex flex-col justify-center p-4' : ''}`}>
-      {/* Main Image Display */}
+    <div
+      className={`w-full max-w-full overflow-hidden px-4 space-y-4 transition-all duration-300 
+      ${
+        isFullscreen
+          ? "fixed inset-0 z-50 bg-black/90 flex flex-col justify-center p-4"
+          : ""
+      }`}
+    >
       <div
         ref={mainImageRef}
-        className={`w-full ${isFullscreen ? 'aspect-auto max-w-4xl mx-auto' : 'aspect-square relative'}`}
+        className={`w-full ${
+          isFullscreen && "aspect-auto max-w-4xl mx-auto"
+        } aspect-square relative`}
       >
         <Image
-          src={images[currentImage] || ''}
+          src={images[currentImage] || ""}
           alt={`Product Image ${currentImage + 1}`}
           fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           priority
-          className={`${isFullscreen ? "object-contain" : "object-contain"} rounded-lg transition-transform duration-300 w-full max-w-full`}
+          className={`object-contain rounded-lg transition-transform duration-300 w-full max-w-full`}
         />
-        
-        {/* Navigation Buttons */}
+
         <button
           onClick={goToPreviousImage}
           className="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group"
@@ -76,7 +85,7 @@ export function ProductImages({ images }: ImageGalleryProps) {
         >
           <ChevronLeft className="h-6 w-6 group-hover:scale-110 transition-transform" />
         </button>
-        
+
         <button
           onClick={goToNextImage}
           className="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group"
@@ -85,11 +94,12 @@ export function ProductImages({ images }: ImageGalleryProps) {
           <ChevronRight className="h-6 w-6 group-hover:scale-110 transition-transform" />
         </button>
 
-        {/* Fullscreen Toggle - Hidden on iOS */}
         {!isIOS && (
           <button
             onClick={toggleFullscreen}
-            className={`${isFullscreen ? "fixed top-14 right-4" : "absolute top-2 right-2"} bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group`}
+            className={`${
+              isFullscreen ? "fixed top-14 right-4" : "absolute top-2 right-2"
+            } bg-white/80 hover:bg-white p-2 rounded-full shadow-md transition-all group`}
             aria-label={isFullscreen ? "Exit fullscreen" : "Enter fullscreen"}
           >
             {isFullscreen ? (
@@ -101,22 +111,24 @@ export function ProductImages({ images }: ImageGalleryProps) {
         )}
       </div>
 
-      {/* Image Count */}
       <div className="text-center text-sm text-gray-500">
         {currentImage + 1} / {images.length}
       </div>
 
-      {/* Thumbnail Carousel */}
-      <div 
+      <div
         className={`flex gap-2 overflow-x-auto pb-2 w-full max-w-full transition-all 
-        ${isFullscreen ? 'hidden' : ''}`}
+        ${isFullscreen ? "hidden" : ""}`}
       >
         {images.map((src, idx) => (
           <button
             key={idx}
             onClick={() => setCurrentImage(idx)}
             className={`relative w-20 h-20 flex-shrink-0 
-              ${currentImage === idx ? 'ring-2 ring-primary' : 'opacity-60 hover:opacity-100'}
+              ${
+                currentImage === idx
+                  ? "ring-2 ring-primary"
+                  : "opacity-60 hover:opacity-100"
+              }
               transition-all duration-300 ease-in-out
             `}
             aria-label={`Select image ${idx + 1}`}

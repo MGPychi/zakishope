@@ -26,7 +26,7 @@ export function ProductCard({ product }: ProductCardProps) {
             src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
             alt={product.name}
             fill
-            className="object-cover transition-transform group-hover:scale-105"
+            className="object-contain transition-transform group-hover:scale-105"
           />
           <ProductCardAddToCart product={product} />
         </div>

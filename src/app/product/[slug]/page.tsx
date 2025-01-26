@@ -2,7 +2,7 @@ import Link from "next/link"
 import { notFound } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { SiteHeader } from "@/components/layout/site-header/site-header"
-import { ProductImages } from "./components/ImageGallery"
+import { ImageGallery } from "./components/ImageGallery"
 import { getProductDetailWithSlug } from "@/app/data/products-data"
 import AddProductToCart from "./components/AddProductToCart"
 import Footer from "@/components/layout/Footer"
@@ -23,7 +23,7 @@ export default async function ProductDetail({
       <SiteHeader />
       <main className="min-h-screen container mx-auto max-w-screen-2xl bg-background px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-10">
-          <ProductImages images={product.images.map((img) => img.url)} />
+          <ImageGallery images={product.images.map((img) => img.url)} />
 
           <div className="space-y-6">
             <div>
