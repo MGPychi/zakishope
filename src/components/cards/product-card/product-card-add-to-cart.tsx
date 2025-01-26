@@ -27,7 +27,7 @@ const ProductCardAddToCart = ({ product }: Props) => {
       variant="outline"
       size="icon"
       className={cn(
-        "absolute top-2 right-2 rounded-full transition-colors duration-300",
+        "absolute top-2 w-12 h-12 right-2 rounded-full transition-colors duration-300",
         inCart
           ? "bg-blue-500 text-white hover:text-blue-600 hover:ring-2"
           : "bg-white text-gray-600 hover:text-blue-600  hover:ring-2"
@@ -38,8 +38,8 @@ const ProductCardAddToCart = ({ product }: Props) => {
       }}
     >
       <ShoppingBasket
-        size={18}
-        className={cn("h-4 w-4", inCart && "fill-current")}
+        size={20}
+        className={cn("!h-5 !w-5", inCart && "fill-current")}
       />
       <span className="sr-only">
         {inCart ? "Remove from menu" : "Add to menu"}
