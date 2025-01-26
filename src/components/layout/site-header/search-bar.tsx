@@ -8,7 +8,7 @@ import React, { useRef, useState } from "react";
 const SearchBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
-  const [query, setQuery] = useState("");
+  const [query, setQuery] = useState("")
 
   const handleSearchRouting = () => {
     const searchQuery = inputRef.current?.value || "";
@@ -33,12 +33,11 @@ const SearchBar = () => {
           type="search"
           placeholder="Rechercher des produits"
           className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-tahat-500 focus:ring-tahat-500"
-          onChange={(e) => {
-            setQuery(e.currentTarget.value);
-          }}
+          onChange={(e)=>{setQuery(e.currentTarget.value)}}
           onKeyDown={handleKeyDown}
         />
-        <Link ref={linkRef} href={`/search?q=${query}`} passHref>
+      </div>
+        <Link className="hidden sm:block" ref={linkRef} href={`/search?q=${query}`} passHref>
           <Button
             variant={"outline"}
             onClick={handleSearchRouting}
@@ -48,7 +47,6 @@ const SearchBar = () => {
             Rechercher
           </Button>
         </Link>
-      </div>
     </div>
   );
 };
