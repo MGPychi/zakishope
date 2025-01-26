@@ -44,10 +44,12 @@ export const updateProductCategory = protectedActionClient
       }
 
       // Revalidate the path to reflect the updated data
+      revalidateTag("featured_product_categories");
+      revalidateTag("active_product_categories")
+      revalidateTag("featured_categories")
+      revalidateTag("categories");
       revalidatePath("/admin/dashboard/categories");
       revalidatePath("/admin/dashboard/products");
-      revalidateTag("featured_product_categories");
-      revalidateTag("categories");
       revalidatePath("/");
       return { success: true };
     } catch (err) {
@@ -67,10 +69,12 @@ export const deleteProductCategory = protectedActionClient
         .delete(categories)
         .where(eq(categories.id, parsedInput.id));
 
+      revalidateTag("featured_product_categories");
+      revalidateTag("featured_categories")
+      revalidateTag("active_product_categories")
+      revalidateTag("categories");
       revalidatePath("/admin/dashboard/categories");
       revalidatePath("/admin/dashboard/products");
-      revalidateTag("featured_product_categories");
-      revalidateTag("categories");
       return { success: true };
     } catch (err) {
       console.error("Error deleting product category:", err);
@@ -105,9 +109,12 @@ export const createProductCategory = actionClient
         })
         .returning({ id: categories.id });
 
+      revalidateTag("categories");
+      revalidateTag("featured_product_categories")
+      revalidateTag("featured_categories")
+      revalidateTag("active_product_categories")
       revalidatePath("/admin/dashboard/product-categories");
       revalidatePath("/");
-      revalidateTag("categories");
       return { success: true, data: { success: true } };
     } catch (err) {
       console.error("Error creating product category:", err);

@@ -79,8 +79,11 @@ export const updateProduct = protectedActionClient
         return true;
       });
 
-      revalidatePath("/admin/dashboard/products");
       revalidateTag("featured_products");
+      revalidateTag("category_products")
+      revalidateTag("latest_products")
+      revalidateTag("products")
+      revalidatePath("/admin/dashboard/products");
       revalidatePath("/");
       
       return { success: true, data: result };
@@ -159,8 +162,11 @@ export const createProduct = actionClient
         )
       );
 
-      revalidatePath("/admin/dashboard/products");
       revalidateTag("featured_products");
+      revalidateTag("category_products")
+      revalidateTag("latest_products")
+      revalidateTag("products")
+      revalidatePath("/admin/dashboard/products");
       revalidatePath("/");
 
       return { success: true };
