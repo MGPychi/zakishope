@@ -2,15 +2,20 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
-import { useRouter } from "next/navigation";
-import React, { useRef } from "react";
+import Link from "next/link";
+import React, { useRef, useState } from "react";
 
 const SearchBar = () => {
-  const ref = useRef<HTMLInputElement>(null);
-  const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
+  const linkRef = useRef<HTMLAnchorElement>(null);
+  const [query, setQuery] = useState("");
 
   const handleSearchRouting = () => {
-    router.push(`/search?q=${ref.current?.value}`);
+    const searchQuery = inputRef.current?.value || "";
+    if (linkRef.current) {
+      linkRef.current.href = `/search?q=${searchQuery}`;
+    }
+    linkRef.current?.click();
   };
 
   const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -20,22 +25,29 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="hidden w-full md:flex md:flex-1 md:items-center md:gap-2">
-      <div className="flex-1 flex items-center gap-2 max-w-2xl">
-        <div className="relative flex-1">
-          <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <Input
-            ref={ref}
-            type="search"
-            placeholder="Rechercher des produits"
-            className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-tahat-500 focus:ring-tahat-500"
-            onKeyDown={handleKeyDown}
-          />
-        </div>
-        <Button onClick={handleSearchRouting} className="hidden sm:flex">
-          <Search className="h-4 w-4 mr-2" />
-          Rechercher
-        </Button>
+    <div className="flex w-full items-center gap-2 md:flex-1">
+      <div className="relative flex-1 flex items-center gap-2 max-w-2xl">
+        <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
+        <Input
+          ref={inputRef}
+          type="search"
+          placeholder="Rechercher des produits"
+          className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-tahat-500 focus:ring-tahat-500"
+          onChange={(e) => {
+            setQuery(e.currentTarget.value);
+          }}
+          onKeyDown={handleKeyDown}
+        />
+        <Link ref={linkRef} href={`/search?q=${query}`} passHref>
+          <Button
+            variant={"outline"}
+            onClick={handleSearchRouting}
+            className="flex "
+          >
+            <Search className="h-4 w-4 mr-2" />
+            Rechercher
+          </Button>
+        </Link>
       </div>
     </div>
   );
