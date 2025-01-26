@@ -22,7 +22,7 @@ export default async function Home() {
       <SiteHeader />
       <Container>
         <SiteNav />
-        <main className="space-y-8 px-4  ">
+        <main className="space-y-8 px-1  ">
           <HeroCarousel />
           <FeaturedProducts />
           <NewArrivals />

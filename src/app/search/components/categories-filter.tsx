@@ -31,7 +31,7 @@ const CategoriesFilter = ({
   };
   useEffect(() => {
     handleSearch(queryKey, selectedValues);
-  }, [selectedValues]);
+  }, [handleSearch, queryKey, selectedValues]);
   return (
     <div>
       <h3 className="font-semibold mb-4">Catégories</h3>

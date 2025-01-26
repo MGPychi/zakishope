@@ -115,16 +115,6 @@ export default function Footer() {
 
         <Separator className="my-8" />
 
-        <div className="flex flex-col items-center justify-between gap-4 md:flex-row">
-          <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} WorldTech. All rights reserved.</p>
-          <div className="flex items-center space-x-4">
-            <img
-              src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/ArcoLinux_2025-01-25_16-25-19-bUnihvRQEmlYt7zTImndzTSQC8nrt9.png"
-              alt="Payment Methods"
-              className="h-8"
-            />
-          </div>
-        </div>
       </div>
     </footer>
   )

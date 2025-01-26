@@ -8,7 +8,7 @@ import { getAllCategories } from "@/app/data/categories-data";
 export async function SiteNav() {
   const categories = await getAllCategories();
   return (
-    <nav className="border-b bg-white">
+    <nav className="border-b px-4 xl:px-0 bg-white">
       <div className="container max-w-screen-2xl flex h-14 items-center">
         <Sheet>
           <SheetTrigger asChild>

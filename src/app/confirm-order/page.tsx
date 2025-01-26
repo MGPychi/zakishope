@@ -3,7 +3,7 @@ import { SiteNav } from "@/components/layout/site-nav";
 import { ConfirmOrderForm } from "./confirm-order-form";
 import { getProductDetailWithId } from "@/app/data/products-data";
 import Footer from "@/components/layout/Footer";
-import { Container } from "lucide-react";
+import Container from "@/components/layout/Container";
 
 export default async function ConfirmOrderPage({
   searchParams,
@@ -20,8 +20,8 @@ export default async function ConfirmOrderPage({
   return (
     <>
       <SiteHeader />
-      <SiteNav />
       <Container>
+      <SiteNav />
         <main className="container py-12 px-4">
           <h1 className="text-3xl font-bold font-heading mb-8">
             Confirmer la commande
