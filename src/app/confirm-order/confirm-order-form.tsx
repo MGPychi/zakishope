@@ -132,7 +132,12 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
     };
     await execute(orderData);
   }
-  if (!initialProduct && items.length == 0 && status != "hasSucceeded") {
+  if (
+    !initialProduct &&
+    items.length == 0 &&
+    status != "hasSucceeded" &&
+    status != "executing"
+  ) {
     router.replace("/cart");
     return <></>;
   }
