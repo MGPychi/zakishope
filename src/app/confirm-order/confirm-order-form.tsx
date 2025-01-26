@@ -1,21 +1,38 @@
-"use client"
+"use client";
 
-import { useForm } from "react-hook-form"
-import { zodResolver } from "@hookform/resolvers/zod"
-import * as z from "zod"
-import { useRouter } from "next/navigation"
-import { useCart } from "@/hooks/useCart"
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { useRouter } from "next/navigation";
+import { useCart } from "@/hooks/useCart";
 
-import { Button } from "@/components/ui/button"
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form"
-import { Input } from "@/components/ui/input"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { ALGERIAN_WILAYAS } from "@/constants"
-import { useToast } from "@/hooks/use-toast"
-import { createOrder, type CreateOrderInput } from "../admin/dashboard/orders/actions"
-import { useAction } from "next-safe-action/hooks"
+import { Button } from "@/components/ui/button";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ALGERIAN_WILAYAS } from "@/constants";
+import { useToast } from "@/hooks/use-toast";
+import {
+  createOrder,
+  type CreateOrderInput,
+} from "../admin/dashboard/orders/actions";
+import { useAction } from "next-safe-action/hooks";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -33,23 +50,22 @@ const formSchema = z.object({
   address: z.string().min(10, {
     message: "L'adresse doit contenir au moins 10 caractères.",
   }),
-})
+});
 
-type FormValues = z.infer<typeof formSchema>
+type FormValues = z.infer<typeof formSchema>;
 
 interface ConfirmOrderFormProps {
   initialProduct?: {
-    id: string
-    name: string
-    price: number
-  } | null
+    id: string;
+    name: string;
+    price: number;
+  } | null;
 }
 
 export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
-  const router = useRouter()
-  const { items, getTotal, clearCart } = useCart()
-  const { toast } = useToast()
-
+  const router = useRouter();
+  const { items, getTotal, clearCart } = useCart();
+  const { toast } = useToast();
 
   const form = useForm({
     resolver: zodResolver(formSchema),
@@ -60,41 +76,49 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
       wilaya: "",
       address: "",
     },
-  })
+  });
 
   const { execute, status } = useAction(createOrder, {
     onExecute: () => {
       toast({
         title: "Traitement en cours",
-        description: "Veuillez patienter pendant que nous traitons votre commande...",
-      })
+        description:
+          "Veuillez patienter pendant que nous traitons votre commande...",
+      });
     },
     onSuccess: (d) => {
       if (!initialProduct) {
-        clearCart()
+        clearCart();
       }
       toast({
         title: "Succès",
         description: "Votre commande a été créée avec succès.",
-      })
-      const orderId = d.data?.data?.orderId ?? ""
+      });
+      const orderId = d.data?.data?.orderId ?? "";
       router.push(
-        `/order-success?total=${orderTotal}&&items=${orderItems.length}&&wilaya=${form.getValues().wilaya}&&address=${form.getValues().address}&&phone=${form.getValues().phone}&&firstName=${form.getValues().firstName}&&lastName=${form.getValues().lastName}&&orderId=${orderId}`,
-      )
+        `/order-success?total=${orderTotal}&&items=${
+          orderItems.length
+        }&&wilaya=${form.getValues().wilaya}&&address=${
+          form.getValues().address
+        }&&phone=${form.getValues().phone}&&firstName=${
+          form.getValues().firstName
+        }&&lastName=${form.getValues().lastName}&&orderId=${orderId}`
+      );
     },
     onError: (error) => {
-      console.error(error)
+      console.error(error);
       toast({
         title: "Erreur",
-        description: "Une erreur est survenue lors de la création de la commande.",
+        description:
+          "Une erreur est survenue lors de la création de la commande.",
         variant: "destructive",
-      })
+      });
     },
-  })
+  });
 
-  const orderItems = initialProduct ? [{ item: initialProduct, qt: 1 }] : items
+  const orderItems = initialProduct ? [{ item: initialProduct, qt: 1 }] : items;
 
-  const orderTotal = initialProduct ? initialProduct.price : getTotal()
+  const orderTotal = initialProduct ? initialProduct.price : getTotal();
 
   async function onSubmit(values: FormValues) {
     const orderData: CreateOrderInput = {
@@ -105,17 +129,20 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
         quantity: item.qt,
         price: item.item.price,
       })),
-    }
-    await execute(orderData)
+    };
+    await execute(orderData);
   }
-  if(!initialProduct&&items.length==0){
-    router.replace("/cart")
-    return <></>
+  if (!initialProduct && items.length == 0 && status != "hasSucceeded") {
+    router.replace("/cart");
+    return <></>;
   }
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="grid lg:grid-cols-2 gap-8">
+      <form
+        onSubmit={form.handleSubmit(onSubmit)}
+        className="grid lg:grid-cols-2 gap-8"
+      >
         <div className="space-y-6">
           <FormField
             control={form.control}
@@ -150,9 +177,14 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
               <FormItem>
                 <FormLabel>Numéro de téléphone</FormLabel>
                 <FormControl>
-                  <Input placeholder="Entrez votre numéro de téléphone" {...field} />
+                  <Input
+                    placeholder="Entrez votre numéro de téléphone"
+                    {...field}
+                  />
                 </FormControl>
-                <FormDescription>Format: 05XXXXXXXX, 06XXXXXXXX, ou 07XXXXXXXX</FormDescription>
+                <FormDescription>
+                  Format: 05XXXXXXXX, 06XXXXXXXX, ou 07XXXXXXXX
+                </FormDescription>
                 <FormMessage />
               </FormItem>
             )}
@@ -163,7 +195,10 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Wilaya</FormLabel>
-                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
                   <FormControl>
                     <SelectTrigger>
                       <SelectValue placeholder="Sélectionnez votre wilaya" />
@@ -188,7 +223,11 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
               <FormItem>
                 <FormLabel>Adresse de livraison</FormLabel>
                 <FormControl>
-                  <Textarea placeholder="Entrez votre adresse de livraison" className="resize-none" {...field} />
+                  <Textarea
+                    placeholder="Entrez votre adresse de livraison"
+                    className="resize-none"
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -210,7 +249,10 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
                 <span>Paiement à la livraison</span>
               </div>
               {orderItems.map((item) => (
-                <div key={item.item.id} className="flex justify-between text-sm">
+                <div
+                  key={item.item.id}
+                  className="flex justify-between text-sm"
+                >
                   <span>
                     {item.item.name} × {item.qt}
                   </span>
@@ -219,15 +261,22 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
               ))}
             </CardContent>
           </Card>
-          <Button className="w-full" size="lg" type="submit" disabled={status === "executing"}>
-            {status === "executing" ? "Traitement en cours..." : "Confirmer la commande"}
+          <Button
+            className="w-full"
+            size="lg"
+            type="submit"
+            disabled={status === "executing"}
+          >
+            {status === "executing"
+              ? "Traitement en cours..."
+              : "Confirmer la commande"}
           </Button>
           <p className="text-sm text-center text-gray-600">
-            En confirmant votre commande, vous acceptez nos conditions générales de vente.
+            En confirmant votre commande, vous acceptez nos conditions générales
+            de vente.
           </p>
         </div>
       </form>
     </Form>
-  )
+  );
 }
-
