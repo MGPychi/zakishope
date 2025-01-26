@@ -29,7 +29,7 @@ export function CartItems() {
             <Image width={300} height={300} src={item?.item?.images[0]?.url} alt={item.item.name.split(" ").slice(0,25).join(" ")} className="w-24 h-24 object-cover rounded-md mr-4" />
             <div className="flex-grow">
               <h3 className="font-heading text-lg font-semibold text-tahat-800">{item.item.name.split(" ").slice(0,25).join(" ")}</h3>
-              <p className="text-tahat-600">{item.item.price.toFixed(2)} €</p>
+              <p className="text-tahat-600">{item.item.price.toFixed(2)} DZD</p>
               <div className="flex items-center mt-2">
                 <Button
                   variant="outline"

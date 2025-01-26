@@ -30,21 +30,21 @@ export default async function ProductDetail({
               <h1 className="text-3xl font-bold">{product.name}</h1>
               <p className="text-sm text-muted-foreground">{product.category.name}</p>
               <div className="mt-4 flex items-baseline gap-4">
-                <span className="text-3xl font-bold">${(product.price / 100).toFixed(2)}</span>
+                <span className="text-3xl font-bold">DZD{(product.price / 100).toFixed(2)}</span>
               </div>
             </div>
 
             <div className="flex  gap-4">
               <Link href={`/confirm-order?productId=${product.id}`} passHref>
                 <Button size="lg" className="flex-1 bg-primary">
-                  Pay Now
+                  Payer Maintenant
                 </Button>
               </Link>
               <AddProductToCart product={product} />
            </div>
 
             <div className="space-y-4">
-              <h2 className="text-xl font-semibold">Description</h2>
+                <h2 className="text-xl font-semibold">Description</h2>
               <p>{product.description}</p>
             </div>
           </div>
@@ -52,7 +52,7 @@ export default async function ProductDetail({
 
         <div className="space-y-8 ">
           <div className="py-2" />
-          <h2 className="text-xl font-semibold">Specifications</h2>
+            <h2 className="text-xl font-semibold">Spécifications</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {product.features.map((spec, idx) => (
               <div key={idx} className="flex flex-col">
