@@ -139,12 +139,12 @@ const UpdateCategoryForm = ({
 
   const onSubmit = async (data: FormValues) => {
     try {
-      let imageUrl = imagePreview?.isExisting ? imagePreview.url??"" : "";
+      let imageUrl = imagePreview?.isExisting ? imagePreview?.url??"" : "";
 
       // Upload new image to Cloudinary if exists
       if (imagePreview?.file) {
         const uploadedImage = await uploadToCloudinary(imagePreview.file);
-        imageUrl = uploadedImage.url??"";
+        imageUrl = uploadedImage?.url??"";
       }
 
       const formData = new FormData();
@@ -228,7 +228,7 @@ const UpdateCategoryForm = ({
                         {imagePreview ? (
                           <div className="relative">
                             <img
-                              src={imagePreview.url??""}
+                              src={imagePreview?.url??""}
                               alt="Preview"
                               className="w-full h-64 object-cover rounded-md"
                             />
