@@ -14,26 +14,31 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
-  const originalPrice  = product.price*1.2
+  const originalPrice = product.price * 1.2;
   return (
     <Card
-      onClick={() => router.push(`/product/${product.slug}`)}
+      // onClick={() => router.push(`/product/${product.slug}`)}
       className="group active:ring-2 active:ring-primary overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
     >
       <CardContent className="p-0 flex-grow flex flex-col">
         <div className="aspect-square m-4  relative overflow-hidden">
-          <Image
-            src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
-            alt={product.name}
-            fill
-            className="object-contain transition-transform group-hover:scale-105"
-          />
+          <Link href={`/product/${product.slug}`} passHref>
+            <Image
+              src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
+              alt={product.name}
+              fill
+              className="object-contain transition-transform group-hover:scale-105"
+            />
+          </Link>
           <ProductCardAddToCart product={product} />
         </div>
+
         <div className="p-4 flex-grow flex flex-col">
-          <h3 className="font-medium line-clamp-2 mb-2 text-lg text-gray-800 min-h-[3rem]">
-            {product.name}
-          </h3>
+          <Link href={`/product/${product.slug}`} passHref>
+            <h3 className="font-medium line-clamp-2 mb-2 text-lg text-gray-800 min-h-[3rem]">
+              {product.name}
+            </h3>
+          </Link>
           <div className="flex items-baseline gap-2 mt-auto">
             <span className="text-2xl font-bold text-primary">
               {product.price.toFixed(2)} DZD
@@ -46,7 +51,11 @@ export function ProductCard({ product }: ProductCardProps) {
           </div>
           {originalPrice && (
             <p className="text-sm text-primary mt-1">
-              {((originalPrice - product.price) / originalPrice * 100).toFixed(0)}% Off
+              {(
+                ((originalPrice - product.price) / originalPrice) *
+                100
+              ).toFixed(0)}
+              % Off
             </p>
           )}
         </div>
