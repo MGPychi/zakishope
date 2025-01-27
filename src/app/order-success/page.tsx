@@ -4,6 +4,11 @@ import { SiteHeader } from "@/components/layout/site-header/site-header";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { redirect } from "next/navigation";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Commande Réussie - Merci pour Votre Achat ! - WorldTech Constantine",
+};
 
 export default function OrderSuccessPage({
   searchParams,

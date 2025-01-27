@@ -9,6 +9,11 @@ import { SiteHeader } from "@/components/layout/site-header/site-header";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
 import { Search} from "lucide-react";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Résultats de Recherche - Trouvez Vos Électroménagers - WorldTech Constantine",
+};
 
 interface SearchParams {
   q?: string;

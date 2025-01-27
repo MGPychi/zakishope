@@ -5,6 +5,11 @@ import { SiteNav } from "../../components/layout/site-nav";
 import ConfirmCommandButton from "./_components/ConfirmCommandButton";
 import Footer from "@/components/layout/Footer";
 import Container from "@/components/layout/Container";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Votre Panier - WorldTech Constantine",
+};
 
 export default function CartPage() {
   return (
