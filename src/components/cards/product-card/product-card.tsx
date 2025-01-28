@@ -14,7 +14,13 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
-  const originalPrice = product.price * 1.2;
+  let discountedPercentage = 0;
+  let hasDiscount = false;
+  if (product.discount) {
+    hasDiscount = product.price != product.discount;
+    discountedPercentage =
+      ((product.price - product.discount) / product.price) * 100;
+  }
   return (
     <Card
       // onClick={() => router.push(`/product/${product.slug}`)}
@@ -39,23 +45,29 @@ export function ProductCard({ product }: ProductCardProps) {
               {product.name}
             </h3>
           </Link>
-          <div className="flex items-baseline gap-2 mt-auto">
-            <span className="text-2xl font-bold text-primary">
-              {product.price.toFixed(2)} DZD
-            </span>
-            {product.price && (
-              <span className="text-sm text-muted-foreground line-through">
-                {originalPrice.toFixed(2)} DZD
+
+          {!hasDiscount && (
+            <div className="flex items-baseline gap-2 mt-auto">
+              <span className="text-2xl font-bold text-primary">
+                {product.price.toFixed(0)} DZD
               </span>
-            )}
-          </div>
-          {originalPrice && (
+            </div>
+          )}
+          {hasDiscount && product.discount && (
+            <div className="flex items-baseline gap-2 mt-auto">
+              <span className="text-2xl font-bold text-primary">
+                {product.discount.toFixed(0)} DZD
+              </span>
+              {product.price && (
+                <span className="text-sm text-muted-foreground line-through">
+                  {product.price.toFixed(0)} DZD
+                </span>
+              )}
+            </div>
+          )}
+          {hasDiscount && (
             <p className="text-sm text-primary mt-1">
-              {(
-                ((originalPrice - product.price) / originalPrice) *
-                100
-              ).toFixed(0)}
-              % Off
+              {discountedPercentage.toFixed(0)}% Off
             </p>
           )}
         </div>

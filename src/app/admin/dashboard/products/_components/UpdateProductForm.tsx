@@ -35,6 +35,8 @@ const MAX_CHARS = 2000;
 const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
+  price: z.number().min(1, "Price is required"),
+  discount: z.number().optional(),
   mark: z.string().min(1, "Mark is required"),
   isFeatured: z.boolean(),
   description: z.string().min(50).max(MAX_CHARS),
@@ -67,6 +69,7 @@ const UpdateProductForm = ({
   };
   categories: Awaited<ReturnType<typeof getAllCategories>>;
 }) => {
+  console.log(initialData)
   const { toast } = useToast();
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>(
     initialData.images.map((img) => ({
@@ -207,6 +210,8 @@ const UpdateProductForm = ({
         imageUrls: allImages.map((img) => img.url),
         description: data.description,
         name: data.name,
+        price:data.price,
+        discount:data.discount,
         isFeatured: data.isFeatured,
         category: data.category,
         mark:data.mark,
@@ -258,6 +263,46 @@ const UpdateProductForm = ({
                 <FormLabel>Mark</FormLabel>
                 <FormControl>
                   <Input placeholder="Product mark" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="price"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Price</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={1}
+                    placeholder="Product price"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="discount"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Discount</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    min={1}
+                    placeholder="Product discount"
+                    {...field}
+                    onChange={(e) => field.onChange(Number(e.target.value))}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>

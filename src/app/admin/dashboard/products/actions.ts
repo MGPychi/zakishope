@@ -15,6 +15,8 @@ import slugify from "slugify";
 const updateProductSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
+  price: z.number().min(1, "Price must be at least 1.").optional(),
+  discount: z.number().optional(),
   mark: z.string().min(2, "mark must be at least 2 characters."),
   description: z.string().min(50).max(2000),
   isFeatured: z.boolean(),
@@ -43,6 +45,8 @@ export const updateProduct = protectedActionClient
             name: parsedInput.name,
             description: parsedInput.description,
             mark:parsedInput.mark,
+            price:parsedInput.price,
+            discount:parsedInput.discount,
             isFeatured: parsedInput.isFeatured,
             categoryId: category?.id,
           })
@@ -102,6 +106,7 @@ const createProductSchema = z.object({
     .string()
     .min(10, "Description must be at least 10 characters."),
   price: z.number().min(1, "Price must be at least 1."),
+  discount: z.number().optional(),
   isFeatured: z.boolean().default(false),
   category: z.string({ required_error: "Please select a category." }),
   imageUrls: z.string().transform((val) => JSON.parse(val)),
@@ -137,6 +142,7 @@ export const createProduct = actionClient
           isFeatured: parsedInput.isFeatured,
           categoryId: foundCategory.id,
           price: parsedInput.price,
+          discount:parsedInput.discount
         })
         .returning({ id: products.id });
 
