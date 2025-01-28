@@ -1,29 +1,33 @@
-"use client"
+"use client";
 
-import type { getOrders } from "@/app/data/orders-data"
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "../ui/dialog"
-import { Badge } from "../ui/badge"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { CalendarIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react"
+import type { getOrders } from "@/app/data/orders-data";
+import { Dialog, DialogContent, DialogHeader  } from "../ui/dialog";
+import { Badge } from "../ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { CalendarIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react";
 
 interface Props {
-  order: Awaited<ReturnType<typeof getOrders>>["data"][0]
-  open: boolean
-  closeModal: () => void
+  order: Awaited<ReturnType<typeof getOrders>>["data"][0];
+  open: boolean;
+  closeModal: () => void;
 }
 
 const OrderDetailsModal = ({ order, closeModal, open }: Props) => {
   return (
     <Dialog open={open} onOpenChange={closeModal}>
       <DialogContent className="max-w-6xl h-[95vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="text-2xl font-bold">Order Details</DialogTitle>
-        </DialogHeader>
-        <div className="mt-6 space-y-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            <Card>
-              <CardHeader>
+        <DialogHeader className="pt-4">
+          <div className="gap-4 flex flex-col">
+            <Card className="">
+              <CardHeader className="">
                 <CardTitle className="text-lg">Order Information</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -46,7 +50,7 @@ const OrderDetailsModal = ({ order, closeModal, open }: Props) => {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-muted-foreground">Total Amount:</span>
-                  <span className="font-bold text-lg">{(order.totalAmount)}</span>
+                  <span className="font-bold text-lg">{order.totalAmount}</span>
                 </div>
               </CardContent>
             </Card>
@@ -74,6 +78,8 @@ const OrderDetailsModal = ({ order, closeModal, open }: Props) => {
               </CardContent>
             </Card>
           </div>
+        </DialogHeader>
+        <div className="mt-6 space-y-8">
           <div>
             <h3 className="text-xl font-semibold mb-4">Order Items</h3>
             <Table>
@@ -88,17 +94,25 @@ const OrderDetailsModal = ({ order, closeModal, open }: Props) => {
               <TableBody>
                 {order.orderItems.map((item) => (
                   <TableRow key={item.id}>
-                    <TableCell className="font-medium">{item.product.name}</TableCell>
-                    <TableCell className="text-right">{item.quantity}</TableCell>
-                    <TableCell className="text-right">{(item.price)}</TableCell>
-                    <TableCell className="text-right">{(item.price * item.quantity)}</TableCell>
+                    <TableCell className="font-medium">
+                      {item.product.name}
+                    </TableCell>
+                    <TableCell className="text-right">
+                      {item.quantity}
+                    </TableCell>
+                    <TableCell className="text-right">{item.price}</TableCell>
+                    <TableCell className="text-right">
+                      {item.price * item.quantity}
+                    </TableCell>
                   </TableRow>
                 ))}
                 <TableRow>
                   <TableCell colSpan={3} className="text-right font-semibold">
                     Total
                   </TableCell>
-                  <TableCell className="text-right font-bold">{(order.totalAmount)}</TableCell>
+                  <TableCell className="text-right font-bold">
+                    {order.totalAmount}
+                  </TableCell>
                 </TableRow>
               </TableBody>
             </Table>
@@ -106,8 +120,7 @@ const OrderDetailsModal = ({ order, closeModal, open }: Props) => {
         </div>
       </DialogContent>
     </Dialog>
-  )
-}
+  );
+};
 
-export default OrderDetailsModal
-
+export default OrderDetailsModal;
