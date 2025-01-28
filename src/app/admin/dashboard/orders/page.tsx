@@ -27,7 +27,7 @@ export default async function OrderAdmin(
       <PagePaginator
         hasNext={hasNext}
         hasPrev={hasPrev}
-        baseHref="/dashboard/users"
+        baseHref="/admin/dashboard/orders"
         page={parseInt(page)}
         pageCount={pageCount}
       />

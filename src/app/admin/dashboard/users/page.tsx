@@ -27,7 +27,7 @@ export default async function UserDashboard(
       <PagePaginator
         hasNext={hasNext}
         hasPrev={hasPrev}
-        baseHref="/dashboard/users"
+        baseHref="/admin/dashboard/users"
         page={parseInt(page)}
         pageCount={pageCount}
       />

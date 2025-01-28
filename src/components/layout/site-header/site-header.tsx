@@ -1,5 +1,7 @@
 import Link from "next/link";
-import { Search, Heart } from "lucide-react";
+import { Search,
+  //  Heart 
+  } from "lucide-react";
 import LogoImage from "../../../../public/logo.png";
 import { Button } from "@/components/ui/button";
 import SiteHeaderCart from "./site-header-cart";
@@ -43,13 +45,13 @@ export function SiteHeader() {
 
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center gap-4">
-            <Button
+            {/* <Button
               variant="ghost"
               size="icon"
               className="text-gray-600 hover:text-tahat-800"
             >
               <Heart className="h-5 w-5" />
-            </Button>
+            </Button> */}
             <Link href="/cart">
               <SiteHeaderCart />
             </Link>

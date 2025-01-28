@@ -65,7 +65,7 @@ export default async function SearchPage({
 
           <div className="flex flex-col md:flex-row gap-6">
             <div className="hidden md:block w-64 shrink-0">
-              <SearchFilters marks={marks} categories={allCategories} />
+              <SearchFilters marks={marks}  categories={allCategories} />
             </div>
 
             <div className="flex-1">
