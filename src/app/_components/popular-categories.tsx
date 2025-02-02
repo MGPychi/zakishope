@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 export async function PopularCategories() {
   const categories = await getAllFeaturedCategories();
   return (
-    <section className="container mx-auto py-12 px-4">
+    <section security="featured-categories" className="container mx-auto py-12 px-4">
       <div className="mb-8 flex items-center justify-between">
         <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white">
           Catégories Populaires

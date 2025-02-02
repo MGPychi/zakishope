@@ -9,7 +9,7 @@ export async function NewArrivals() {
   const latestProducts = await getLatestProducts();
 
   return (
-    <section className="py-8 w-full px-4">
+    <section id='new-products' className="py-8 w-full px-4">
       <div className="flex   justify-between items-center mb-6">
         <h2 className="text-2xl font-bold">Nouveaux Arrivages</h2>
         <Link

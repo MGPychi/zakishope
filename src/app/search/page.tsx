@@ -6,7 +6,7 @@ import {
 } from "../data/products-data";
 import { getAllCategories } from "../data/categories-data";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
-import Footer from "@/components/layout/Footer";
+import Footer from "@/components/layout/Footer/Footer";
 import Container from "@/components/layout/Container";
 import { Search} from "lucide-react";
 import { Metadata } from "next";

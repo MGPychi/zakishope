@@ -5,7 +5,7 @@ import { SiteHeader } from "@/components/layout/site-header/site-header";
 import { ImageGallery } from "./components/ImageGallery";
 import { getProductDetailWithSlug } from "@/app/data/products-data";
 import AddProductToCart from "./components/AddProductToCart";
-import Footer from "@/components/layout/Footer";
+import Footer from "@/components/layout/Footer/Footer";
 import { Metadata, ResolvingMetadata } from "next";
 type Props = {
   params: { slug: string };
