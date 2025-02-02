@@ -3,6 +3,7 @@ import LogoImage from "../../../../public/logo.png";
 import SiteHeaderCart from "./site-header-cart";
 import Image from "next/image";
 import SearchBar from "./search-bar";
+import { Suspense } from "react";
 
 export function SiteHeader() {
   return (
@@ -30,7 +31,9 @@ export function SiteHeader() {
           </div>
 
           {/* Search Section */}
-          <SearchBar />
+          <Suspense>
+            <SearchBar />
+          </Suspense>
 
           {/* Desktop Action Buttons */}
           <div className="hidden md:flex items-center gap-4">

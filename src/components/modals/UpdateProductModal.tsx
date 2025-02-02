@@ -27,6 +27,7 @@ const UpdateProductModal = ({
             categories={categories}
             initialData={{
               ...product,
+              discount: product.discount ?? undefined,
               category: {
                 id: product.category?.id ?? "",
                 name: product.category?.name ?? "",
