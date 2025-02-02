@@ -24,7 +24,7 @@ export function ProductCard({ product }: ProductCardProps) {
   return (
     <Card
       // onClick={() => router.push(`/product/${product.slug}`)}
-      className="group active:ring-2 active:ring-primary overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
+      className="group   overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
     >
       <CardContent className="p-0 flex-grow flex flex-col">
         <div className="aspect-square m-4  relative overflow-hidden">
@@ -51,16 +51,21 @@ export function ProductCard({ product }: ProductCardProps) {
               <span className="text-2xl font-bold text-primary">
                 {product.price.toFixed(0)} DZD
               </span>
+              {product.price && (
+                <span className="text-sm text-muted-foreground line-through">
+                  {product.price.toFixed(2)} DZD
+                </span>
+              )}
             </div>
           )}
-          {hasDiscount && product.discount && (
+          {hasDiscount && (
             <div className="flex items-baseline gap-2 mt-auto">
               <span className="text-2xl font-bold text-primary">
-                {product.discount.toFixed(0)} DZD
+                {product.price.toFixed(2)} DZD
               </span>
               {product.price && (
                 <span className="text-sm text-muted-foreground line-through">
-                  {product.price.toFixed(0)} DZD
+                  {product.price.toFixed(2)} DZD
                 </span>
               )}
             </div>

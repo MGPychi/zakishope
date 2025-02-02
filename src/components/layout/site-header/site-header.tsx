@@ -1,9 +1,5 @@
 import Link from "next/link";
-import { Search,
-  //  Heart 
-  } from "lucide-react";
 import LogoImage from "../../../../public/logo.png";
-import { Button } from "@/components/ui/button";
 import SiteHeaderCart from "./site-header-cart";
 import Image from "next/image";
 import SearchBar from "./search-bar";
@@ -27,13 +23,6 @@ export function SiteHeader() {
 
             {/* Mobile Icons */}
             <div className="flex items-center gap-2 md:hidden">
-              <Button
-                variant="ghost"
-                size="icon"
-                className="text-gray-600 hover:text-tahat-800"
-              >
-                <Search className="h-5 w-5" />
-              </Button>
               <Link href="/cart">
                 <SiteHeaderCart />
               </Link>

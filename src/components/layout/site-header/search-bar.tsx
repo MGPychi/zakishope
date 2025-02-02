@@ -3,12 +3,14 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search } from "lucide-react";
 import Link from "next/link";
-import React, { useRef, useState } from "react";
+import { useSearchParams } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 
 const SearchBar = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const linkRef = useRef<HTMLAnchorElement>(null);
-  const [query, setQuery] = useState("")
+  const params = useSearchParams();
+  const [query, setQuery] = useState("");
 
   const handleSearchRouting = () => {
     const searchQuery = inputRef.current?.value || "";
@@ -23,6 +25,14 @@ const SearchBar = () => {
       handleSearchRouting();
     }
   };
+  useEffect(() => {
+    console.log("params",params.get("q"))
+    const q = params.get("q");
+    if (q) {
+      setQuery(q);
+      console.log('qq',q)
+    }
+  }, [setQuery, params]);
 
   return (
     <div className="flex w-full items-center gap-2 md:flex-1">
@@ -31,22 +41,30 @@ const SearchBar = () => {
         <Input
           ref={inputRef}
           type="search"
+          value={query}
           placeholder="Rechercher des produits"
           className="pl-10 pr-4 py-2 w-full border-gray-300 focus:border-tahat-500 focus:ring-tahat-500"
-          onChange={(e)=>{setQuery(e.currentTarget.value)}}
+          onChange={(e) => {
+            setQuery(e.currentTarget.value);
+          }}
           onKeyDown={handleKeyDown}
         />
       </div>
-        <Link className="hidden sm:block" ref={linkRef} href={`/search?q=${query}`} passHref>
-          <Button
-            variant={"outline"}
-            onClick={handleSearchRouting}
-            className="flex "
-          >
-            <Search className="h-4 w-4 mr-2" />
-            Rechercher
-          </Button>
-        </Link>
+      <Link
+        className="hidden sm:block"
+        ref={linkRef}
+        href={`/search?q=${query}`}
+        passHref
+      >
+        <Button
+          variant={"outline"}
+          onClick={handleSearchRouting}
+          className="flex "
+        >
+          <Search className="h-4 w-4 mr-2" />
+          Rechercher
+        </Button>
+      </Link>
     </div>
   );
 };
