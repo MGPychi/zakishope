@@ -7,14 +7,13 @@ import { getProductDetailWithSlug } from "@/app/data/products-data";
 import AddProductToCart from "./components/AddProductToCart";
 import Footer from "@/components/layout/Footer/Footer";
 import { Metadata, ResolvingMetadata } from "next";
-type Props = {
-  params: { slug: string };
-};
+type Params = Promise<{ slug: string }>;
 export async function generateMetadata(
-  { params }: Props,
+  { params }: { params: Params },
   parent: ResolvingMetadata
 ): Promise<Metadata> {
-  const product = await getProductDetailWithSlug(params.slug);
+  const slug = (await params).slug;
+  const product = await getProductDetailWithSlug(slug);
 
   if (!product) {
     return {
@@ -37,8 +36,9 @@ export async function generateMetadata(
   };
 }
 
-export default async function ProductDetail({ params }: Props) {
-  const product = await getProductDetailWithSlug(params.slug);
+export default async function ProductDetail({ params }: { params: Params }) {
+  const slug = (await params).slug;
+  const product = await getProductDetailWithSlug(slug);
 
   if (!product) {
     notFound();

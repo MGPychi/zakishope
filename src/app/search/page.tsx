@@ -15,14 +15,14 @@ export const metadata: Metadata = {
   title: "Résultats de Recherche - Trouvez Vos Électroménagers - WorldTech Constantine",
 };
 
-interface SearchParams {
+type SearchParams =Promise<{
   q?: string;
   priceMin?: string;
   priceMax?: string;
   mark?: string;
   order?: string;
   category?: string;
-}
+}>
 
 export default async function SearchPage({
   searchParams,
@@ -36,7 +36,7 @@ export default async function SearchPage({
     mark,
     order,
     category: categoriesParam,
-  } = searchParams;
+  } = await searchParams;
   const selectedCategorySlugs = categoriesParam
     ? categoriesParam.split("_or_")
     : [];

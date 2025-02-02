@@ -10,19 +10,21 @@ export const metadata: Metadata = {
   title: "Commande Réussie - Merci pour Votre Achat ! - WorldTech Constantine",
 };
 
-export default function OrderSuccessPage({
+type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>;
+export default async function OrderSuccessPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: SearchParams;
 }) {
-  const total = searchParams.total as string;
-  const itemCount = searchParams.items as string;
-  const wilaya = searchParams.wilaya as string;
-  const address = searchParams.address as string;
-  const phone = searchParams.phone as string;
-  const firstName = searchParams.firstName as string;
-  const lastName = searchParams.lastName as string;
-  const orderId = searchParams.orderId as string;
+  const sp = await searchParams;
+  const total = sp.total as string;
+  const itemCount = sp.items as string;
+  const wilaya = sp.wilaya as string;
+  const address = sp.address as string;
+  const phone = sp.phone as string;
+  const firstName = sp.firstName as string;
+  const lastName = sp.lastName as string;
+  const orderId = sp.orderId as string;
 
   const fullName = `${firstName} ${lastName}`.trim();
   const date = new Date().toLocaleDateString("fr-FR", {
@@ -135,7 +137,7 @@ export default function OrderSuccessPage({
               <Button variant="outline">Continuer vos achats</Button>
             </Link>
             <Link href="/cart">
-                <Button>Aller au panier</Button>
+              <Button>Aller au panier</Button>
             </Link>
           </div>
         </div>

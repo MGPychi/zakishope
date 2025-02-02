@@ -11,12 +11,13 @@ export const metadata: Metadata = {
   title: "Confirmez Votre Commande - WorldTech Constantine",
 };
 
-export default async function ConfirmOrderPage({
-  searchParams,
-}: {
-  searchParams: { productId?: string };
+type Params = Promise<{ productId?: string }>;
+
+export default async function ConfirmOrderPage(props: {
+  params: Params;
 }) {
-  const productId = searchParams.productId;
+  const params = await props.params;
+  const productId = params.productId;
   let product = null;
 
   if (productId) {
@@ -27,7 +28,7 @@ export default async function ConfirmOrderPage({
     <>
       <SiteHeader />
       <Container>
-      <SiteNav />
+        <SiteNav />
         <main className="container py-12 px-4">
           <h1 className="text-3xl font-bold font-heading mb-8">
             Confirmer la commande
