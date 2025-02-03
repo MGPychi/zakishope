@@ -1,5 +1,4 @@
 import Link from "next/link";
-import LogoImage from "../../../../public/logo.png";
 import SiteHeaderCart from "./site-header-cart";
 import Image from "next/image";
 import SearchBar from "./search-bar";
@@ -14,11 +13,11 @@ export function SiteHeader() {
           <div className="flex items-center justify-between w-full md:w-auto">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                width={100}
-                height={100}
+                width={150}
+                height={150}
                 priority
-                quality={50}
-                src={LogoImage}
+                quality={30}
+                src={"/logo.png"}
                 alt="World Tech"
                 className="h-[80px] w-auto md:h-[100px]"
               />
