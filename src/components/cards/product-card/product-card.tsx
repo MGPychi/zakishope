@@ -27,15 +27,16 @@ export function ProductCard({ product }: ProductCardProps) {
       className="group   overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-lg h-full flex flex-col"
     >
       <CardContent className="p-0 flex-grow flex flex-col">
-        <div className="aspect-square m-4  relative overflow-hidden">
+        <div className="aspect-square m-4 relative overflow-hidden flex items-center justify-center">
           <Link href={`/product/${product.slug}`} passHref>
-            <Image
-              src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
-              alt={product.name}
-              width={500}
-              height={500}
-              className="object-contain transition-transform group-hover:scale-105"
-            />
+        <Image
+          src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
+          alt={product.name}
+          width={250}
+          height={250}
+          quality={60}
+          className="object-contain transition-transform group-hover:scale-105"
+        />
           </Link>
           <ProductCardAddToCart product={product} />
         </div>
