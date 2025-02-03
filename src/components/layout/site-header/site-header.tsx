@@ -14,8 +14,10 @@ export function SiteHeader() {
           <div className="flex items-center justify-between w-full md:w-auto">
             <Link href="/" className="flex items-center gap-2">
               <Image
-                width={350}
-                height={300}
+                width={100}
+                height={100}
+                priority
+                quality={50}
                 src={LogoImage}
                 alt="World Tech"
                 className="h-[80px] w-auto md:h-[100px]"

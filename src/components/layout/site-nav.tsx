@@ -30,15 +30,13 @@ export async function SiteNav({ children }: { children?: ReactNode }) {
             <h2 className="text-xl font-medium">Categories</h2>
             <div className="grid gap-2 py-4">
               {categories.map((category) => (
-                <>
                   <Link
-                    key={category.name}
+                    key={`category_all_${category.id}`}
                     href={`/search?category=${category.slug}`}
                     className="block px-2 border-b border-gray-200 last:border-b-0 py-2 hover:text-primary  text-lg hover:text-tahat-800 transition-colors"
                   >
                     {category.name}
                   </Link>
-                </>
               ))}
             </div>
           </SheetContent>
@@ -61,17 +59,15 @@ export async function SiteNav({ children }: { children?: ReactNode }) {
           </SheetTrigger>
           <SheetContent side="left" className="max-h-screen overflow-scroll">
             <h2 className="text-xl font-medium">Categories</h2>
-            <div className="grid gap-2 py-4">
+            <div  className="grid gap-2 py-4">
               {categories.map((category) => (
-                <>
                   <Link
-                    key={category.name}
+                    key={`category_grid_${category.id}`}
                     href={`/search?category=${category.slug}`}
                     className="block px-2 border-b border-gray-200 last:border-b-0 py-2 hover:text-primary  text-lg hover:text-tahat-800 transition-colors"
                   >
                     {category.name}
                   </Link>
-                </>
               ))}
             </div>
           </SheetContent>
@@ -80,7 +76,7 @@ export async function SiteNav({ children }: { children?: ReactNode }) {
         <div className="md:hidden  flex    gap-6 ">
           {categories.slice(0, 2).map((category) => (
             <Link
-              key={category.name}
+              key={`category_2_items_${category.id}`}
               href={`/search?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
@@ -92,7 +88,7 @@ export async function SiteNav({ children }: { children?: ReactNode }) {
         <div className="lg:hidden md:flex hidden gap-6  ">
           {categories.slice(0, 4).map((category) => (
             <Link
-              key={category.name}
+              key={`category_4_items_${category.id}`}
               href={`/search?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >
@@ -103,7 +99,7 @@ export async function SiteNav({ children }: { children?: ReactNode }) {
         <div className="lg:flex gap-6 hidden ">
           {categories.slice(0, 8).map((category) => (
             <Link
-              key={category.name}
+              key={`category_8_items_${category.id}`}
               href={`/search?category=${category.slug}`}
               className="text-sm font-medium transition-colors hover:text-tahat-800"
             >

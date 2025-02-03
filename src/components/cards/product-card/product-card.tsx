@@ -32,7 +32,8 @@ export function ProductCard({ product }: ProductCardProps) {
             <Image
               src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
               alt={product.name}
-              fill
+              width={500}
+              height={500}
               className="object-contain transition-transform group-hover:scale-105"
             />
           </Link>
