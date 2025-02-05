@@ -19,7 +19,7 @@ export function SiteHeader() {
                 height={150}
                 priority
                 quality={30}
-                src={"/logo.png"}
+                src={"/logo.webp"}
                 alt="World Tech"
                 className="h-[80px] w-auto md:h-[100px]"
               />
