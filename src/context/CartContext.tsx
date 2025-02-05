@@ -44,7 +44,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
   const updateQuantity = (id: string, qt: number, override?: boolean) => {
     if (override) {
       if (qt <= 0) qt = 1;
-      console.log(qt);
       setItems((prev) =>
         prev.map((i) => {
           if (i.item.id == id && i.qt >= 1) return { ...i, qt };
@@ -56,7 +55,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     setItems((prev) =>
       prev.map((i) => {
         const newQt = i.qt + qt;
-        console.log(newQt);
         if (i.item.id == id && i.qt + qt >= 1) return { ...i, qt: newQt };
         return { ...i };
       })

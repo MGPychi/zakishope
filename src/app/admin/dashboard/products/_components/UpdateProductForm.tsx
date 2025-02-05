@@ -69,7 +69,6 @@ const UpdateProductForm = ({
   };
   categories: Awaited<ReturnType<typeof getAllCategories>>;
 }) => {
-  console.log(initialData)
   const { toast } = useToast();
   const [imagePreviews, setImagePreviews] = useState<ImagePreview[]>(
     initialData.images.map((img) => ({

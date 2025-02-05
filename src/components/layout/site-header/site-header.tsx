@@ -3,8 +3,10 @@ import SiteHeaderCart from "./site-header-cart";
 import Image from "next/image";
 import SearchBar from "./search-bar";
 import { Suspense } from "react";
+// import { getTranslations } from "next-intl/server";
 
 export function SiteHeader() {
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
       <div className="container py-4 lg:py-2 mx-auto max-w-screen-2xl px-4">

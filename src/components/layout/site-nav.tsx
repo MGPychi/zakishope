@@ -7,6 +7,7 @@ import { getAllCategories } from "@/app/data/categories-data";
 import { ReactNode } from "react";
 
 export async function SiteNav({ children }: { children?: ReactNode }) {
+
   const categories = await getAllCategories();
   if(children){
     return (

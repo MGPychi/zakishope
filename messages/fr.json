@@ -1,0 +1,21 @@
+{
+    "header": {
+        "cart": "Cart",
+        "searchPlaceholder": "Search..."
+    },
+    "footer": {
+        "companyInfo": "Informations sur l'entreprise",
+        "quickLinks": "Liens rapides",
+        "customerService": "Service client",
+        "categories": "Catégories",
+        "connectWithUs": "Connectez-vous avec nous",
+        "featuredProducts": "Produits en vedette",
+        "topBrands": "Meilleures marques",
+        "newProducts": "Nouveaux produits",
+        "aboutUs": "À propos de nous",
+        "faqs": "FAQs",
+        "privacyPolicy": "Politique de confidentialité",
+        "termsConditions": "Termes et conditions",
+        "contactUs": "Contactez-nous"
+    }
+}

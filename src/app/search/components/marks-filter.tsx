@@ -18,7 +18,6 @@ const MarksFilter = ({
   initialState,
   queryKey,
 }: Props) => {
-  console.log(marks);
   const [selectedValues, setSelectedValues] = useState<string[]>(initialState);
   const toggleValue = (value: string) => {
     setSelectedValues((prev) => {

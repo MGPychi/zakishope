@@ -26,11 +26,9 @@ const SearchBar = () => {
     }
   };
   useEffect(() => {
-    console.log("params",params.get("q"))
     const q = params.get("q");
     if (q) {
       setQuery(q);
-      console.log('qq',q)
     }
   }, [setQuery, params]);
 

@@ -1,10 +1,7 @@
-/** @type {import('next').NextConfig} */
-const nextConfig = {
-  i18n:{
-    locales:['fr','ar'],
-    defaultLocale:'fr'
+import type { NextConfig } from 'next'
 
-  },
+
+const nextConfig:NextConfig = {
   images: {
     remotePatterns: [
       {

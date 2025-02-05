@@ -97,7 +97,6 @@ export const createProductCategory = actionClient
   .action(async ({ ctx, parsedInput }) => {
     try {
       const slug = slugify(parsedInput.name);
-      console.log(parsedInput)
 
       await ctx.db
         .insert(categories)

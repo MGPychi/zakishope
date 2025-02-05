@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -10,9 +10,9 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { Checkbox } from "@/components/ui/checkbox";
-import { Label } from "@/components/ui/label";
-import { Slider } from "@/components/ui/slider";
+// import { Checkbox } from "@/components/ui/checkbox";
+// import { Label } from "@/components/ui/label";
+// import { Slider } from "@/components/ui/slider";
 import { getAllCategories } from "@/app/data/categories-data";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useRouter } from "next/navigation";
@@ -26,7 +26,7 @@ interface Props {
 }
 export function SearchFilters({ categories,marks }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
-  const [priceRange, setPriceRange] = useState([0, 1000]);
+  // const [priceRange, setPriceRange] = useState([0, 1000]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
@@ -38,14 +38,14 @@ export function SearchFilters({ categories,marks }: Props) {
     }
     return [];
   };
-  const handleSearch = (key: string, value: string[]) => {
+  const handleSearch = useCallback((key: string, value: string[]) => {
     if (value && value.length) {
       params.set(key, value.join("_or_"));
     } else {
       params.delete(key);
     }
     router.replace(`${pathname}?${params.toString()}`);
-  };
+  }, []);
 
 
   const filterContent = (
@@ -58,7 +58,7 @@ export function SearchFilters({ categories,marks }: Props) {
       />
       <MarksFilter marks={marks} handleSearch={handleSearch} initialState={parseValues("mark")} queryKey="mark" />
 
-      <div>
+      {/* <div>
         <h3 className="font-semibold mb-4">Prix</h3>
         <Slider
           defaultValue={[0, 1000]}
@@ -72,21 +72,10 @@ export function SearchFilters({ categories,marks }: Props) {
           <span>€{priceRange[0]}</span>
           <span>€{priceRange[1]}</span>
         </div>
-      </div>
+      </div> */}
 
-      <div>
-        <h3 className="font-semibold mb-4">Marques</h3>
-        <div className="space-y-3">
-          {marks.map((brand) => (
-            <div key={brand.mark} className="flex items-center space-x-2">
-              <Checkbox id={brand.mark} />
-              <Label htmlFor={brand.mark}>{brand.mark} {brand.count}</Label>
-            </div>
-          ))}
-        </div>
-      </div>
 
-      <div>
+      {/* <div>
         <h3 className="font-semibold mb-4">État</h3>
         <div className="space-y-3">
           {["Nouveau", "En promotion", "En stock"].map((status) => (
@@ -96,7 +85,7 @@ export function SearchFilters({ categories,marks }: Props) {
             </div>
           ))}
         </div>
-      </div>
+      </div> */}
     </div>
   );
 

@@ -10,7 +10,6 @@ interface Props {
 }
 
 const UpdateCategoryModal = ({ category, closeModal, open }: Props) => {
-  console.log(category)
   return (
     <>
       <Dialog open={open} onOpenChange={closeModal}>

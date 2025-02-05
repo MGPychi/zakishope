@@ -100,9 +100,6 @@ const AddNewCategoryForm = () => {
     try {
       const { signature, timestamp, apiKey, cloudName } =
         await generateUploadSignature();
-        console.log("signature", signature) 
-        console.log("timestamp", timestamp)
-        console.log("apiKey", apiKey)
 
       const formData = new FormData();
       formData.append("file", file);
@@ -110,7 +107,6 @@ const AddNewCategoryForm = () => {
       formData.append("timestamp", timestamp.toString());
       formData.append("api_key", apiKey.toString());
       formData.append("folder", "worldtech");
-      console.log("form data",formData)
 
       const uploadResponse = await fetch(
         `https://api.cloudinary.com/v1_1/${cloudName}/image/upload`,
@@ -121,7 +117,6 @@ const AddNewCategoryForm = () => {
       );
 
       const data = await uploadResponse.json();
-      console.log('response data ',data)
       return {
         url: data.secure_url,
         cloudId: data.public_id,
@@ -141,7 +136,6 @@ const AddNewCategoryForm = () => {
       // Handle image upload if present
       if (imagePreview) {
         const uploadedImage = await uploadToCloudinary(imagePreview.file);
-        console.log(uploadedImage)
         formData.append("imageUrl", uploadedImage?.url??"");
         formData.append("cloudId", uploadedImage.cloudId);
       }

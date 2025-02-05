@@ -18,7 +18,6 @@ const CategoriesFilter = ({
   initialState,
   queryKey,
 }: Props) => {
-  console.log(categories);
   const [selectedValues, setSelectedValues] = useState<string[]>(initialState);
   const toggleValue = (value: string) => {
     setSelectedValues((prev) => {

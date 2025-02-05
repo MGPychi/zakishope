@@ -12,6 +12,7 @@ import { WhyChooseUs } from "./_components/WhyUs";
 import Container from "@/components/layout/Container";
 import { CategoryProducts } from "./_components/category-products";
 import { getAllFeaturedActiveCategories } from "./data/categories-data";
+// import { getTranslations } from "next-intl/server";
 
 export default async function Home() {
   const featuredCategories = await getAllFeaturedActiveCategories();
