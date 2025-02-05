@@ -17,7 +17,6 @@ export function SiteHeader() {
               <Image
                 width={150}
                 height={150}
-                priority
                 quality={30}
                 src={"/logo.webp"}
                 alt="World Tech"
