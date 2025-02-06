@@ -28,6 +28,7 @@ const UpdateProductModal = ({
             initialData={{
               ...product,
               discount: product.discount ?? undefined,
+              showInCarousel:product.showInCarousel??undefined,
               category: {
                 id: product.category?.id ?? "",
                 name: product.category?.name ?? "",

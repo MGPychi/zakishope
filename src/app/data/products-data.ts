@@ -264,29 +264,56 @@ export const getProductDetailWithId = async (id: string) => {
     },
   });
 };
-export const getProductsByCategory = unstable_cache( async (categorySlug: string) => {   
-  const category = await db.query.categories.findFirst({
-    where: eq(categories.slug, categorySlug),
-  });
+export const getProductsByCategory = unstable_cache(
+  async (categorySlug: string) => {
+    const category = await db.query.categories.findFirst({
+      where: eq(categories.slug, categorySlug),
+    });
 
-  if (!category) {
-    return [];
-  }
+    if (!category) {
+      return [];
+    }
 
-  return await db.query.products.findMany({
-    where: eq(products.categoryId, category.id),
-    with: {
-      images: true,
-    },
-  });
-},
+    return await db.query.products.findMany({
+      where: eq(products.categoryId, category.id),
+      with: {
+        images: true,
+      },
+    });
+  },
   ["category_products"],
   {
     tags: ["category_products"],
   }
+);
 
-)
+export const getCarouselProducts = unstable_cache(
+  async () => {
+    const featuredProducts = await db.query.products.findMany({
+      where: eq(products.showInCarousel, true),
+      with: {
+        images: true,
+      },
+    });
 
-
-
-
+    return featuredProducts.map((product) => ({
+      title: product.name,
+      subtitle: product.mark,
+      description: product.description,
+      price: product.price,
+      discount: product.discount ?? undefined,
+      slug: product.slug,
+      offer: product.discount
+        ? `Special Offer - ${(
+            ((product.price - product.discount) / product.price) *
+            100
+          ).toFixed(0)} % off`
+        : undefined,
+      image: product.images[0]?.url || "/default-image.png", // Assuming you have a default image
+    }));
+  },
+  ["carousel_products"],
+  {
+    tags: ["carousel_products"],
+  }
+);

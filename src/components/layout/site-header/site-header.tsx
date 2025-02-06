@@ -8,7 +8,7 @@ import { Suspense } from "react";
 export function SiteHeader() {
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-white shadow-sm">
+    <header className="sticky top-0 z-50 w-full  bg-white ">
       <div className="container py-4 lg:py-2 mx-auto max-w-screen-2xl px-4">
         <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
           {/* Logo and Brand */}

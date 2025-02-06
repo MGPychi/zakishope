@@ -19,7 +19,8 @@ const updateProductSchema = z.object({
   discount: z.number().optional(),
   mark: z.string().min(2, "mark must be at least 2 characters."),
   description: z.string().min(50).max(2000),
-  isFeatured: z.boolean(),
+  isFeatured: z.boolean().default(false),
+  showInCarousel: z.boolean().default(false),
   imageUrls: z.array(z.string()),
   cloudIds: z.array(z.string()),
   category: z.string().optional(),
@@ -48,6 +49,7 @@ export const updateProduct = protectedActionClient
             price:parsedInput.price,
             discount:parsedInput.discount,
             isFeatured: parsedInput.isFeatured,
+            showInCarousel:parsedInput.showInCarousel,
             categoryId: category?.id,
           })
           .where(eq(products.id, parsedInput.id));
@@ -84,9 +86,10 @@ export const updateProduct = protectedActionClient
       });
 
       revalidateTag("featured_products");
-      revalidateTag("category_products")
-      revalidateTag("latest_products")
-      revalidateTag("products")
+      revalidateTag("category_products");
+      revalidateTag("latest_products");
+      revalidateTag("products");
+      revalidateTag("carousel_products");
       revalidatePath("/admin/dashboard/products");
       revalidatePath("/");
       
@@ -108,6 +111,7 @@ const createProductSchema = z.object({
   price: z.number().min(1, "Price must be at least 1."),
   discount: z.number().optional(),
   isFeatured: z.boolean().default(false),
+  showInCarousel: z.boolean().default(false),
   category: z.string({ required_error: "Please select a category." }),
   imageUrls: z.string().transform((val) => JSON.parse(val)),
   cloudIds: z.string().transform((val) => JSON.parse(val)),
@@ -140,6 +144,7 @@ export const createProduct = actionClient
           name: parsedInput.name,
           mark:parsedInput.mark,
           isFeatured: parsedInput.isFeatured,
+          showInCarousel:parsedInput.showInCarousel,
           categoryId: foundCategory.id,
           price: parsedInput.price,
           discount:parsedInput.discount
@@ -169,9 +174,10 @@ export const createProduct = actionClient
       );
 
       revalidateTag("featured_products");
-      revalidateTag("category_products")
-      revalidateTag("latest_products")
-      revalidateTag("products")
+      revalidateTag("category_products");
+      revalidateTag("latest_products");
+      revalidateTag("products");
+      revalidateTag("carousel_products");
       revalidatePath("/admin/dashboard/products");
       revalidatePath("/");
 
@@ -191,6 +197,13 @@ export const deleteProduct = protectedActionClient
       console.error(err);
       return { success: false };
     }
-    revalidatePath("/admin/dashboard/products");
+
+      revalidateTag("featured_products");
+      revalidateTag("category_products");
+      revalidateTag("latest_products");
+      revalidateTag("products");
+      revalidateTag("carousel_products");
+      revalidatePath("/admin/dashboard/products");
+      revalidatePath("/");
     return { success: true };
   });

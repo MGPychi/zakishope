@@ -42,6 +42,7 @@ export const products = pgTable("products", {
   slug: varchar("slug", { length: 255 }).notNull().unique(),
   description: text("description").notNull(),
   isFeatured: boolean("is_featured").notNull().default(false),
+  showInCarousel:boolean("show_in_carousel").default(false),
   price: integer("price").notNull(),
   discount: integer("discount").default(0),
   categoryId: uuid("category_id")

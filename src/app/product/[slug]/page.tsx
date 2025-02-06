@@ -7,6 +7,7 @@ import { getProductDetailWithSlug } from "@/app/data/products-data";
 import AddProductToCart from "./components/AddProductToCart";
 import Footer from "@/components/layout/Footer/Footer";
 import { Metadata, ResolvingMetadata } from "next";
+import { SiteNav } from "@/components/layout/site-nav";
 type Params = Promise<{ slug: string }>;
 export async function generateMetadata(
   { params }: { params: Params },
@@ -47,7 +48,10 @@ export default async function ProductDetail({ params }: { params: Params }) {
   return (
     <>
       <SiteHeader />
-      <main className="min-h-screen container mx-auto max-w-screen-2xl bg-background px-4 py-8">
+      <div className="max-w-screen-2xl mx-auto container">
+        <SiteNav/>
+      </div>
+      <main className="min-h-screen md:pt-14 container mx-auto max-w-screen-2xl bg-background px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-10">
           <ImageGallery images={product.images.map((img) => img.url)} />
 

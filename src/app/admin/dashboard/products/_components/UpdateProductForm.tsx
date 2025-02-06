@@ -36,9 +36,10 @@ const formSchema = z.object({
   id: z.string(),
   name: z.string().min(1, "Name is required"),
   price: z.number().min(1, "Price is required"),
-  discount: z.number().optional(),
+  discount: z.number().min(0).optional(),
   mark: z.string().min(1, "Mark is required"),
   isFeatured: z.boolean(),
+  showInCarousel: z.boolean().optional(),
   description: z.string().min(50).max(MAX_CHARS),
   images: z.array(z.any()).min(1).max(MAX_FILES),
   category: z.string().min(1, "Category is required"),
@@ -212,6 +213,7 @@ const UpdateProductForm = ({
         price:data.price,
         discount:data.discount,
         isFeatured: data.isFeatured,
+        showInCarousel:data.showInCarousel,
         category: data.category,
         mark:data.mark,
         features: data.features,
@@ -297,7 +299,6 @@ const UpdateProductForm = ({
                 <FormControl>
                   <Input
                     type="number"
-                    min={1}
                     placeholder="Product discount"
                     {...field}
                     onChange={(e) => field.onChange(Number(e.target.value))}
@@ -407,6 +408,31 @@ const UpdateProductForm = ({
             )}
           />
 
+
+          <div className="flex flex-col space-y-4">
+            <FormField
+              control={form.control}
+              name="showInCarousel"
+              render={({ field }) => (
+                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <FormLabel className="text-base">
+                      show in Carousel
+                    </FormLabel>
+                    <FormDescription>
+                      Show this product in carousel sections
+                    </FormDescription>
+                  </div>
+                  <FormControl>
+                    <Switch
+                      checked={field.value}
+                      onCheckedChange={field.onChange}
+                    />
+                  </FormControl>
+                </FormItem>
+              )}
+            />
+          </div>
           <div className="flex flex-col space-y-4">
             <FormField
               control={form.control}

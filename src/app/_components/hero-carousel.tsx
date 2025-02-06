@@ -11,44 +11,25 @@ import {
 } from "@/components/ui/carousel";
 import { useEffect, useRef } from "react";
 import type { CarouselApi } from "@/components/ui/carousel";
-import Image1 from "../../../public/getImage.png";
-import Image2 from "../../../public/2.png";
-import Image3 from "../../../public/3.png";
-import Image4 from "../../../public/4.png";
 import Container from "@/components/layout/Container";
+import Link from "next/link";
 
-const slides = [
-  {
-    title: "NVIDIA Shield TV Pro:",
-    subtitle: "4K HDR Streaming Media Player",
-    description: "AI-Enhanced Upscaling",
-    offer: "Pour les Gamers",
-    image: Image1,
-  },
-  {
-    title: "Google TV Box:",
-    subtitle: "Xiaomi Mi Box S 2nd",
-    description: "4K Google TV",
-    offer: "Offre Spéciale",
-    image: Image2,
-  },
-  {
-    title: "Smart Speaker:",
-    subtitle: "Amazon Echo Dot 4th Gen",
-    description: "With Alexa",
-    offer: "Nouveau Modèle",
-    image: Image3,
-  },
-  {
-    title: "Streaming Stick:",
-    subtitle: "Roku Streaming Stick 4K",
-    description: "4K/HDR/Dolby Vision",
-    offer: "Prix Réduit",
-    image: Image4,
-  },
-];
+interface Slide {
+  title: string;
+  subtitle: string;
+  description: string;
+  slug:string;
+  offer?: string;
+  image: string;
+  price: number;
+  discount?: number;
+}
 
-export function HeroCarousel() {
+interface HeroCarouselProps {
+  slides: Slide[];
+}
+
+export function HeroCarousel({ slides }: HeroCarouselProps) {
   const [api, setApi] = React.useState<CarouselApi>();
   const [activeSlide, setActiveSlide] = React.useState(0);
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
@@ -76,7 +57,7 @@ export function HeroCarousel() {
 
   return (
     <Container>
-      <div className="py-4"/>
+      <div className="py-4" />
       <div className="relative w-full  mx-auto px-4">
         <Carousel
           className="w-full"
@@ -102,7 +83,7 @@ export function HeroCarousel() {
                       alt={slide.subtitle}
                       fill
                       priority={index === 0}
-                      className="object-cover md:object-cover"
+                      className="object-contain"
                       sizes="(max-width: 768px) 100vw, 50vw"
                     />
                   </div>
@@ -117,13 +98,26 @@ export function HeroCarousel() {
                     <p className="text-sm md:text-base text-muted-foreground line-clamp-2">
                       {slide.description}
                     </p>
-                    <p className="text-base md:text-lg font-semibold text-primary">
-                      {slide.offer}
-                    </p>
-
+                    {slide.offer && (
+                      <p className="text-base md:text-lg font-semibold text-primary">
+                        {slide.offer}
+                      </p>
+                    )}
+                    <div className="text-base md:text-lg font-semibold text-primary">
+                      {slide.discount ? (
+                      <>
+                        <span className="line-through text-gray-500">{slide.price} DZD</span>{" "}
+                        <span>{slide.discount} DZD</span>
+                      </>
+                      ) : (
+                      <span>{slide.price} DZD</span>
+                      )}
+                    </div>
+                    <Link href={`product/${slide.slug}`}>
                     <Button size="sm" className="w-full md:w-auto mt-4">
                       Acheter Maintenant
                     </Button>
+                    </Link>
                   </div>
                 </div>
               </CarouselItem>

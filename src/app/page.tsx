@@ -12,10 +12,12 @@ import { WhyChooseUs } from "./_components/WhyUs";
 import Container from "@/components/layout/Container";
 import { CategoryProducts } from "./_components/category-products";
 import { getAllFeaturedActiveCategories } from "./data/categories-data";
+import { getCarouselProducts } from "./data/products-data";
 // import { getTranslations } from "next-intl/server";
 
 export default async function Home() {
   const featuredCategories = await getAllFeaturedActiveCategories();
+  const carouselProducts = await getCarouselProducts();
   return (
     <>
       {/* <div> */}
@@ -24,7 +26,9 @@ export default async function Home() {
       <Container>
         <SiteNav />
         <main className="space-y-8 px-1  ">
-          <HeroCarousel />
+          {carouselProducts && carouselProducts.length > 0 && (
+            <HeroCarousel slides={carouselProducts} />
+          )}
           <FeaturedProducts />
           <NewArrivals />
           <PopularCategories />
