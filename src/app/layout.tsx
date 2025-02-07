@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { Toaster } from "@/components/ui/toaster"
+import { Toaster } from "@/components/ui/toaster";
 import localFont from "next/font/local";
 import "./globals.css";
 import Providers from "@/components/Providers";
+import { LazyMotion, domAnimation } from "motion/react";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -17,7 +18,8 @@ const geistMono = localFont({
 
 export const metadata: Metadata = {
   title: "WorldTech Constantine - Électroménager de Qualité au Meilleur Prix",
-  description: "Découvrez WorldTech, votre boutique en ligne à Constantine spécialisée dans la vente d'électroménager de haute qualité. Trouvez des appareils modernes pour votre maison avec livraison rapide et service client dédié",
+  description:
+    "Découvrez WorldTech, votre boutique en ligne à Constantine spécialisée dans la vente d'électroménager de haute qualité. Trouvez des appareils modernes pour votre maison avec livraison rapide et service client dédié",
 };
 
 export default function RootLayout({
@@ -28,13 +30,14 @@ export default function RootLayout({
   return (
     <html lang="en">
       <Providers>
-
-        <body
-          className={`${geistSans.variable} ${geistMono.variable} antialiased    `}
-        >
-          {children}
-          <Toaster />
-        </body>
+        <LazyMotion features={domAnimation}>
+          <body
+            className={`${geistSans.variable} ${geistMono.variable} antialiased    `}
+          >
+            {children}
+            <Toaster />
+          </body>
+        </LazyMotion>
       </Providers>
     </html>
   );

@@ -11,6 +11,8 @@ export function ImageGallery({ images }: ImageGalleryProps) {
   const [currentImage, setCurrentImage] = useState(0);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [touchStartX, setTouchStartX] = useState<number | null>(null);
+  const [touchEndX, setTouchEndX] = useState<number | null>(null);
   const mainImageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -55,6 +57,28 @@ export function ImageGallery({ images }: ImageGalleryProps) {
     }
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    setTouchStartX(e.touches[0].clientX);
+    setTouchEndX(null); // Reset touch end position
+  };
+
+  const handleTouchMove = (e: React.TouchEvent) => {
+    setTouchEndX(e.touches[0].clientX);
+  };
+
+  const handleTouchEnd = () => {
+    if (!touchStartX || !touchEndX) return;
+
+    const swipeThreshold = 50; // Minimum swipe distance to trigger navigation
+    const swipeDistance = touchEndX - touchStartX;
+
+    if (swipeDistance > swipeThreshold) {
+      goToPreviousImage(); // Swipe right to go to the previous image
+    } else if (swipeDistance < -swipeThreshold) {
+      goToNextImage(); // Swipe left to go to the next image
+    }
+  };
+
   return (
     <div
       className={`w-full max-w-full overflow-hidden px-4 space-y-4 transition-all duration-300 
@@ -69,6 +93,9 @@ export function ImageGallery({ images }: ImageGalleryProps) {
         className={`w-full ${
           isFullscreen && "aspect-auto max-w-4xl mx-auto"
         } aspect-square relative`}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
       >
         <Image
           src={images[currentImage] || ""}
