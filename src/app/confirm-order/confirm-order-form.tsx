@@ -64,7 +64,7 @@ interface ConfirmOrderFormProps {
 
 export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
   const router = useRouter();
-  const { items, getTotal, clearCart } = useCart();
+  const { items, getTotal, clearCart, isLoading } = useCart();
   const { toast } = useToast();
 
   const form = useForm({
@@ -132,12 +132,18 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
     };
     await execute(orderData);
   }
+  if (isLoading) return <></>;
+
   if (
     !initialProduct &&
+    !isLoading &&
     items.length == 0 &&
     status != "hasSucceeded" &&
     status != "executing"
   ) {
+    console.log(initialProduct);
+    console.log(items.length);
+    console.log("redircting redirect");
     router.replace("/cart");
     return <></>;
   }
