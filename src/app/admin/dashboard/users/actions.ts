@@ -2,7 +2,7 @@
 import { users, insertUserSchema } from "@/db/schema";
 import { hashPassword } from "@/lib/passwords";
 import { actionClient, protectedActionClient } from "@/lib/safe-actions";
-import { and, ne, eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
@@ -14,6 +14,7 @@ export const createUser = actionClient
       await ctx.db.insert(users).values({
         ...parsedInput,
         password: hashed,
+        role: "admin",
       });
     } catch (err) {
       console.error(err);
@@ -30,10 +31,8 @@ export const deleteUser = protectedActionClient
   .schema(z.object({ id: z.string() }))
   .action(async ({ ctx, parsedInput }) => {
     try {
-      if (ctx.user.role == "admin") return { success: false };
-      await ctx.db
-        .delete(users)
-        .where(and(eq(users.id, parsedInput.id), ne(users.role, "admin")));
+      if (ctx.user.id == parsedInput.id) return { success: false };
+      await ctx.db.delete(users).where(and(eq(users.id, parsedInput.id)));
     } catch (err) {
       console.error(err);
       return { success: false };

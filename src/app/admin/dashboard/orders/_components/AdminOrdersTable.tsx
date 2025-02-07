@@ -105,6 +105,8 @@ export default function AdminOrdersTable({
               <TableHead>Wilaya</TableHead>
               <TableHead>address</TableHead>
               <TableHead>status</TableHead>
+              <TableHead>Total</TableHead>
+              <TableHead>Products</TableHead>
               <TableHead>Registred at</TableHead>
               <TableHead>Actions</TableHead>
             </TableRow>
@@ -118,6 +120,8 @@ export default function AdminOrdersTable({
                 <TableCell>{item.wilaya}</TableCell>
                 <TableCell>{item.address}</TableCell>
                 <TableCell>{item.status}</TableCell>
+                <TableCell>{item.totalAmount} DZD</TableCell>
+                <TableCell>{item.totalCount}</TableCell>
                 <TableCell>{item.createdAt?.toLocaleDateString()}</TableCell>
                 <TableCell>
                   <OrderActionsMenu orderId={item.id} />

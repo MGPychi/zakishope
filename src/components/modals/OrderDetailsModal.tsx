@@ -1,7 +1,7 @@
 "use client";
 
 import type { getOrders } from "@/app/data/orders-data";
-import { Dialog, DialogContent, DialogHeader  } from "../ui/dialog";
+import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
 import { Badge } from "../ui/badge";
 import {
   Table,
@@ -12,7 +12,7 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { CalendarIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react";
+import { CalendarIcon,MapIcon, MapPinIcon, PhoneIcon, UserIcon } from "lucide-react";
 
 interface Props {
   order: Awaited<ReturnType<typeof getOrders>>["data"][0];
@@ -70,10 +70,13 @@ const OrderDetailsModal = ({ order, closeModal, open }: Props) => {
                   <span>{order.phone}</span>
                 </div>
                 <div className="flex items-center">
+                  <MapIcon className="mr-2 h-4 w-4 text-muted-foreground" />
+                  <span> {order.wilaya}</span>
+                </div>
+                <div className="flex items-center">
                   <MapPinIcon className="mr-2 h-4 w-4 text-muted-foreground" />
-                  <span>
-                    {order.wilaya}, {order.address}
-                  </span>
+                  <span> {order.address}</span>
+
                 </div>
               </CardContent>
             </Card>
