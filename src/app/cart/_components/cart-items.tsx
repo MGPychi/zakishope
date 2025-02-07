@@ -87,10 +87,10 @@ export function CartItems() {
                   height={300}
                   src={item?.item?.images[0]?.url || "/placeholder.svg"}
                   alt={item.item.name.split(" ").slice(0, 25).join(" ")}
-                  className="w-24 h-24 object-cover rounded-md mr-4"
+                  className=" w-16 h-16 md:w-24 md:h-24 object-cover rounded-md mr-4"
                 />
                 <div className="flex-grow">
-                  <h3 className="font-heading text-lg font-semibold text-tahat-800">
+                  <h3 className="font-heading text-xs  md:text-lg font-semibold text-tahat-800">
                     {item.item.name.split(" ").slice(0, 25).join(" ")}
                   </h3>
                   <p className="text-tahat-600">{item.item.price.toFixed(2)} DZD</p>
