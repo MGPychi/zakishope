@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { SlidersHorizontal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -22,15 +22,14 @@ import MarksFilter from "./marks-filter";
 interface Props {
   categories: Awaited<ReturnType<typeof getAllCategories>>;
   marks: Awaited<ReturnType<typeof getProductMarks>>;
-
 }
-export function SearchFilters({ categories,marks }: Props) {
+export function SearchFilters({ categories, marks }: Props) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   // const [priceRange, setPriceRange] = useState([0, 1000]);
   const router = useRouter();
   const searchParams = useSearchParams();
   const pathname = usePathname();
-  const params = new URLSearchParams(searchParams);
+  const params = useMemo(() => new URLSearchParams(searchParams), [searchParams]);
   const parseValues = (key: string): string[] => {
     const value = params.get(key);
     if (value) {
@@ -38,15 +37,17 @@ export function SearchFilters({ categories,marks }: Props) {
     }
     return [];
   };
-  const handleSearch = useCallback((key: string, value: string[]) => {
-    if (value && value.length) {
-      params.set(key, value.join("_or_"));
-    } else {
-      params.delete(key);
-    }
-    router.replace(`${pathname}?${params.toString()}`);
-  }, [params, pathname, router]);
-
+  const handleSearch = useCallback(
+    (key: string, value: string[]) => {
+      if (value && value.length) {
+        params.set(key, value.join("_or_"));
+      } else {
+        params.delete(key);
+      }
+      router.replace(`${pathname}?${params.toString()}`);
+    },
+    [params, pathname, router]
+  );
 
   const filterContent = (
     <div className="space-y-6">
@@ -56,7 +57,12 @@ export function SearchFilters({ categories,marks }: Props) {
         initialState={parseValues("category")}
         queryKey="category"
       />
-      <MarksFilter marks={marks} handleSearch={handleSearch} initialState={parseValues("mark")} queryKey="mark" />
+      <MarksFilter
+        marks={marks}
+        handleSearch={handleSearch}
+        initialState={parseValues("mark")}
+        queryKey="mark"
+      />
 
       {/* <div>
         <h3 className="font-semibold mb-4">Prix</h3>
@@ -73,7 +79,6 @@ export function SearchFilters({ categories,marks }: Props) {
           <span>€{priceRange[1]}</span>
         </div>
       </div> */}
-
 
       {/* <div>
         <h3 className="font-semibold mb-4">État</h3>
