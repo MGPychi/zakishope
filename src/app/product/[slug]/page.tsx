@@ -49,7 +49,7 @@ export default async function ProductDetail({ params }: { params: Params }) {
     <>
       <SiteHeader />
       <div className="max-w-screen-2xl mx-auto container">
-        <SiteNav/>
+        <SiteNav />
       </div>
       <main className="min-h-screen md:pt-14 container mx-auto max-w-screen-2xl bg-background px-4 py-8">
         <div className="grid lg:grid-cols-2 gap-10">
@@ -61,11 +61,23 @@ export default async function ProductDetail({ params }: { params: Params }) {
               <p className="text-sm text-muted-foreground">
                 {product.category.name}
               </p>
-              <div className="mt-4 flex items-baseline gap-4">
-                <span className="text-3xl font-bold">
-                  DZD{(product.price / 100).toFixed(2)}
-                </span>
-              </div>
+              {!product.discount && (
+                <div className="mt-4 flex items-baseline gap-4">
+                  <span className="text-3xl font-bold">
+                    {(product.price).toFixed(2)} DZD
+                  </span>
+                </div>
+              )}
+              {product.discount && (
+                <div className="mt-4 flex items-baseline gap-4">
+                  <span className="text-3xl font-bold">
+                    {product.price.toFixed(2)} DZD
+                  </span>
+                  <span className="text-2xl line-through ">
+                    {product.discount.toFixed(2)} DZD
+                  </span>
+                </div>
+              )}
             </div>
 
             <div className="flex  gap-4">

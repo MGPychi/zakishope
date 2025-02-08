@@ -17,9 +17,7 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
   let discountedPercentage = 0;
-  let hasDiscount = false;
   if (product.discount) {
-    hasDiscount = product.price != product.discount;
     discountedPercentage =
       ((product.price - product.discount) / product.price) * 100;
   }
@@ -42,7 +40,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 transition={{ duration: 0.3, ease: "easeOut" }}
               >
                 <Image
-                  src={product?.images?.length > 0 ? product?.images[0]?.url : ""}
+                  src={
+                    product?.images?.length > 0 ? product?.images[0]?.url : ""
+                  }
                   alt={product.name}
                   width={250}
                   height={250}
@@ -67,7 +67,7 @@ export function ProductCard({ product }: ProductCardProps) {
               </motion.h3>
             </Link>
 
-            {!hasDiscount && (
+            {!product.discount && (
               <motion.div
                 initial={{ opacity: 0, y: 10 }} // Fade in and slide up
                 whileInView={{ opacity: 1, y: 0 }} // Animate into view
@@ -80,16 +80,16 @@ export function ProductCard({ product }: ProductCardProps) {
                 </span>
               </motion.div>
             )}
-            {hasDiscount && (
+            {product.discount && (
               <motion.div
-                initial={{ opacity: 0}} // Fade in and slide up
-                whileInView={{ opacity: 1}} // Animate into view
-                viewport={{ once: true}} // Trigger once
+                initial={{ opacity: 0 }} // Fade in and slide up
+                whileInView={{ opacity: 1 }} // Animate into view
+                viewport={{ once: true }} // Trigger once
                 transition={{ duration: 0.5, delay: 0.3 }} // Delay for staggered effect
                 className="flex items-baseline gap-2 mt-auto"
               >
                 <span className="text-2xl font-bold text-primary">
-                  {product.price.toFixed(2)} DZD
+                  {product.discount.toFixed(2)} DZD
                 </span>
                 {product.price && (
                   <span className="text-sm text-muted-foreground line-through">
@@ -98,9 +98,9 @@ export function ProductCard({ product }: ProductCardProps) {
                 )}
               </motion.div>
             )}
-            {hasDiscount && (
+            {product.discount && (
               <motion.div
-                viewport={{ once: true}} // Trigger once
+                viewport={{ once: true }} // Trigger once
                 transition={{ type: "spring", stiffness: 260, damping: 20 }} // Spring animation
               >
                 <Badge className="mt-2 bg-primary hover:bg-primary/80">
@@ -122,9 +122,9 @@ export function ProductCard({ product }: ProductCardProps) {
             passHref
           >
             <motion.div
-              initial={{  opacity: 0 }} // Fade in and slide up
-              whileInView={{  opacity: 1 }} // Animate into view
-              viewport={{ once: true}} // Trigger once
+              initial={{ opacity: 0 }} // Fade in and slide up
+              whileInView={{ opacity: 1 }} // Animate into view
+              viewport={{ once: true }} // Trigger once
               transition={{ duration: 0.5, delay: 0.4 }} // Delay for staggered effect
               className="w-full"
             >

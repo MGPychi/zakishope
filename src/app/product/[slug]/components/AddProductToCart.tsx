@@ -18,7 +18,8 @@ const AddProductToCart = ({ product }: Props) => {
 
   const handleAddToCart = () => {
     if (!inCart) {
-      addItem({ item: product, qt: 1 });
+      const productWithDiscount = {...product,price:product.discount??product.price}
+      addItem({ item: productWithDiscount, qt: 1 });
     } else removeItem(product.id);
   };
 
