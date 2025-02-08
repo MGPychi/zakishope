@@ -98,11 +98,11 @@ export async function SiteNav({ children }: { children?: ReactNode }) {
           ))}
         </div>
         <div className="lg:flex gap-6 hidden ">
-          {categories.slice(0, 8).map((category) => (
+          {categories.slice(0, 10).map((category) => (
             <Link
               key={`category_8_items_${category.id}`}
               href={`/search?category=${category.slug}`}
-              className="text-sm font-medium transition-colors hover:text-tahat-800"
+              className="text-sm  duration-200 hover:!text-blue-500 font-medium transition-colors "
             >
               {category.name}
             </Link>

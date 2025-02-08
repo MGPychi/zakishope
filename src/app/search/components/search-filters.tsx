@@ -45,7 +45,7 @@ export function SearchFilters({ categories,marks }: Props) {
       params.delete(key);
     }
     router.replace(`${pathname}?${params.toString()}`);
-  }, []);
+  }, [params, pathname, router]);
 
 
   const filterContent = (

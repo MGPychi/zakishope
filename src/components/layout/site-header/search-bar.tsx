@@ -55,12 +55,11 @@ const SearchBar = () => {
         passHref
       >
         <Button
-          variant={"outline"}
+          variant={"ghost"}
           onClick={handleSearchRouting}
           className="flex "
         >
-          <Search className="h-4 w-4 mr-2" />
-          Rechercher
+          <Search className="h-4 w-4" />
         </Button>
       </Link>
     </div>

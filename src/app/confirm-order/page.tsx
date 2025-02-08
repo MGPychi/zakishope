@@ -11,18 +11,17 @@ export const metadata: Metadata = {
   title: "Confirmez Votre Commande - WorldTech Constantine",
 };
 
-type Params = Promise<{ productId?: string }>;
 
 export default async function ConfirmOrderPage(props: {
-  params: Params;
+  searchParams:{productId:string}
 }) {
-  const params = await props.params;
-  const productId = params.productId;
+  const productId = props.searchParams.productId
   let product = null;
 
   if (productId) {
     product = await getProductDetailWithId(productId);
   }
+  console.log("id",productId)
 
   return (
     <>

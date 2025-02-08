@@ -78,11 +78,6 @@ export function ProductCard({ product }: ProductCardProps) {
                 <span className="text-2xl font-bold text-primary">
                   {product.price.toFixed(0)} DZD
                 </span>
-                {product.price && (
-                  <span className="text-sm text-muted-foreground line-through">
-                    {product.price.toFixed(2)} DZD
-                  </span>
-                )}
               </motion.div>
             )}
             {hasDiscount && (
