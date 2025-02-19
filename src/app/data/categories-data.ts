@@ -170,3 +170,4 @@ export const getTotalCategoriesCountToday = cache(async () => {
   });
   return result.length;
 });
+

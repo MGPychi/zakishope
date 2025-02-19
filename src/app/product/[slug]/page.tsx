@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { SiteHeader } from "@/components/layout/site-header/site-header";
 import { ImageGallery } from "./components/ImageGallery";
-import { getProductDetailWithSlug } from "@/app/data/products-data";
+import {
+  getAllProducts,
+  getProductDetailWithSlug,
+} from "@/app/data/products-data";
 import AddProductToCart from "./components/AddProductToCart";
 import Footer from "@/components/layout/Footer/Footer";
 import { Metadata, ResolvingMetadata } from "next";
@@ -37,6 +40,11 @@ export async function generateMetadata(
   };
 }
 
+export async function generateStaticParams() {
+  const products = await getAllProducts();
+  return products.map((product) => ({ slug: product.slug }));
+}
+
 export default async function ProductDetail({ params }: { params: Params }) {
   const slug = (await params).slug;
   const product = await getProductDetailWithSlug(slug);
@@ -64,7 +72,7 @@ export default async function ProductDetail({ params }: { params: Params }) {
               {!product.discount && (
                 <div className="mt-4 flex items-baseline gap-4">
                   <span className="text-3xl font-bold">
-                    {(product.price).toFixed(2)} DZD
+                    {product.price.toFixed(2)} DZD
                   </span>
                 </div>
               )}
