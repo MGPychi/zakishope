@@ -11,17 +11,17 @@ export const metadata: Metadata = {
   title: "Confirmez Votre Commande - WorldTech Constantine",
 };
 
-
 export default async function ConfirmOrderPage(props: {
-  searchParams:{productId:string}
+  searchParams: { productId: string };
 }) {
-  const productId = props.searchParams.productId
+  const productId = props.searchParams.productId;
   let product = null;
 
   if (productId) {
     product = await getProductDetailWithId(productId);
   }
-  console.log("id",productId)
+  console.log("productId:", productId);
+  console.log("product:", product);
 
   return (
     <>
