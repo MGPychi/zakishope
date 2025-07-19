@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { selectProductSchema } from "@/db/schema";
 import { useCart } from "@/hooks/useCart";
 import { cn } from "@/lib/utils";
+import { getFinalPrice } from "@/utils/product-utils";
 import { ShoppingBasket } from "lucide-react";
 import React from "react";
 import { z } from "zod";
@@ -18,7 +19,10 @@ const ProductCardAddToCart = ({ product }: Props) => {
 
   const handleAddToCart = () => {
     if (!inCart) {
-      const productWithDiscount = {...product,price:product.discount??product.price}
+      const productWithDiscount = {
+        ...product,
+        price: getFinalPrice(product.price, product.discount),
+      };
       addItem({ item: productWithDiscount, qt: 1 });
     } else removeItem(product.id);
   };

@@ -14,9 +14,9 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Loader2, Upload, X, Plus } from 'lucide-react';
+import { Loader2, Upload, X, Plus } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
-import { createProduct  } from "../actions";
+import { createProduct } from "../actions";
 import { z } from "zod";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent } from "@/components/ui/card";
@@ -37,11 +37,16 @@ const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   mark: z.string().min(1, "Name is mark"),
   price: z.number().min(1, "Price is required"),
-  discount: z.number().optional(),
+  discount: z
+    .number()
+    .optional()
+    .refine((val, ctx) => !val || val === 0 || val < ctx.parent.price, {
+      message: "Discount must be less than price",
+    }),
   description: z.string().min(50).max(MAX_CHARS),
   images: z.array(z.any()).min(1).max(MAX_FILES).optional().nullable(),
   isFeatured: z.boolean(),
-  showInCarousel:z.boolean(),
+  showInCarousel: z.boolean(),
   category: z.string().min(1, "Category is required"),
   features: z.array(
     z.object({
@@ -60,16 +65,15 @@ type ImagePreview = {
 
 const initialValues: FormValues = {
   name: "",
-  mark:"",
+  mark: "",
   price: 1,
-  showInCarousel:false,
+  showInCarousel: false,
   description: "",
   images: [],
   isFeatured: false,
   category: "",
   features: [],
 };
-
 
 const AddNewProductForm = ({
   categories,
@@ -187,45 +191,48 @@ const AddNewProductForm = ({
     }
   };
   const onSubmit = async (data: FormValues) => {
-  try {
-    const uploadPromises = imagePreviews.map((preview) =>
-      uploadToCloudinary(preview.file)
-    );
+    try {
+      const uploadPromises = imagePreviews.map((preview) =>
+        uploadToCloudinary(preview.file)
+      );
 
-    const uploadedImages = await Promise.all(uploadPromises);
+      const uploadedImages = await Promise.all(uploadPromises);
 
-    const productData = {
-      name: data.name,
-      description: data.description,
-      showInCarousel:data.showInCarousel,
-      isFeatured: data.isFeatured,
-      mark:data.mark,
-      category: data.category,
-      price: data.price,
-      features: data.features || [],
-      imageUrls: JSON.stringify(uploadedImages.map((img) => img.url)),
-      cloudIds: JSON.stringify(uploadedImages.map((img) => img.cloudId)),
+      const productData = {
+        name: data.name,
+        description: data.description,
+        showInCarousel: data.showInCarousel,
+        isFeatured: data.isFeatured,
+        mark: data.mark,
+        category: data.category,
+        price: data.price,
+        discount: data.discount,
+        features: data.features || [],
+        imageUrls: JSON.stringify(uploadedImages.map((img) => img.url)),
+        cloudIds: JSON.stringify(uploadedImages.map((img) => img.cloudId)),
+      };
 
-    };
+      const response = await createProduct(productData);
 
-    const response = await createProduct(productData);
-
-    if (response?.data?.success) {
-      toast({ title: "Success", description: "Product created successfully" });
-      form.reset();
-      setImagePreviews([]);
-    } else {
-      throw new Error("Failed to create product");
+      if (response?.data?.success) {
+        toast({
+          title: "Success",
+          description: "Product created successfully",
+        });
+        form.reset();
+        setImagePreviews([]);
+      } else {
+        throw new Error("Failed to create product");
+      }
+    } catch (error) {
+      console.error("Error creating product:", error);
+      toast({
+        title: "Error",
+        description: "Failed to create product",
+        variant: "destructive",
+      });
     }
-  } catch (error) {
-    console.error("Error creating product:", error);
-    toast({
-      title: "Error",
-      description: "Failed to create product",
-      variant: "destructive"
-    });
-  }
-};
+  };
 
   return (
     <Form {...form}>
@@ -348,7 +355,12 @@ const AddNewProductForm = ({
                     </FormItem>
                   )}
                 />
-                <Button type="button" variant="ghost" size="icon" onClick={() => remove(index)}>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={() => remove(index)}
+                >
                   <X className="h-4 w-4" />
                 </Button>
               </div>
@@ -458,7 +470,7 @@ const AddNewProductForm = ({
                           {imagePreviews.map((preview) => (
                             <div key={preview.id} className="relative">
                               <img
-                                src={preview.url??""}
+                                src={preview.url ?? ""}
                                 alt="Preview"
                                 className="w-full h-32 object-cover rounded-md"
                               />
@@ -534,4 +546,3 @@ const AddNewProductForm = ({
 };
 
 export default AddNewProductForm;
-

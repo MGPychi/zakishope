@@ -7,10 +7,9 @@ import {
 } from "@/db/schema";
 import { actionClient, protectedActionClient } from "@/lib/safe-actions";
 import { eq } from "drizzle-orm";
-import { revalidatePath, revalidateTag } from "next/cache";
 import { z } from "zod";
 import slugify from "slugify";
-
+import { revalidateProductCache } from "@/utils/product-utils";
 
 const updateProductSchema = z.object({
   id: z.string(),
@@ -24,10 +23,12 @@ const updateProductSchema = z.object({
   imageUrls: z.array(z.string()),
   cloudIds: z.array(z.string()),
   category: z.string().optional(),
-  features: z.array(z.object({
-    name: z.string().min(1),
-    value: z.string().min(1)
-  }))
+  features: z.array(
+    z.object({
+      name: z.string().min(1),
+      value: z.string().min(1),
+    })
+  ),
 });
 
 export const updateProduct = protectedActionClient
@@ -45,11 +46,11 @@ export const updateProduct = protectedActionClient
           .set({
             name: parsedInput.name,
             description: parsedInput.description,
-            mark:parsedInput.mark,
-            price:parsedInput.price,
-            discount:parsedInput.discount,
+            mark: parsedInput.mark,
+            price: parsedInput.price,
+            discount: parsedInput.discount,
             isFeatured: parsedInput.isFeatured,
-            showInCarousel:parsedInput.showInCarousel,
+            showInCarousel: parsedInput.showInCarousel,
             categoryId: category?.id,
           })
           .where(eq(products.id, parsedInput.id));
@@ -74,7 +75,7 @@ export const updateProduct = protectedActionClient
 
         if (parsedInput.features.length > 0) {
           await tx.insert(productFeatures).values(
-            parsedInput.features.map(spec => ({
+            parsedInput.features.map((spec) => ({
               productId: parsedInput.id,
               name: spec.name,
               value: spec.value,
@@ -85,14 +86,18 @@ export const updateProduct = protectedActionClient
         return true;
       });
 
-      revalidateTag("featured_products");
-      revalidateTag("category_products");
-      revalidateTag("latest_products");
-      revalidateTag("products");
-      revalidateTag("carousel_products");
-      revalidatePath("/admin/dashboard/products");
-      revalidatePath("/");
-      
+      // Get product slug and category slug for revalidation
+      const product = await ctx.db.query.products.findFirst({
+        where: eq(products.id, parsedInput.id),
+      });
+
+      // Use our revalidation utility
+      await revalidateProductCache({
+        productSlug: product?.slug,
+        categorySlug: sluggedCategory,
+        isHomepage: parsedInput.isFeatured || parsedInput.showInCarousel,
+      });
+
       return { success: true, data: result };
     } catch (err) {
       console.error("Error updating product:", err);
@@ -142,12 +147,12 @@ export const createProduct = actionClient
           description: parsedInput.description,
           slug,
           name: parsedInput.name,
-          mark:parsedInput.mark,
+          mark: parsedInput.mark,
           isFeatured: parsedInput.isFeatured,
-          showInCarousel:parsedInput.showInCarousel,
+          showInCarousel: parsedInput.showInCarousel,
           categoryId: foundCategory.id,
           price: parsedInput.price,
-          discount:parsedInput.discount
+          discount: parsedInput.discount,
         })
         .returning({ id: products.id });
 
@@ -173,13 +178,12 @@ export const createProduct = actionClient
         )
       );
 
-      revalidateTag("featured_products");
-      revalidateTag("category_products");
-      revalidateTag("latest_products");
-      revalidateTag("products");
-      revalidateTag("carousel_products");
-      revalidatePath("/admin/dashboard/products");
-      revalidatePath("/");
+      // Use our revalidation utility
+      await revalidateProductCache({
+        productSlug: slug,
+        categorySlug: sluggedCategory,
+        isHomepage: parsedInput.isFeatured || parsedInput.showInCarousel,
+      });
 
       return { success: true };
     } catch (err) {
@@ -192,18 +196,29 @@ export const deleteProduct = protectedActionClient
   .schema(z.object({ id: z.string() }))
   .action(async ({ ctx, parsedInput }) => {
     try {
+      // Get product details before deletion for revalidation
+      const product = await ctx.db.query.products.findFirst({
+        where: eq(products.id, parsedInput.id),
+        with: {
+          category: true,
+        },
+      });
+
+      // Delete the product
       await ctx.db.delete(products).where(eq(products.id, parsedInput.id));
+
+      // Use our revalidation utility
+      if (product) {
+        await revalidateProductCache({
+          productSlug: product.slug,
+          categorySlug: product.category?.slug,
+          isHomepage: product.isFeatured || product.showInCarousel,
+        });
+      }
+
+      return { success: true };
     } catch (err) {
       console.error(err);
       return { success: false };
     }
-
-      revalidateTag("featured_products");
-      revalidateTag("category_products");
-      revalidateTag("latest_products");
-      revalidateTag("products");
-      revalidateTag("carousel_products");
-      revalidatePath("/admin/dashboard/products");
-      revalidatePath("/");
-    return { success: true };
   });

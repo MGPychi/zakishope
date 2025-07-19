@@ -5,6 +5,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { useCart } from "@/hooks/useCart";
+import { getFinalPrice } from "@/utils/product-utils";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -127,7 +128,7 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
       items: orderItems.map((item) => ({
         productId: item.item.id,
         quantity: item.qt,
-        price: item.item.price,
+        price: getFinalPrice(item.item.price, item.item.discount),
       })),
     };
     await execute(orderData);
