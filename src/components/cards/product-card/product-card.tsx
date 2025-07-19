@@ -102,7 +102,7 @@ export function ProductCard({ product }: ProductCardProps) {
                 </span>
               )}
             </motion.div>
-            {product.discount && (
+            {/* {product.discount && (
               <motion.div
                 viewport={{ once: true }} // Trigger once
                 transition={{ type: "spring", stiffness: 260, damping: 20 }} // Spring animation
@@ -111,7 +111,7 @@ export function ProductCard({ product }: ProductCardProps) {
                   {discountPercentage.toFixed(0)}% Off
                 </Badge>
               </motion.div>
-            )}
+            )} */}
           </div>
         </CardContent>
 
