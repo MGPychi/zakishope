@@ -1,13 +1,15 @@
-"use client"
-import { Minus, Plus, X, ShoppingCart } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Card, CardContent } from "@/components/ui/card"
-import { Skeleton } from "@/components/ui/skeleton"
-import { useCart } from "@/hooks/useCart"
-import Image from "next/image"
-import * as motion from "motion/react-m"
-import { AnimatePresence } from "motion/react"
+"use client";
+// import { getCartItemPrice } from "@/interfaces/CartItem";
+// import { getFinalPrice } from "@/utils/product-utils";
+import { Minus, Plus, X, ShoppingCart } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Card, CardContent } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
+import { useCart } from "@/hooks/useCart";
+import Image from "next/image";
+import * as motion from "motion/react-m";
+import { AnimatePresence } from "motion/react";
 
 const CartItemSkeleton = () => (
   <Card>
@@ -25,35 +27,51 @@ const CartItemSkeleton = () => (
       <Skeleton className="h-8 w-8 rounded ml-4" />
     </CardContent>
   </Card>
-)
+);
 
 const EmptyCart = () => (
-  <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}>
+  <motion.div
+    initial={{ opacity: 0, y: 20 }}
+    animate={{ opacity: 1, y: 0 }}
+    transition={{ duration: 0.5 }}
+  >
     <Card className="w-full">
       <CardContent className="flex flex-col items-center justify-center p-8">
         <ShoppingCart className="h-16 w-16 text-gray-400 mb-4" />
-        <h3 className="font-heading text-xl font-semibold text-gray-700 mb-2">Votre panier est vide</h3>
+        <h3 className="font-heading text-xl font-semibold text-gray-700 mb-2">
+          Votre panier est vide
+        </h3>
         <p className="text-gray-500 text-center mb-4">
-          On dirait que vous n&apos;avez pas encore ajouté d&apos;articles à votre panier.
+          On dirait que vous n&apos;avez pas encore ajouté d&apos;articles à
+          votre panier.
         </p>
-        <Button variant="default" className="mt-2" onClick={() => window.history.back()}>
+        <Button
+          variant="default"
+          className="mt-2"
+          onClick={() => window.history.back()}
+        >
           Continuer vos achats
         </Button>
       </CardContent>
     </Card>
   </motion.div>
-)
+);
 
 export function CartItems() {
-  const { items, isLoading, updateQuantity: updateItemQt, removeItem: removeCartItem } = useCart()
+  const {
+    items,
+    isLoading,
+    updateQuantity: updateItemQt,
+    removeItem: removeCartItem,
+  } = useCart();
 
   const updateQuantity = (id: string, newQuantity: number) => {
-    updateItemQt(id, newQuantity)
-  }
+    updateItemQt(id, newQuantity);
+  };
 
   const removeItem = (id: string) => {
-    removeCartItem(id)
-  }
+    removeCartItem(id);
+  };
 
   if (isLoading) {
     return (
@@ -62,15 +80,20 @@ export function CartItems() {
           <CartItemSkeleton key={index} />
         ))}
       </div>
-    )
+    );
   }
 
   if (!items || items.length === 0) {
-    return <EmptyCart />
+    return <EmptyCart />;
   }
 
   return (
-    <motion.div className="space-y-4" initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
+    <motion.div
+      className="space-y-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.5 }}
+    >
       <AnimatePresence>
         {items.map((item) => (
           <motion.div
@@ -93,9 +116,27 @@ export function CartItems() {
                   <h3 className="font-heading text-xs  md:text-lg font-semibold text-tahat-800">
                     {item.item.name.split(" ").slice(0, 25).join(" ")}
                   </h3>
-                  <p className="text-tahat-600">{item.item.price.toFixed(2)} DZD</p>
+                  <div className="text-tahat-600">
+                    {item.item.discount &&
+                    item.item.discount > 0 &&
+                    item.item.discount < item.item.price ? (
+                      <>
+                        <span className="line-through text-gray-500 mr-2">
+                          {item.item.price.toFixed(2)} DZD
+                        </span>
+                        <span className="text-red-500 font-semibold">
+                          {item.item.discount.toFixed(2)} DZD
+                        </span>
+                      </>
+                    ) : (
+                      <span>{item.item.price.toFixed(2)} DZD</span>
+                    )}
+                  </div>
                   <div className="flex items-center mt-2">
-                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
                       <Button
                         variant="outline"
                         size="icon"
@@ -109,10 +150,19 @@ export function CartItems() {
                       type="number"
                       value={item.qt}
                       min={1}
-                      onChange={(e) => updateItemQt(item.item.id, Number.parseInt(e.target.value ?? "1"), true)}
+                      onChange={(e) =>
+                        updateItemQt(
+                          item.item.id,
+                          Number.parseInt(e.target.value ?? "1"),
+                          true
+                        )
+                      }
                       className="w-16 mx-2 text-center"
                     />
-                    <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
+                    <motion.div
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                    >
                       <Button
                         variant="outline"
                         size="icon"
@@ -124,8 +174,15 @@ export function CartItems() {
                     </motion.div>
                   </div>
                 </div>
-                <motion.div whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }}>
-                  <Button variant="ghost" size="icon" onClick={() => removeItem(item.item.id)}>
+                <motion.div
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.9 }}
+                >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => removeItem(item.item.id)}
+                  >
                     <X className="h-5 w-5" />
                   </Button>
                 </motion.div>
@@ -135,6 +192,5 @@ export function CartItems() {
         ))}
       </AnimatePresence>
     </motion.div>
-  )
+  );
 }
-

@@ -212,7 +212,8 @@ export const deleteProduct = protectedActionClient
         await revalidateProductCache({
           productSlug: product.slug,
           categorySlug: product.category?.slug,
-          isHomepage: product.isFeatured || product.showInCarousel,
+          isHomepage:
+            (product.isFeatured ?? false) || (product.showInCarousel ?? false),
         });
       }
 

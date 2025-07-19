@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import * as motion from "motion/react-m"; // Import Framer Motion
 import { Badge } from "@/components/ui/badge"; // Import the Badge component
+import { getFinalPrice } from "@/utils/product-utils";
 
 interface ProductCardProps {
   product: Awaited<ReturnType<typeof getAllFeaturedActiveProducts>>[0];
@@ -16,10 +17,17 @@ interface ProductCardProps {
 
 export function ProductCard({ product }: ProductCardProps) {
   const router = useRouter();
-  let discountedPercentage = 0;
-  if (product.discount) {
-    discountedPercentage =
-      ((product.price - product.discount) / product.price) * 100;
+  const finalPrice = getFinalPrice(product.price, product.discount);
+  const hasDiscount =
+    product.discount &&
+    product.discount > 0 &&
+    product.discount < product.price;
+  let discountPercentage = 0;
+
+  if (hasDiscount) {
+    discountPercentage = Math.round(
+      ((product.price - finalPrice) / product.price) * 100
+    );
   }
 
   return (
@@ -67,44 +75,40 @@ export function ProductCard({ product }: ProductCardProps) {
               </motion.h3>
             </Link>
 
-            {!product.discount && (
-              <motion.div
-                initial={{ opacity: 0, y: 10 }} // Fade in and slide up
-                whileInView={{ opacity: 1, y: 0 }} // Animate into view
-                viewport={{ once: true, margin: "-50px" }} // Trigger once
-                transition={{ duration: 0.5, delay: 0.3 }} // Delay for staggered effect
-                className="flex items-baseline gap-2 mt-auto"
-              >
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex items-baseline gap-2 mt-auto"
+            >
+              {hasDiscount ? (
+                <>
+                  <span className="text-2xl font-bold text-primary">
+                    {finalPrice.toFixed(0)} DZD
+                  </span>
+                  <span className="text-sm text-muted-foreground line-through">
+                    {product.price.toFixed(0)} DZD
+                  </span>
+                  {discountPercentage > 0 && (
+                    <Badge variant="destructive" className="ml-auto">
+                      -{discountPercentage}%
+                    </Badge>
+                  )}
+                </>
+              ) : (
                 <span className="text-2xl font-bold text-primary">
                   {product.price.toFixed(0)} DZD
                 </span>
-              </motion.div>
-            )}
-            {product.discount && (
-              <motion.div
-                initial={{ opacity: 0 }} // Fade in and slide up
-                whileInView={{ opacity: 1 }} // Animate into view
-                viewport={{ once: true }} // Trigger once
-                transition={{ duration: 0.5, delay: 0.3 }} // Delay for staggered effect
-                className="flex items-baseline gap-2 mt-auto"
-              >
-                <span className="text-2xl font-bold text-primary">
-                  {product.discount.toFixed(2)} DZD
-                </span>
-                {product.price && (
-                  <span className="text-sm text-muted-foreground line-through">
-                    {product.price.toFixed(2)} DZD
-                  </span>
-                )}
-              </motion.div>
-            )}
+              )}
+            </motion.div>
             {product.discount && (
               <motion.div
                 viewport={{ once: true }} // Trigger once
                 transition={{ type: "spring", stiffness: 260, damping: 20 }} // Spring animation
               >
                 <Badge className="mt-2 bg-primary hover:bg-primary/80">
-                  {discountedPercentage.toFixed(0)}% Off
+                  {discountPercentage.toFixed(0)}% Off
                 </Badge>
               </motion.div>
             )}

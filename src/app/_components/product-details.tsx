@@ -1,18 +1,29 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Heart, Minus, Plus, ShoppingCart, Star } from 'lucide-react'
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import Image from "next/image"
-import {  getProductDetailWithSlug } from "../data/products-data"
+import { useState } from "react";
+import { Heart, Minus, Plus, ShoppingCart, Star } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import Image from "next/image";
+import { getProductDetailWithSlug } from "../data/products-data";
+import { getFinalPrice } from "@/utils/product-utils";
+import { Badge } from "@/components/ui/badge";
 
 interface Props {
-  product:Awaited<ReturnType<typeof getProductDetailWithSlug>>
+  product: Awaited<ReturnType<typeof getProductDetailWithSlug>>;
 }
-export function ProductDetailsClient({ product }:Props) {
-  const [quantity, setQuantity] = useState(1)
-  const [selectedImage, setSelectedImage] = useState(0)
+export function ProductDetailsClient({ product }: Props) {
+  const [quantity, setQuantity] = useState(1);
+  const [selectedImage, setSelectedImage] = useState(0);
+
+  const finalPrice = getFinalPrice(product!.price, product!.discount);
+  const hasDiscount =
+    product!.discount &&
+    product!.discount > 0 &&
+    product!.discount < product!.price;
+  const discountPercentage = hasDiscount
+    ? Math.round(((product!.price - finalPrice) / product!.price) * 100)
+    : 0;
 
   return (
     <div className="grid md:grid-cols-2 gap-8">
@@ -21,7 +32,7 @@ export function ProductDetailsClient({ product }:Props) {
           <Image
             width={400}
             height={400}
-            src={product!.images[selectedImage]?.url??""}
+            src={product!.images[selectedImage]?.url ?? ""}
             alt={product!.name}
             className="absolute inset-0 w-full h-full object-cover rounded-lg"
           />
@@ -35,13 +46,21 @@ export function ProductDetailsClient({ product }:Props) {
               }`}
               onClick={() => setSelectedImage(index)}
             >
-              <Image width={100} height={100} src={image?.url??""} alt={`${product!.name} ${index + 1}`} className="w-full h-full object-cover" />
+              <Image
+                width={100}
+                height={100}
+                src={image?.url ?? ""}
+                alt={`${product!.name} ${index + 1}`}
+                className="w-full h-full object-cover"
+              />
             </button>
           ))}
         </div>
       </div>
       <div className="space-y-6">
-        <h1 className="text-3xl font-bold font-heading text-tahat-900">{product!.name}</h1>
+        <h1 className="text-3xl font-bold font-heading text-tahat-900">
+          {product!.name}
+        </h1>
         <div className="flex items-center gap-2">
           {Array.from({ length: 5 }).map((_, index) => (
             <Star
@@ -55,11 +74,35 @@ export function ProductDetailsClient({ product }:Props) {
           ))}
           <span className="text-tahat-600">({4.5})</span>
         </div>
-        <p className="text-2xl font-bold text-tahat-800">{product!.price.toFixed(2)} €</p>
+
+        <div className="flex items-center gap-3">
+          {hasDiscount ? (
+            <>
+              <span className="text-2xl font-bold text-tahat-800">
+                {finalPrice.toFixed(2)} DZD
+              </span>
+              <span className="text-lg text-gray-500 line-through">
+                {product!.price.toFixed(2)} DZD
+              </span>
+              {discountPercentage > 0 && (
+                <Badge variant="destructive" className="ml-1">
+                  -{discountPercentage}%
+                </Badge>
+              )}
+            </>
+          ) : (
+            <span className="text-2xl font-bold text-tahat-800">
+              {product!.price.toFixed(2)} DZD
+            </span>
+          )}
+        </div>
+
         <p className="text-tahat-600">{product!.description}</p>
         <ul className="list-disc list-inside space-y-2">
           {product!.features.map((feature, index) => (
-            <li key={index} className="text-tahat-600">{feature.value}</li>
+            <li key={index} className="text-tahat-600">
+              {feature.value}
+            </li>
           ))}
         </ul>
         <div className="flex items-center gap-4">
@@ -75,7 +118,9 @@ export function ProductDetailsClient({ product }:Props) {
             <Input
               type="number"
               value={quantity}
-              onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value)))}
+              onChange={(e) =>
+                setQuantity(Math.max(1, parseInt(e.target.value)))
+              }
               className="w-16 mx-2 text-center"
             />
             <Button
@@ -96,5 +141,5 @@ export function ProductDetailsClient({ product }:Props) {
         </div>
       </div>
     </div>
-  )
+  );
 }

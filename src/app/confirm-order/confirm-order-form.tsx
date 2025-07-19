@@ -34,6 +34,7 @@ import {
   type CreateOrderInput,
 } from "../admin/dashboard/orders/actions";
 import { useAction } from "next-safe-action/hooks";
+import { getProductDetailWithSlug } from "../data/products-data";
 
 const formSchema = z.object({
   firstName: z.string().min(2, {
@@ -56,11 +57,7 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 interface ConfirmOrderFormProps {
-  initialProduct?: {
-    id: string;
-    name: string;
-    price: number;
-  } | null;
+  initialProduct?: Awaited<ReturnType<typeof getProductDetailWithSlug>> | null;
 }
 
 export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
@@ -119,7 +116,9 @@ export function ConfirmOrderForm({ initialProduct }: ConfirmOrderFormProps) {
 
   const orderItems = initialProduct ? [{ item: initialProduct, qt: 1 }] : items;
 
-  const orderTotal = initialProduct ? initialProduct.price : getTotal();
+  const orderTotal = initialProduct
+    ? getFinalPrice(initialProduct.price, initialProduct.discount)
+    : getTotal();
 
   async function onSubmit(values: FormValues) {
     const orderData: CreateOrderInput = {

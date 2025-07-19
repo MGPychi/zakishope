@@ -11,6 +11,8 @@ import AddProductToCart from "./components/AddProductToCart";
 import Footer from "@/components/layout/Footer/Footer";
 import { Metadata, ResolvingMetadata } from "next";
 import { SiteNav } from "@/components/layout/site-nav";
+import { getFinalPrice } from "@/utils/product-utils";
+import { Badge } from "@/components/ui/badge";
 type Params = Promise<{ slug: string }>;
 export async function generateMetadata(
   { params }: { params: Params },
@@ -69,23 +71,47 @@ export default async function ProductDetail({ params }: { params: Params }) {
               <p className="text-sm text-muted-foreground">
                 {product.category.name}
               </p>
-              {!product.discount && (
-                <div className="mt-4 flex items-baseline gap-4">
-                  <span className="text-3xl font-bold">
-                    {product.price.toFixed(2)} DZD
-                  </span>
-                </div>
-              )}
-              {product.discount && (
-                <div className="mt-4 flex items-baseline gap-4">
-                  <span className="text-3xl font-bold">
-                    {product.price.toFixed(2)} DZD
-                  </span>
-                  <span className="text-2xl line-through ">
-                    {product.discount.toFixed(2)} DZD
-                  </span>
-                </div>
-              )}
+
+              {/* Calculate price details */}
+              {(() => {
+                const finalPrice = getFinalPrice(
+                  product.price,
+                  product.discount
+                );
+                const hasDiscount =
+                  product.discount &&
+                  product.discount > 0 &&
+                  product.discount < product.price;
+                const discountPercentage = hasDiscount
+                  ? Math.round(
+                      ((product.price - finalPrice) / product.price) * 100
+                    )
+                  : 0;
+
+                return (
+                  <div className="mt-4 flex items-baseline gap-4">
+                    {hasDiscount ? (
+                      <>
+                        <span className="text-3xl font-bold">
+                          {finalPrice.toFixed(2)} DZD
+                        </span>
+                        <span className="text-2xl line-through text-gray-500">
+                          {product.price.toFixed(2)} DZD
+                        </span>
+                        {discountPercentage > 0 && (
+                          <Badge variant="destructive" className="ml-1">
+                            -{discountPercentage}%
+                          </Badge>
+                        )}
+                      </>
+                    ) : (
+                      <span className="text-3xl font-bold">
+                        {product.price.toFixed(2)} DZD
+                      </span>
+                    )}
+                  </div>
+                );
+              })()}
             </div>
 
             <div className="flex  gap-4">

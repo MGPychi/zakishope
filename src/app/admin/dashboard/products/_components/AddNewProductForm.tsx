@@ -37,12 +37,7 @@ const formSchema = z.object({
   name: z.string().min(1, "Name is required"),
   mark: z.string().min(1, "Name is mark"),
   price: z.number().min(1, "Price is required"),
-  discount: z
-    .number()
-    .optional()
-    .refine((val, ctx) => !val || val === 0 || val < ctx.parent.price, {
-      message: "Discount must be less than price",
-    }),
+  discount: z.number().optional(),
   description: z.string().min(50).max(MAX_CHARS),
   images: z.array(z.any()).min(1).max(MAX_FILES).optional().nullable(),
   isFeatured: z.boolean(),
@@ -206,7 +201,6 @@ const AddNewProductForm = ({
         mark: data.mark,
         category: data.category,
         price: data.price,
-        discount: data.discount,
         features: data.features || [],
         imageUrls: JSON.stringify(uploadedImages.map((img) => img.url)),
         cloudIds: JSON.stringify(uploadedImages.map((img) => img.cloudId)),
