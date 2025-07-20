@@ -34,7 +34,7 @@ export default function PrivacyPolicyPage() {
             Collecte des Informations
           </h2>
           <p className="mb-4">
-            Nous collectons différents types d'informations lorsque vous
+            Nous collectons différents types d&apos;informations lorsque vous
             utilisez notre site :
           </p>
           <ul className="list-disc pl-6 mb-4">
